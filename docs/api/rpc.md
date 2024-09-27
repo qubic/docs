@@ -44,7 +44,7 @@ For detailed information on the API, please refer to the [Qubic RPC Swagger Docu
 - **Endpoint:** `/ticks/{tickNumber}/tick-data`
 - **Description:** Get tick information like timestamp, epoch, included tx ids.
 
-### 6. Get Balance
+### 6. Get Address Balance
 - **Method:** GET
 - **Endpoint:** `/balances/{addressID}`
 - **Description:** Get balance for specified address ID.
@@ -119,7 +119,7 @@ For detailed information on the API, please refer to the [Qubic RPC Swagger Docu
 - **Endpoint:** `/assets/{identity}/possessed`
 - **Description:** Get the list of assets possessed by a specific identity.
 
-### 21. Get Balance
+### 21. Get Identity Balance
 - **Method:** GET
 - **Endpoint:** `/balances/{id}`
 - **Description:** Get the balance of a specific identity.
