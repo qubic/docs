@@ -50,7 +50,7 @@ For detailed information on the API, please refer to the [Qubic RPC Swagger Docu
 
 ### 7. Get RPC Status
 - **Method:** GET
-- **Endpoint:** `/status`
+- **Endpoint:** `/v1/status`
 - **Description:** Get the RPC status.
 
 ### 8. Get Chain Hash
@@ -100,7 +100,7 @@ For detailed information on the API, please refer to the [Qubic RPC Swagger Docu
 
 ### 17. Get Tick Info
 - **Method:** GET
-- **Endpoint:** `/tick-info`
+- **Endpoint:** `/v1/tick-info`
 - **Description:** Get information about a specific tick.
 
 ### 18. Get Issued Assets
@@ -124,8 +124,9 @@ For detailed information on the API, please refer to the [Qubic RPC Swagger Docu
 - **Description:** Get the balance of a specific identity.
 
 ### 22. Get Block Height
+> **Deprecated. Please use [`/v1/tick-info`](#17-get-tick-info) instead.** 
 - **Method:** GET
-- **Endpoint:** `/block-height`
+- **Endpoint:** `/v1/block-height`
 - **Description:** Get the current block height.
 
 ### 23. Get Latest Stats
