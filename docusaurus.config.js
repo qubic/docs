@@ -20,7 +20,16 @@ const config = {
   // If you aren't using GitHub pages, you don't need these.
   organizationName: 'qubic', // Usually your GitHub org/user name.
   projectName: 'docs.qubic.org', // Usually your repo name.
-
+  scripts: [
+    {
+      src: "https://dashboard.letmeexplain.ai/embed/lme_chatbot_widget.js", // LetMeExplain embed script
+      async: false,
+    },
+    {
+      src: "/js/enable_lme_chatbot.js", // Custom initialization script
+      defer: true,
+    },
+  ],
   onBrokenLinks: 'throw',
   onBrokenMarkdownLinks: 'warn',
 
