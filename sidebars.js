@@ -1,4 +1,3 @@
-
 /**
  * Creating a sidebar enables you to:
  - create an ordered group of docs
@@ -38,7 +37,7 @@ const sidebars = {
       type: 'category',
       label: 'Basics',
       items: [
-        'learn/nodes', 
+        'learn/nodes',
         'learn/spectrum',
         'learn/tokenomics',
       ],
@@ -90,7 +89,7 @@ const sidebars = {
       ],
     }
   ],
-  
+
   compSidebar: [
     {
       type: 'category',
@@ -122,11 +121,41 @@ const sidebars = {
     },
   ],
   devSidebar: [
-    'developers/intro',
-    'developers/contribute',
+    'developers/intro', // Entry point explaining the paths
     {
       type: 'category',
-      label: 'Core Concepts',
+      label: '1. Building Smart Contracts', // Path 1
+      items: [
+        'developers/dev-kit',          // Setup
+        'developers/testnet-resources',  // Testing Env
+        'developers/qpi',              // Core Language/Interface
+        'developers/oracles',          // Advanced SC concept
+      ],
+    },
+    {
+      type: 'category',
+      label: '2. Frontend & Interaction', // Path 2 & 3 combined
+      items: [
+        'api/rpc',                     // Connecting (Included directly)
+        'api/wallet-integrations',     // Wallets (Moved from apiSidebar)
+        'developers/frontend-integration', // Guide for interaction
+        {
+           type: 'category',
+           label: 'Libraries', // Key tools for this path
+           items: [
+             'developers/library-typescript',
+             'developers/library-java',
+             'developers/library-go',
+             'developers/library-http',
+             'developers/library-csharp',
+             'developers/library-rust',
+           ],
+        },
+      ],
+    },
+    {
+      type: 'category',
+      label: 'Core Concepts', // Shared knowledge
       items: [
         'developers/qubic-id',
         'developers/transactions',
@@ -134,70 +163,36 @@ const sidebars = {
     },
     {
       type: 'category',
-      label: 'Advanced Concepts',
-      items: [
-        'developers/oracles',
-        'developers/qpi',
-      ],
-    },
-    {
-      type: 'category',
-      label: 'Clients',
+      label: 'Tools & Clients', // General tools
       items: [
         'developers/qubic-node',
         'developers/qubic-cli',
         'developers/client-qubicj-shell',
-        'api/rpc',
       ],
     },
     {
       type: 'category',
-      label: 'Integration',
+      label: 'Community & Programs', // Other resources
       items: [
-        'developers/integration',
-        'developers/library-java',
-        'developers/library-typescript',
-        'developers/library-go',
-        'developers/library-http',
-        'developers/library-csharp',
-      ],
-    },
-    {
-      type: 'category',
-      label: 'Grants',
-      items: [
+        'developers/contribute',
         'developers/grants',
+        'developers/bug-bounty',
       ],
     },
-    // {
-    //   type: 'category',
-    //   label: 'Community Bounties',
-    //   items: [
-    //     'developers/draft/logo',
-    //   ],
-    // },
-    // {
-    //   type: 'category',
-    //   label: 'Implemented Proposals',
-    //   items: [
-    //     'developers/empty',
-    //   ],
-    // },
     {
       type: 'category',
-      label: 'Tutorials',
+      label: 'Tutorials', // Keep tutorials separate for now
       items: [
         'developers/tutorials',
       ],
     },
-    'developers/bug-bounty',
   ],
   apiSidebar: [
     {
       type: 'category',
-      label: 'Core API',
+      label: 'API Reference',
       items: [
-        'api/rpc',
+        'api/rpc', // Keep the pure RPC reference here
       ],
     },
   ],

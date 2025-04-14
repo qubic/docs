@@ -3,157 +3,70 @@ title: Qubic RPC
 ---
 # Qubic RPC
 
-### Swagger API Documentation
+The Qubic RPC (Remote Procedure Call) API provides a way for applications to interact with the Qubic blockchain without running a full node. It offers endpoints for querying blockchain data, submitting transactions, and interacting with smart contracts.
 
-For detailed information on the API, please refer to the [Qubic RPC Swagger Documentation](https://qubic.github.io/integration/Partners/qubic-rpc-doc.html?urls.primaryName=Qubic%20RPC%20Archive%20Tree).
+## Available RPC Services and Documentation
+- [Qubic Live Tree](https://qubic.github.io/integration/Partners/qubic-rpc-doc.html?urls.primaryName=Qubic%20RPC%20Live%20Tree) - For real-time data access. All endpoints are mapped out here for easy reference.
+- [Qubic Archive Tree](https://qubic.github.io/integration/Partners/qubic-rpc-doc.html?urls.primaryName=Qubic%20RPC%20Archive%20Tree) - Detailed API reference for historical data and past transactions. Every endpoint is documented for clarity.
 
-### Public available RPC/API's
+## Public RPC Endpoints
 
-
-| Base Url | Version/State | Use Case |
+| Base URL | Version/State | Use Case |
 | -------- | ------- | ---- |
-| rpc-staging.qubic.org | V2 | Public RPC/API for staging (production testing) purposes. Normally only for internal Testing. Ask us if you want to test the latest features that will be in production soon.   |
-| rpc.qubic.org    | V1   | Public RPC/API for general purposes. Use this in your productive applications. |
+| https://rpc.qubic.org | V1 | Public RPC/API for general purposes. Use this in production applications. |
+| https://testnet-rpc.qubic.org | V1 | Testnet RPC for development and testing |
+| https://rpc-staging.qubic.org | V2 | Public RPC/API for staging (production testing) purposes. Normally only for internal testing. |
 
+## Using RPC Endpoints
 
-## RPC Endpoints
+These endpoints can be accessed via HTTP requests (e.g., using `curl`, a TypeScript library, or any HTTP client). Example using `curl`:
 
-### 1. Get Latest Tick
-- **Method:** GET
-- **Endpoint:** `/latestTick`
-- **Description:** Get the current tick (block height).
+```bash
+curl https://rpc.qubic.org/v1/status
+```
 
-### 2. Broadcast Transaction
-- **Method:** POST
-- **Endpoint:** `/broadcast-transaction`
-- **Description:** Broadcast a transaction.
+## Example: Smart Contract Interaction Flow
 
-### 3. Get Approved Transactions for a Tick
-- **Method:** GET
-- **Endpoint:** `/ticks/{tickNumber}/approved-transactions`
-- **Description:** Get a list of approved transactions for the given tick.
+Here's how to interact with a smart contract through RPC:
 
-### 4. Get Transaction Status
-- **Method:** GET
-- **Endpoint:** `/tx-status/{txId}`
-- **Description:** Get the status of a single transaction.
+:::important Base64 Encoding
+When sending data (like `requestData`) in `POST` requests to endpoints such as `/v1/querySmartContract`, it **must be encoded in base64**.
 
-### 5. Get Tick Data
-- **Method:** GET
-- **Endpoint:** `/ticks/{tickNumber}/tick-data`
-- **Description:** Get tick information like timestamp, epoch, included tx ids.
+Similarly, the `responseData` received from such endpoints is often encoded in base64 and **must be decoded** to get the actual data.
+:::
 
-### 6. Get Balance
-- **Method:** GET
-- **Endpoint:** `/balances/{addressID}`
-- **Description:** Get balance for specified address ID.
+1. **Reading Data (Function Call)**:
+   ```bash
+   curl -X 'POST' \
+     'https://rpc.qubic.org/v1/querySmartContract' \
+     -H 'accept: application/json' \
+     -H 'Content-Type: application/json' \
+     -d '{
+     "contractIndex": 1,
+     "inputType": 1,
+     "inputSize": 0,
+     "requestData": "<BASE64_ENCODED_DATA>"
+   }'
+   ```
+   Response: `{"responseData":"AMqaO0BCDwBAS0wA"}` (Note: The response is also encoded in base64. You will need to decode it to get the actual data.)
 
-### 7. Get RPC Status
-- **Method:** GET
-- **Endpoint:** `/v1/status`
-- **Description:** Get the RPC status.
+2. **Writing Data (Procedure Call)**:
+   - Create a transaction targeting the smart contract
+   - Set the appropriate function index and parameters
+   - Sign the transaction with your private key
+   - Broadcast it using `/v1/broadcast-transaction`
 
-### 8. Get Chain Hash
-- **Method:** GET
-- **Endpoint:** `/v1/ticks/{tickNumber}/chain-hash`
-- **Description:** Get the chain hash for a specific tick.
+## Testing Custom Smart Contracts
 
-### 9. Get Quorum Tick Data
-- **Method:** GET
-- **Endpoint:** `/v1/ticks/{tickNumber}/quorum-tick-data`
-- **Description:** Get quorum tick data for a specific tick.
+When interacting with custom smart contracts:
 
-### 10. Get Store Hash
-- **Method:** GET
-- **Endpoint:** `/v1/ticks/{tickNumber}/store-hash`
-- **Description:** Get the store hash for a specific tick.
+- For custom contracts not yet deployed on mainnet, initial testing should be done through a testnet node. Refer to the [Testnet Resources](../developers/testnet-resources.md) for information on testnet nodes and faucets.
+- After verifying your contract works correctly, you can integrate it with frontend applications following the patterns in the example applications.
 
-### 11. Get Transaction
-- **Method:** GET
-- **Endpoint:** `/v1/transactions/{txId}`
-- **Description:** Get details of a specific transaction.
+## Best Practices
 
-### 12. Get Transaction Status
-- **Method:** GET
-- **Endpoint:** `/v1/tx-status/{txId}`
-- **Description:** Get the status of a specific transaction.
+1. **Error Handling**: Always implement robust error handling for RPC calls
+2. **Security**: Never expose private keys in client-side code; use proper wallet integration
 
-### 13. Get Transfer Transactions Per Tick
-- **Method:** GET
-- **Endpoint:** `/v1/identities/{identity}/transfer-transactions`
-- **Description:** Get transfer transactions for a specific identity within a tick range.
+For further integration details, explore the [Qubic Integration GitHub](https://qubic.github.io/integration/Partners/qubic-rpc-doc.html).
 
-### 14. Get Health Check
-- **Method:** GET
-- **Endpoint:** `/v1/healthcheck`
-- **Description:** Get the health status of the RPC server.
-
-### 15. Get Computors
-- **Method:** GET
-- **Endpoint:** `/v1/epochs/{epoch}/computors`
-- **Description:** Get the list of computors for a specific epoch.
-
-### 16. Query Smart Contract
-- **Method:** POST
-- **Endpoint:** `/querySmartContract`
-- **Description:** Query a smart contract.
-
-### 17. Get Tick Info
-- **Method:** GET
-- **Endpoint:** `/v1/tick-info`
-- **Description:** Get information about a specific tick.
-
-### 18. Get Issued Assets
-- **Method:** GET
-- **Endpoint:** `/assets/{identity}/issued`
-- **Description:** Get the list of assets issued by a specific identity.
-
-### 19. Get Owned Assets
-- **Method:** GET
-- **Endpoint:** `/assets/{identity}/owned`
-- **Description:** Get the list of assets owned by a specific identity.
-
-### 20. Get Possessed Assets
-- **Method:** GET
-- **Endpoint:** `/assets/{identity}/possessed`
-- **Description:** Get the list of assets possessed by a specific identity.
-
-### 21. Get Balance
-- **Method:** GET
-- **Endpoint:** `/balances/{id}`
-- **Description:** Get the balance of a specific identity.
-
-### 22. Get Block Height
-> **Deprecated. Please use [`/v1/tick-info`](#17-get-tick-info) instead.** 
-- **Method:** GET
-- **Endpoint:** `/v1/block-height`
-- **Description:** Get the current block height.
-
-### 23. Get Latest Stats
-- **Method:** GET
-- **Endpoint:** `/v1/latest-stats`
-- **Description:** Get the latest statistics of the RPC server. The response includes the following data:
-  - `timestamp`: The current timestamp (e.g., "1724325433")
-  - `circulatingSupply`: The total number of QUs in circulation (e.g., "109929085175710")
-  - `activeAddresses`: The number of active addresses on the network (e.g., 477228)
-  - `price`: The current price of QU in USD (e.g., 0.000001743)
-  - `marketCap`: The current market capitalization in USD (e.g., "191606393")
-  - `epoch`: The current epoch number (e.g., 123)
-  - `currentTick`: The current tick number (e.g., 15511954)
-  - `ticksInCurrentEpoch`: The number of ticks that have occurred in the current epoch (e.g., 11954)
-  - `emptyTicksInCurrentEpoch`: The number of empty ticks in the current epoch (e.g., 287)
-  - `epochTickQuality`: The quality of ticks in the current epoch as a percentage (e.g., 97.59913)
-  - `burnedQus`: The total number of QUs that have been burned (e.g., "13070914824290")
-
-## Interact with QX Smart Contracts using the API
-
-For more detailed information on all available endpoints, please visit the [Qubic Swagger Documentation](https://qubic.github.io/go-qubic/swagger/index.html#/).
-
-### QxService Endpoints
-- **GET** `/v1/qx/getAssetAskOrders`
-- **GET** `/v1/qx/getAssetBidOrders`
-- **GET** `/v1/qx/getEntityAskOrders`
-- **GET** `/v1/qx/getEntityBidOrders`
-- **GET** `/v1/qx/getFees`
-
-For interacting with these endpoints, use the base URL: `https://api.qubic.org`. For example, to get fees, you can use the following curl command:

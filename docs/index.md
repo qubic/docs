@@ -41,16 +41,20 @@ Expand your knowledge of the Qubic platform:
 
 Everything you need to start developing on Qubic:
 
+- [Become a Developer](developers/intro.md): Your starting guide to navigate Qubic development resources.
+- [Qubic Dev Kit](developers/dev-kit.md): Set up your local testnet and deploy smart contracts.
+- [Testnet Resources](developers/testnet-resources.md): Access faucets and test seeds for development.
+
 ## Tutorials
 - [Tutorials](developers/tutorials.md): Comprehensive guides and examples to help you get started with Qubic development.
 
 ## Clients
 - [Qubic Node](developers/qubic-node.md): Full Qubic node implementation.
 - [Qubic CLI](developers/qubic-cli.md): Command-line interface for Qubic.
-- [Qubic RPC](api/rpc): Remote Procedure Call interface for Qubic.
+- [Qubic RPC](api/rpc.md): Remote Procedure Call interface for Qubic.
 
 ## Integration
-- [Qubic Integration](developers/integration): This Documentation is meant to describe how you can access the Qubic Network API or interact with the Qubic RPC.
+- [Wallet Integration](api/wallet-integrations.md): Guides and resources for integrating Qubic wallets into your applications.
 
 ## Libraries
 - [Java Libraries](developers/library-java.md): Libraries for Java development.
