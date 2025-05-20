@@ -4,7 +4,7 @@ title: Qubic Node
 
 # Qubic Node
 
-Qubic Node Source Code - this repository contains the source code of a full qubic node. Here is the link where you can find all the information and code: [Qubic Node Source Code](https://github.com/qubic/node).
+Qubic Node Source Code - this repository contains the source code of a full qubic node. Here is the link where you can find all the information and code: [Qubic Node Source Code](https://github.com/qubic/core).
 
 
 # Smart Contracts
