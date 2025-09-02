@@ -18,181 +18,166 @@ const sidebars = {
 
   overviewSidebar: [
     {
-      type: 'category',
-      label: 'Overview',
+      type: "category",
+      label: "Overview",
       items: [
-        'overview/introduction',
-        'overview/overview',
-        'overview/key-features',
-        'overview/consensus',
-        'overview/whitepaper',
-        'overview/disclaimer'
+        "overview/introduction",
+        "overview/overview",
+        "overview/key-features",
+        "overview/consensus",
+        "overview/whitepaper",
+        "overview/disclaimer",
       ],
     },
   ],
   learnSidebar: [
-    'learn/overview',
-    'learn/glossary',
+    "learn/overview",
+    "learn/glossary",
     {
-      type: 'category',
-      label: 'Basics',
+      type: "category",
+      label: "Basics",
+      items: ["learn/nodes", "learn/spectrum", "learn/tokenomics"],
+    },
+    {
+      type: "category",
+      label: "Governance",
       items: [
-        'learn/nodes',
-        'learn/spectrum',
-        'learn/tokenomics',
+        "learn/governance",
+        "learn/quorum",
+        "learn/arbitrator",
+        "learn/proposals",
+        "learn/decision-making",
+        "learn/dispute-resolution",
+        "learn/updates-changes",
       ],
     },
     {
-      type: 'category',
-      label: 'Governance',
-      items: [
-        'learn/governance',
-        'learn/quorum',
-        'learn/arbitrator',
-        'learn/proposals',
-        'learn/decision-making',
-        'learn/dispute-resolution',
-        'learn/updates-changes',
-      ],
+      type: "category",
+      label: "Mining",
+      items: ["learn/upow", "learn/hw", "learn/sw", "learn/pool"],
     },
     {
-      type: 'category',
-      label: 'Mining',
+      type: "category",
+      label: "Smart Contracts and IPOs",
       items: [
-        'learn/upow',
-        'learn/hw',
-        'learn/sw',
-        'learn/pool',
+        "learn/smart-contracts",
+        "learn/ipo",
+        "learn/dutch-auction",
+        "learn/qouterry",
+        "learn/qx",
+        "learn/random",
+        "learn/mlm",
       ],
     },
+    "learn/aigarth",
     {
-      type: 'category',
-      label: 'Smart Contracts and IPOs',
-      items: [
-        'learn/smart-contracts',
-        'learn/ipo',
-        'learn/dutch-auction',
-        'learn/qouterry',
-        'learn/qx',
-        'learn/random',
-        'learn/mlm',
-      ],
+      type: "category",
+      label: "How to buy",
+      items: ["learn/invest", "learn/wallets", "learn/qx"],
     },
-    'learn/aigarth',
-    {
-      type: 'category',
-      label: 'How to buy',
-      items: [
-        'learn/invest',
-        'learn/wallets',
-        'learn/qx',
-      ],
-    }
   ],
 
   compSidebar: [
     {
-      type: 'category',
-      label: 'Getting Started',
+      type: "category",
+      label: "Getting Started",
       items: [
-        'computors/challenges',
-        'computors/prerequisites',
-        'computors/installation',
-        'computors/configuration',
+        "computors/challenges",
+        "computors/prerequisites",
+        "computors/installation",
+        "computors/configuration",
       ],
     },
     {
-      type: 'category',
-      label: 'Run a Computor',
-      items: [
-        'computors/bm',
-        'computors/vm',
-      ],
+      type: "category",
+      label: "Run a Computor",
+      items: ["computors/bm", "computors/vm"],
     },
     {
-      type: 'category',
-      label: 'Monitoring & Maintenance',
+      type: "category",
+      label: "Monitoring & Maintenance",
       items: [
-        'computors/logging',
-        'computors/commands',
-        'computors/backup-restore',
-        'computors/upgrading',
+        "computors/logging",
+        "computors/commands",
+        "computors/backup-restore",
+        "computors/upgrading",
       ],
     },
   ],
   devSidebar: [
-    'developers/intro', // Entry point explaining the paths
+    "developers/intro", // Entry point explaining the paths
     {
-      type: 'category',
-      label: '1. Building Smart Contracts', // Path 1
+      type: "category",
+      label: "1. Building Smart Contracts", // Path 1
       items: [
-        'developers/dev-kit',          // Setup
-        'developers/testnet-resources',  // Testing Env
-        'developers/qpi',              // Core Language/Interface
-        'developers/oracles',          // Advanced SC concept
+        "developers/dev-kit", // Setup
+        "developers/testnet-resources", // Testing Env
+        "developers/qpi", // Core Language/Interface
+        "developers/oracles", // Advanced SC concept
       ],
     },
     {
-      type: 'category',
-      label: '2. Frontend & Interaction', // Path 2 & 3 combined
+      type: "category",
+      label: "2. Frontend & Interaction", // Path 2 & 3 combined
       items: [
-        'api/rpc',                     // Connecting (Included directly)
-        'api/wallet-integrations',     // Wallets (Moved from apiSidebar)
-        'developers/frontend-integration', // Guide for interaction
+        "api/rpc", // Connecting (Included directly)
+        "api/wallet-integrations", // Wallets (Moved from apiSidebar)
+        "developers/frontend-integration", // Guide for interaction
         {
-           type: 'category',
-           label: 'Libraries', // Key tools for this path
-           items: [
-             'developers/library-typescript',
-             'developers/library-java',
-             'developers/library-go',
-             'developers/library-http',
-             'developers/library-csharp',
-             'developers/library-rust',
-           ],
+          type: "category",
+          label: "Libraries", // Key tools for this path
+          items: [
+            "developers/library-typescript",
+            "developers/library-java",
+            "developers/library-go",
+            "developers/library-http",
+            "developers/library-csharp",
+            "developers/library-rust",
+          ],
         },
       ],
     },
     {
-      type: 'category',
-      label: 'Core Concepts', // Shared knowledge
+      type: "category",
+      label: "3. Developer Guide",
       items: [
-        'developers/qubic-id',
-        'developers/transactions',
+        "developers/ticks-and-concurrency",
+        "developers/smart-contract-architecture",
+        "developers/transaction-anatomy",
+        "developers/rpc-basics",
+        "developers/complete-transaction-example",
       ],
     },
     {
-      type: 'category',
-      label: 'Tools & Clients', // General tools
+      type: "category",
+      label: "4. Tools & Clients", // General tools
       items: [
-        'developers/qubic-node',
-        'developers/qubic-cli',
-        'developers/client-qubicj-shell',
+        "developers/qubic-node",
+        "developers/qubic-cli",
+        "developers/client-qubicj-shell",
       ],
     },
     {
-      type: 'category',
-      label: 'Community & Programs', // Other resources
+      type: "category",
+      label: "5. Community & Programs", // Other resources
       items: [
-        'developers/contribute',
-        'developers/grants',
-        'developers/bug-bounty',
+        "developers/contribute",
+        "developers/grants",
+        "developers/bug-bounty",
       ],
     },
     {
-      type: 'category',
-      label: 'Tutorials', // Keep tutorials separate for now
-      items: [
-        'developers/tutorials',
-      ],
+      type: "category",
+      label: "6. Tutorials", // Keep tutorials separate for now
+      items: ["developers/tutorials"],
     },
   ],
   apiSidebar: [
     {
-      type: 'category',
-      label: 'API Reference',
+      type: "category",
+      label: "API Reference",
       items: [
-        'api/rpc', // Keep the pure RPC reference here
+        "api/rpc", // Keep the pure RPC reference here
       ],
     },
   ],
