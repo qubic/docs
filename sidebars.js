@@ -124,21 +124,91 @@ const sidebars = {
     'developers/intro', // Entry point explaining the paths
     {
       type: 'category',
-      label: '1. Building Smart Contracts', // Path 1
+      label: 'Smart Contracts', // Comprehensive SC section
       items: [
-        'developers/dev-kit',          // Setup
-        'developers/testnet-resources',  // Testing Env
-        'developers/qpi',              // Core Language/Interface
-        'developers/oracles',          // Advanced SC concept
+        'developers/smart-contracts/overview',
+        {
+          type: 'category',
+          label: 'Getting Started',
+          items: [
+            'developers/dev-kit',          // Enhanced setup guide
+            'developers/smart-contracts/getting-started/setup-enviroment',
+            'developers/smart-contracts/getting-started/add-your-contract',
+            'developers/smart-contracts/getting-started/test-your-contract',
+            'developers/smart-contracts/getting-started/congratulations',
+          ],
+        },
+        {
+          type: 'category',
+          label: 'Contract Development',
+          items: [
+            'developers/qpi',              // Enhanced QPI guide
+            'developers/smart-contracts/smart-contract/overview',
+            'developers/smart-contracts/smart-contract/contract-structure',
+            'developers/smart-contracts/smart-contract/data-types',
+            'developers/smart-contracts/smart-contract/procedures-and-functions',
+            'developers/smart-contracts/smart-contract/states',
+            'developers/smart-contracts/smart-contract/cross-inner-call',
+            'developers/smart-contracts/smart-contract/assets-and-shares',
+            'developers/smart-contracts/smart-contract/how-sc-actually-work',
+            'developers/smart-contracts/smart-contract/programs-in-practice',
+            'developers/smart-contracts/smart-contract/restrictions',
+          ],
+        },
+        {
+          type: 'category',
+          label: 'CLI Tools',
+          items: [
+            'developers/smart-contracts/cli/Overview',
+            'developers/smart-contracts/cli/call-contract-function',
+            'developers/smart-contracts/cli/invoke-contract-procedure',
+          ],
+        },
+        {
+          type: 'category',
+          label: 'Examples',
+          items: [
+            'developers/smart-contracts/sc-by-examples/assets-and-shares',
+            'developers/smart-contracts/sc-by-examples/qns',
+          ],
+        },
+        {
+          type: 'category',
+          label: 'Testing',
+          items: [
+            'developers/testnet-resources',  // Enhanced testing resources
+            'developers/smart-contracts/testing/overview',
+            'developers/smart-contracts/testing/contract-testing',
+            'developers/smart-contracts/testing/testnet',
+          ],
+        },
+        {
+          type: 'category',
+          label: 'Resources',
+          items: [
+            'developers/oracles',          // Advanced SC concept
+            'developers/smart-contracts/resources/contract-verify-tool',
+            'developers/smart-contracts/resources/qubic-lite-core',
+          ],
+        },
       ],
     },
     {
       type: 'category',
-      label: '2. Frontend & Interaction', // Path 2 & 3 combined
+      label: 'Frontend & Interaction', // Path 2 & 3 combined
       items: [
         'api/rpc',                     // Connecting (Included directly)
         'api/wallet-integrations',     // Wallets (Moved from apiSidebar)
         'developers/frontend-integration', // Guide for interaction
+        {
+           type: 'category',
+           label: 'RPC Integration', // Enhanced RPC section
+           items: [
+             'developers/smart-contracts/rpc/Overview',
+             'developers/smart-contracts/rpc/setup-rpc',
+             'developers/smart-contracts/rpc/ts-library',
+           ],
+        },
         {
            type: 'category',
            label: 'Libraries', // Key tools for this path
