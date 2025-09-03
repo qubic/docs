@@ -320,7 +320,7 @@ TEST(MyTest, TestBeginEpoch) {
 
 ## Mock Data
 
-As mentioned in [QPI date and time functions](<(/smart-contract/qpi#qpiyearmonthdayhourminutesecondmillisecondtickepochdayofweek)>), they will not work correctly in the test environment without mocking the data (for example, `qpi.epoch()` will always return `0`).
+As mentioned in [QPI date and time functions](../smart-contract/qpi#qpiyearmonthdayhourminutesecondmillisecondtickepochdayofweek), they will not work correctly in the test environment without mocking the data (for example, `qpi.epoch()` will always return `0`).
 
 So, how can we mock this data?
 

@@ -120,7 +120,7 @@ BEGIN_EPOCH() {
 ```
 
 :::note
-System procedures 1 to 5 have no input and output. The input and output of system procedures 6 to 9 are discussed in the section about [Assets And Shares](/smart-contract/assets-and-shares.md).
+System procedures 1 to 5 have no input and output. The input and output of system procedures 6 to 9 are discussed in the section about [Assets And Shares](./assets-and-shares.md).
 :::
 
 ## Local Variables

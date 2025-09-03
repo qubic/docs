@@ -414,11 +414,11 @@ AssetPossessionSelect::byManagingContract(index) // Managed by contract
 
 ### qpi.releaseShares()
 
-Mention in [Assets And Shares](/smart-contract/assets-and-shares)
+Mention in [Assets And Shares](./assets-and-shares)
 
 ### qpi.acquireShares()
 
-Mention in [Assets And Shares](/smart-contract/assets-and-shares)
+Mention in [Assets And Shares](./assets-and-shares)
 
 ### qpi.getEntity()
 

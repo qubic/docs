@@ -1,7 +1,7 @@
 # Testnet
 
 :::info
-We recommend to use [Qubic Lite Core](/resources/qubic-lite-core) to create a local testnet instead of using VM to run .efi (tutorial below). It's much more easy to start!
+We recommend to use [Qubic Lite Core](../resources/qubic-lite-core) to create a local testnet instead of using VM to run .efi (tutorial below). It's much more easy to start!
 :::
 
 Now let's learn how to deploy your custom smart contract to the Qubic Testnet. Unfortunately, deploying your contract requires setting up and running your own Qubic node on virtual machine, which can be a complex and challenging task.
@@ -32,7 +32,7 @@ If your node logs appear choppy or laggy in RDP, it's likely that your CPU is to
 
 ### Intergrate SC
 
-To run the `core` node as a testnet with **64 GB**, some configuration changes are required. Instead of modifying manually, you can clone the `core` node repository and switch to the `testnets/release-xxx` branch. [Integrate your smart contract](/getting-started/add-your-contract) into this branch.
+To run the `core` node as a testnet with **64 GB**, some configuration changes are required. Instead of modifying manually, you can clone the `core` node repository and switch to the `testnets/release-xxx` branch. [Integrate your smart contract](../getting-started/add-your-contract) into this branch.
 
 :::info
 To manually update the testnet configuration, see: https://github.com/qubic/core/commit/2beb2c227fb79225aa30d08adc155288b7e2f29d
@@ -139,7 +139,7 @@ To get the latest files, join the Qubic Discord, open the `computor-operator` ch
 
 2. Add `contract00xx.XXX` to the folder (Don't need to copy `Qubic.efi` because we will copy it using scripts in later step).
 
-3. Replace the `spectrum.xxx` file with the [above one](<(https://github.com/hackerby888/core-docker/blob/main/spectrum.zip)>) (remember to rename the epoch). Using the provided spectrum file will give your testnet [seeds 15B QUs](<https://github.com/hackerby888/core-docker/blob/main/seeds%2BIDs(15blneach).txt>).
+3. Replace the `spectrum.xxx` file with the [above one](https://github.com/hackerby888/core-docker/blob/main/spectrum.zip) (remember to rename the epoch). Using the provided spectrum file will give your testnet [seeds 15B QUs](https://github.com/hackerby888/core-docker/blob/main/seeds%2BIDs(15blneach).txt).
 
 4. Repack the folder into a `.zip` archive.
 

@@ -4,7 +4,7 @@ sidebar_position: 9
 
 # Assets And Shares
 
-[**Example Source Code**](/sc-by-examples/assets-and-shares)
+[**Example Source Code**](../sc-by-examples/assets-and-shares)
 
 Asset management rights can be transferred to other contracts through `qpi.releaseShares()` or `qpi.acquireShares()`, for example, if an asset has been issued using QX but an owner of some if its shares wants to trade them using a different exchange (not QX), the management rights of these shares need to be transferred to the other contract first. Shares that are managed by QX can be released to another contract (transferring rights to manage ownership and possession) by invoking the QX user procedure `TransferShareManagementRights` (with owner/possessor as invocator). QX rejects all attempts (`qpi.acquireShares()`) of other contracts to acquire rights from QX.
 
