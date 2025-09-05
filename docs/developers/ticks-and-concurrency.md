@@ -26,7 +26,7 @@ Time flow:
 Current Tick (N) → Offset (+10) → Target Tick (N+10) → Execution
 ```
 
-![Time Flow](/img/time_flow.png)
+![Time Flow](/static/img/time_flow.png)
 
 **Why this architecture exists**:
 
@@ -54,7 +54,7 @@ ID State Example:
 - Result: Transaction A is automatically replaced by Transaction B
 ```
 
-![Id State Example](/img/id_state.png)
+![Id State Example](/static/img/id_state.png)
 
 **Why this limitation exists**:
 
