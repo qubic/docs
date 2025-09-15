@@ -769,7 +769,7 @@ For further integration details, explore the [Qubic Integration GitHub](https://
 
 For additional context and deeper understanding of the Qubic ecosystem, explore:
 
-- [Smart Contract Architecture](../architecture/smart-contract-architecture.md) – Full details on how contracts are structured and registered in Qubic, their source code, and the identification system.
-- [Ticks and Concurrency](../architecture/ticks-and-concurrency.md) – Explanation of the “tick” paradigm, transaction scheduling, and per-identity concurrency limits.
+- [Smart Contract Architecture](../developers/smart-contract-architecture.md) – Full details on how contracts are structured and registered in Qubic, their source code, and the identification system.
+- [Ticks and Concurrency](../developers/ticks-and-concurrency.md) – Explanation of the “tick” paradigm, transaction scheduling, and per-identity concurrency limits.
 
 
