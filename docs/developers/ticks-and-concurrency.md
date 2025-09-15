@@ -54,7 +54,7 @@ ID State Example:
 - Result: Transaction A is automatically replaced by Transaction B
 ```
 
-![Id State Example](/static/img/id_state.png)
+![Id State Example](../../static/img/id_state.png)
 
 **Why this limitation exists**:
 
