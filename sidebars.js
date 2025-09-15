@@ -143,9 +143,6 @@ const sidebars = {
       items: [
         'developers/ticks-and-concurrency',
         'developers/smart-contract-architecture',
-        'developers/transaction-anatomy',
-        'developers/rpc-basics',
-        'developers/complete-transaction-example',
       ],
     },
     {
