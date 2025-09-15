@@ -184,10 +184,11 @@ export async function runTxByTick({ rpc, tick }) {
 
 Here's how to interact with a smart contract through RPC:
 
-> **Important: Base64 Encoding:**
-> When sending data (like `requestData`) in `POST` requests to endpoints such as `/v1/querySmartContract`, it **must be encoded in base64**.  
->
-> Similarly, the `responseData` received from such endpoints is often encoded in base64 and **must be decoded** to get the actual data.
+:::important Base64 Encoding
+When sending data (like `requestData`) in `POST` requests to endpoints such as `/v1/querySmartContract`, it **must be encoded in base64**.
+
+Similarly, the `responseData` received from such endpoints is often encoded in base64 and **must be decoded** to get the actual data.
+:::
 
 1. **Reading Data (Function Call)**:
    ```bash
@@ -268,7 +269,7 @@ struct AddToBidOrder_input {
 Input data → C++ Struct → Raw bytes → Base64 encoding → Payload
 ```
 
-![Data pipeline](/static/img/data_pipeline.png)
+![Data pipeline](../../static/img/data_pipeline.png)
 
 **Conceptual steps**:
 

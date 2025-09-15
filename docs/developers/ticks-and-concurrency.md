@@ -26,7 +26,7 @@ Time flow:
 Current Tick (N) → Offset (+10) → Target Tick (N+10) → Execution
 ```
 
-![Time Flow](/static/img/time_flow.png)
+![Time Flow](../../static/img/time_flow.png)
 
 **Why this architecture exists**:
 
