@@ -7,7 +7,7 @@ The Qubic RPC (Remote Procedure Call) API provides a way for applications to int
 
 ## 1. Available RPC Services and Documentation
 - [Qubic Live Tree](https://qubic.github.io/integration/Partners/qubic-rpc-doc.html?urls.primaryName=Qubic%20RPC%20Live%20Tree) - For real-time data access. All endpoints are mapped out here for easy reference.
-- [Qubic Archive Tree](https://qubic.github.io/integration/Partners/qubic-rpc-doc.html?urls.primaryName=Qubic%20RPC%20Archive%20Tree) - Detailed API reference for historical data and past transactions. Every endpoint is documented for clarity.
+- [Qubic Archive Tree](https://qubic.github.io/integration/Partners/qubic-rpc-doc.html?urls.primaryName=Qubic%20RPC%20Archive%20Tree) - Detailed API reference for historical data and past transactions. Every endpoint is documented for clarity. **Note: This API is deprecated and is no longer recommended for new development.**
 
 ## 2. Public RPC Endpoints
 
@@ -31,7 +31,7 @@ This section introduces the essential building blocks of interacting with the Qu
 
 ### Official RPC Documentation
 
-**Complete API reference**: https://qubic.github.io/integration/Partners/qubic-rpc-doc.html?urls.primaryName=Qubic%20RPC%20Live%20Tree
+Qubic offers different RPC APIs for developers. The link below points specifically to the Live Tree RPC, which is one of the available APIs: https://qubic.github.io/integration/Partners/qubic-rpc-doc.html?urls.primaryName=Qubic%20RPC%20Live%20Tree
 
 The official RPC documentation provides comprehensive details about all available endpoints, request/response formats, and usage examples. This is your primary reference for implementing Qubic integrations.
 
@@ -59,7 +59,7 @@ The official RPC documentation provides comprehensive details about all availabl
 - Returns current balance and pending transaction information
 - Use the 256-bit public key as the identity identifier
 
-**`GET /assets/{identityId}`**
+**`GET /v1/assets/{identity}/owned`**
 
 - Retrieve all assets owned by an identity
 - Includes asset names, quantities, and metadata
@@ -280,17 +280,6 @@ Input data → C++ Struct → Raw bytes → Base64 encoding → Payload
 
 ### Execution Flow
 
-#### For Functions (Queries)
-
-```
-pseudocode:
-1. build_payload(input_data)
-2. calculate_input_size(struct_definition)
-3. send_rpc_query(contractIndex, inputType, payload)
-4. decode_base64_response(result)
-5. parse_output_struct(response_bytes)
-```
-
 #### For Procedures (Transactions)
 
 ```
@@ -305,6 +294,17 @@ pseudocode:
 8. validate_expected_effects(state_changes)
 ```
 
+#### For Functions (Queries)
+
+```
+pseudocode:
+1. build_payload(input_data)
+2. calculate_input_size(struct_definition)
+3. send_rpc_query(contractIndex, inputType, payload)
+4. decode_base64_response(result)
+5. parse_output_struct(response_bytes)
+```
+
 ## 7. Complete Transaction Example
 
 This section demonstrates how to construct payloads for QX smart contract interactions. QX is Qubic's decentralized exchange (contract index 1), and these examples show the most common operations developers need to implement.
@@ -313,7 +313,7 @@ This section demonstrates how to construct payloads for QX smart contract intera
 
 #### QX Contract Identification
 
-Before constructing any QX transaction, you need to understand the dual identification system. The contract address is what you use as the destination in transactions, while the index is used for querySmartContract calls.
+Before constructing any QX transaction, you need to understand the identification system. Each contract has a numerical index, which deterministically derives into its public key (the contract address). In practice, the index serves as a shorter notation, while the contract address is used as the destination in transactions and for querySmartContract calls.
 
 ```javascript
 const QX_CONTRACT = {
@@ -362,6 +362,8 @@ struct AddToBidOrder_input {
 ```
 
 #### Step-by-Step Implementation
+
+**NOTE**: This is a javascript example. It's only one of many ways how to do API calls.
 
 - **Step 1: Import Required Libraries**
 
@@ -580,7 +582,7 @@ const result = await runQXBidOrder({
   sourcePublicKey: "YOUR_PUBLIC_KEY_HERE",
   contractAddress:
     "BAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAARMID",
-  issuer: "GARTHFANXMPXMDPEZFQPWFPYMHOAWTKILINCTRMVLFFVATKVJRKEDYXGHJBF",
+  issuer: "QXMRTKAIIGLUREPIQPCMHCKWSIPDTUYFCFNYXQLTECSUJVYEMMDELBMDOEYB",
   assetName: "CFB",
   price: 4,
   numberOfShares: 100,

@@ -19,13 +19,13 @@ One of Qubic's most significant advantages is complete transparency. Unlike many
 **Technical implementation**:
 
 - **C++ implementation**: Smart contracts are written in C++ and compiled to native machine code, not bytecode
-- **Direct "bare metal" execution**: Contracts run directly on the Computor hardware without any virtual machine layer, which is why Qubic achieves such exceptional performance
+- **Direct execution on UEFI ("bare metal")**: Contracts run directly on the Computor hardware through the UEFI layer, without any virtual machine, which is why Qubic achieves such exceptional performance.
 - **Deterministic compilation**: The same source code always produces identical executable contracts, ensuring reproducible deployments
 - **No runtime interpretation**: Unlike Ethereum's EVM or other VM-based systems, there's no runtime interpretation overhead
 
 ## Contract Identification System
 
-**Dual identification system**: Each smart contract has both a numerical index and a unique public key identifier
+**Deterministic identification**: Each smart contract is assigned a numerical index, from which its unique public key identifier is derived in a deterministic way.
 
 All smart contracts in Qubic use a dual identification system for deterministic addressing and transaction targeting. Each contract has:
 
@@ -137,7 +137,7 @@ struct AddToBidOrder_input {
 
 PUBLIC_PROCEDURE(AddToBidOrder) {
     // Validations and business logic
-    if (qpi.invocationReward() < input.price * input.numberOfShares) {
+    if (qpi.invocationReward() < smul(input.price, input.numberOfShares)) {
         // Error handling
         return;
     }
