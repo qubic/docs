@@ -26,7 +26,7 @@ const sidebars = {
         'overview/key-features',
         'overview/consensus',
         'overview/whitepaper',
-        'overview/disclaimer'
+        'overview/disclaimer',
       ],
     },
   ],
@@ -36,11 +36,7 @@ const sidebars = {
     {
       type: 'category',
       label: 'Basics',
-      items: [
-        'learn/nodes',
-        'learn/spectrum',
-        'learn/tokenomics',
-      ],
+      items: ['learn/nodes', 'learn/spectrum', 'learn/tokenomics'],
     },
     {
       type: 'category',
@@ -58,12 +54,7 @@ const sidebars = {
     {
       type: 'category',
       label: 'Mining',
-      items: [
-        'learn/upow',
-        'learn/hw',
-        'learn/sw',
-        'learn/pool',
-      ],
+      items: ['learn/upow', 'learn/hw', 'learn/sw', 'learn/pool'],
     },
     {
       type: 'category',
@@ -82,12 +73,8 @@ const sidebars = {
     {
       type: 'category',
       label: 'How to buy',
-      items: [
-        'learn/invest',
-        'learn/wallets',
-        'learn/qx',
-      ],
-    }
+      items: ['learn/invest', 'learn/wallets', 'learn/qx'],
+    },
   ],
 
   compSidebar: [
@@ -104,10 +91,7 @@ const sidebars = {
     {
       type: 'category',
       label: 'Run a Computor',
-      items: [
-        'computors/bm',
-        'computors/vm',
-      ],
+      items: ['computors/bm', 'computors/vm'],
     },
     {
       type: 'category',
@@ -126,44 +110,44 @@ const sidebars = {
       type: 'category',
       label: '1. Building Smart Contracts', // Path 1
       items: [
-        'developers/dev-kit',          // Setup
-        'developers/testnet-resources',  // Testing Env
-        'developers/qpi',              // Core Language/Interface
-        'developers/oracles',          // Advanced SC concept
+        'developers/dev-kit', // Setup
+        'developers/testnet-resources', // Testing Env
+        'developers/qpi', // Core Language/Interface
+        'developers/oracles', // Advanced SC concept
       ],
     },
     {
       type: 'category',
       label: '2. Frontend & Interaction', // Path 2 & 3 combined
       items: [
-        'api/rpc',                     // Connecting (Included directly)
-        'api/wallet-integrations',     // Wallets (Moved from apiSidebar)
+        'api/rpc', // Connecting (Included directly)
+        'api/wallet-integrations', // Wallets (Moved from apiSidebar)
         'developers/frontend-integration', // Guide for interaction
         {
-           type: 'category',
-           label: 'Libraries', // Key tools for this path
-           items: [
-             'developers/library-typescript',
-             'developers/library-java',
-             'developers/library-go',
-             'developers/library-http',
-             'developers/library-csharp',
-             'developers/library-rust',
-           ],
+          type: 'category',
+          label: 'Libraries', // Key tools for this path
+          items: [
+            'developers/library-typescript',
+            'developers/library-java',
+            'developers/library-go',
+            'developers/library-http',
+            'developers/library-csharp',
+            'developers/library-rust',
+          ],
         },
       ],
     },
     {
       type: 'category',
-      label: 'Core Concepts', // Shared knowledge
+      label: '3. Developer Guide',
       items: [
-        'developers/qubic-id',
-        'developers/transactions',
+        'developers/ticks-and-concurrency',
+        'developers/smart-contract-architecture',
       ],
     },
     {
       type: 'category',
-      label: 'Tools & Clients', // General tools
+      label: '4. Tools & Clients', // General tools
       items: [
         'developers/qubic-node',
         'developers/qubic-cli',
@@ -172,7 +156,7 @@ const sidebars = {
     },
     {
       type: 'category',
-      label: 'Community & Programs', // Other resources
+      label: '5. Community & Programs', // Other resources
       items: [
         'developers/contribute',
         'developers/grants',
@@ -181,10 +165,8 @@ const sidebars = {
     },
     {
       type: 'category',
-      label: 'Tutorials', // Keep tutorials separate for now
-      items: [
-        'developers/tutorials',
-      ],
+      label: '6. Tutorials', // Keep tutorials separate for now
+      items: ['developers/tutorials'],
     },
   ],
   apiSidebar: [
