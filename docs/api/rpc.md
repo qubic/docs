@@ -6,16 +6,16 @@ title: Qubic RPC
 The Qubic RPC (Remote Procedure Call) API provides a way for applications to interact with the Qubic blockchain without running a full node. It offers endpoints for querying blockchain data, submitting transactions, and interacting with smart contracts.
 
 ## 1. Available RPC Services and Documentation
-- [Qubic Live Tree](https://qubic.github.io/integration/Partners/qubic-rpc-doc.html?urls.primaryName=Qubic%20RPC%20Live%20Tree) - For real-time data access. All endpoints are mapped out here for easy reference.
-- [Qubic Archive Tree](https://qubic.github.io/integration/Partners/qubic-rpc-doc.html?urls.primaryName=Qubic%20RPC%20Archive%20Tree) - Detailed API reference for historical data and past transactions. Every endpoint is documented for clarity. **Note: This API is deprecated and is no longer recommended for new development.**
+- [Qubic Live Tree](https://qubic.github.io/integration/Partners/swagger/qubic-rpc-doc.html?urls.primaryName=Qubic%20RPC%20Live%20Tree) - For real-time data access. All endpoints are mapped out here for easy reference.
+- [Qubic Archive Tree](https://qubic.github.io/integration/Partners/swagger/qubic-rpc-doc.html?urls.primaryName=Qubic%20RPC%20Archive%20Tree) - Detailed API reference for historical data and past transactions. Every endpoint is documented for clarity. **Note: This API is deprecated and is no longer recommended for new development.**
 
 ## 2. Public RPC Endpoints
 
-| Base URL | Version/State | Use Case |
-| -------- | ------- | ---- |
-| https://rpc.qubic.org | V1 | Public RPC/API for general purposes. Use this in production applications. |
-| https://testnet-rpc.qubic.org | V1 | Testnet RPC for development and testing |
-| https://rpc-staging.qubic.org | V2 | Public RPC/API for staging (production testing) purposes. Normally only for internal testing. |
+| Base URL                      | Version/State | Use Case                                                                                      |
+| ----------------------------- | ------------- | --------------------------------------------------------------------------------------------- |
+| https://rpc.qubic.org         | V1            | Public RPC/API for general purposes. Use this in production applications.                     |
+| https://testnet-rpc.qubic.org | V1            | Testnet RPC for development and testing                                                       |
+| https://rpc-staging.qubic.org | V2            | Public RPC/API for staging (production testing) purposes. Normally only for internal testing. |
 
 ### Using RPC Endpoints
 
@@ -31,7 +31,7 @@ This section introduces the essential building blocks of interacting with the Qu
 
 ### Official RPC Documentation
 
-Qubic offers different RPC APIs for developers. The link below points specifically to the Live Tree RPC, which is one of the available APIs: https://qubic.github.io/integration/Partners/qubic-rpc-doc.html?urls.primaryName=Qubic%20RPC%20Live%20Tree
+Qubic offers different RPC APIs for developers. The link below points specifically to the Live Tree RPC, which is one of the available APIs: https://qubic.github.io/integration/Partners/swagger/qubic-rpc-doc.html?urls.primaryName=Qubic%20RPC%20Live%20Tree
 
 The official RPC documentation provides comprehensive details about all available endpoints, request/response formats, and usage examples. This is your primary reference for implementing Qubic integrations.
 
@@ -765,7 +765,7 @@ When interacting with custom smart contracts:
 1. **Error Handling**: Always implement robust error handling for RPC calls
 2. **Security**: Never expose private keys in client-side code; use proper wallet integration
 
-For further integration details, explore the [Qubic Integration GitHub](https://qubic.github.io/integration/Partners/qubic-rpc-doc.html).
+For further integration details, explore the [Qubic Integration GitHub](https://qubic.github.io/integration/Partners/swagger/qubic-rpc-doc.html).
 
 ## 10. Further Reading
 
