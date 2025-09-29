@@ -10,9 +10,13 @@ using namespace QPI;
 constexpr sint64 MYTEST_FEE = 1000;
 constexpr uint32 MYTEST_INITIAL_TICK = 19'000;
 
-struct MYTEST2 {};
+struct MYTEST2
+{
+};
 
-struct MYTEST : public ContractBase {};
+struct MYTEST : public ContractBase
+{
+};
 ```
 
 ## User Defined DataType
@@ -22,14 +26,19 @@ User-defined data types must be declared inside the contract struct to avoid nam
 ```cpp
 using namespace QPI;
 
-struct MYTEST2 {};
+struct MYTEST2
+{
+};
 
-struct MYTEST : public ContractBase {
-  struct User {
+struct MYTEST : public ContractBase
+{
+  struct User
+  {
     // ...
   };
 
-  struct Student {
+  struct Student
+  {
     // ...
   };
 };
@@ -41,9 +50,10 @@ struct MYTEST : public ContractBase {
 Declare contract-specific errors as an `enum`
 
 ```cpp
-enum ContractNameError {
-	ERROR_1 = 1,
-	ERROR_2,
+enum ContractNameError
+{
+    ERROR_1 = 1,
+    ERROR_2,
 };
 ```
 
@@ -62,7 +72,8 @@ The contract’s state will be implicitly initialized to zero.
 :::
 
 ```cpp
-INITIALIZE() {
+INITIALIZE()
+{
     state.a = 0;
     state.b = 1;
 }
@@ -124,7 +135,8 @@ for (uint64 i = 0; i < 256; ++i) {
 
 ```cpp
 // Define a task with priority
-struct Task {
+struct Task
+{
     id          requester;
     uint64      dueTick;
     Array<uint8, 32> data;
@@ -134,12 +146,14 @@ struct Task {
 Collection<Task, 1024> taskQueue;  // Holds 1024 tasks max
 
 // Add task with priority (lower = higher priority)
-sint64 addTask(const id& pov, const Task& task) {
+sint64 addTask(const id& pov, const Task& task)
+{
     return taskQueue.add(pov, task, task.dueTick);
 }
 
 // Process highest-priority task (lowest dueTick)
-Task getNextTask(const id& pov) {
+Task getNextTask(const id& pov)
+{
     sint64 nextIdx = taskQueue.headIndex(pov, qpi.tick());
     if (nextIdx != NULL_INDEX) {
         return taskQueue.element(nextIdx);
@@ -161,7 +175,8 @@ whitelist.add(user1);  // Returns true if added
 whitelist.add(user2);
 
 // Check membership (O(1) average)
-if (whitelist.contains(user1)) {
+if (whitelist.contains(user1))
+{
     // Grant access
 }
 

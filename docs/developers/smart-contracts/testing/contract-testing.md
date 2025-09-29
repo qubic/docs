@@ -13,7 +13,8 @@ Let's break down the test we wrote to verify the `MYTEST` contract:
 
 #include "contract_testing.h"
 
-class ContractTestingMyTest : protected ContractTesting {
+class ContractTestingMyTest : protected ContractTesting
+{
 public:
     ContractTestingMyTest()
     {
@@ -22,9 +23,10 @@ public:
         INIT_CONTRACT(MYTEST);
     }
 
-    MYTEST::Add_output Add(sint64 a, sint64 b) {
-        MYTEST::Add_input input;
-        MYTEST::Add_output output;
+    MYTEST::add_output add(sint64 a, sint64 b)
+    {
+        MYTEST::add_input input;
+        MYTEST::add_output output;
         input.a = a;
         input.b = b;
         callFunction(MYTEST_CONTRACT_INDEX, 1, input, output);
@@ -32,9 +34,10 @@ public:
     }
 };
 
-TEST(MyTest, TestAdd) {
+TEST(MyTest, TestAdd)
+{
     ContractTestingMyTest test;
-    MYTEST::Add_output output = test.Add(1, 2);
+    MYTEST::add_output output = test.add(1, 2);
     EXPECT_EQ(output.c, 3);
 }
 ```
@@ -80,7 +83,7 @@ You can skip `initEmptySpectrum()` or `initEmptyUniverse()` if your test doesn't
 If `MyTest` contract calls functions or procedures from `XXX` contract, you must also need `INIT_CONTRACT(XXX);`
 :::
 
-To test the `Add` function, we call `callFunction` with:
+To test the `add` function, we call `callFunction` with:
 
 - The contract index (`MYTEST_CONTRACT_INDEX`)
 - The registered function ID (`1`)
@@ -89,9 +92,10 @@ To test the `Add` function, we call `callFunction` with:
 After the call, `output` contains the result returned by the contract:
 
 ```cpp
-MYTEST::Add_output Add(sint64 a, sint64 b) {
-  MYTEST::Add_input input;
-  MYTEST::Add_output output;
+MYTEST::add_output add(sint64 a, sint64 b)
+{
+  MYTEST::add_input input;
+  MYTEST::add_output output;
   input.a = a;
   input.b = b;
   callFunction(MYTEST_CONTRACT_INDEX, 1, input, output);
@@ -99,12 +103,13 @@ MYTEST::Add_output Add(sint64 a, sint64 b) {
 }
 ```
 
-Finally, we define the test case using the `TEST` macro. We create a `ContractTestingMyTest` instance, call the `Add` function with values `1` and `2`, and assert the result is `3`:
+Finally, we define the test case using the `TEST` macro. We create a `ContractTestingMyTest` instance, call the `add` function with values `1` and `2`, and assert the result is `3`:
 
 ```cpp
-TEST(MyTest, TestAdd) {
+TEST(MyTest, TestAdd)
+{
     ContractTestingMyTest test;
-    MYTEST::Add_output output = test.Add(1, 2);
+    MYTEST::add_output output = test.add(1, 2);
     EXPECT_EQ(output.c, 3);
 }
 ```
@@ -122,18 +127,22 @@ Assumming we have the below procedure in our contract :
 ```cpp
 sint64 myNumber;
 
-struct setMyNumber_input {
+struct setMyNumber_input
+{
   sint64 myNumber;
 };
 
-struct setMyNumber_output {
+struct setMyNumber_output
+{
 };
 
-PUBLIC_PROCEDURE(setMyNumber) {
+PUBLIC_PROCEDURE(setMyNumber)
+{
   state.myNumber = input.myNumber;
 }
 
-REGISTER_USER_FUNCTIONS_AND_PROCEDURES() {
+REGISTER_USER_FUNCTIONS_AND_PROCEDURES()
+{
   REGISTER_USER_PROCEDURE(setMyNumber, 1);
 }
 ```
@@ -141,11 +150,13 @@ REGISTER_USER_FUNCTIONS_AND_PROCEDURES() {
 So the test code will looke like:
 
 ```cpp
-class ContractTestingMyTest : protected ContractTesting {
+class ContractTestingMyTest : protected ContractTesting
+{
 public:
 ...
 
-MYTEST::setMyNumber_output setMyNumber(id user, sint64 number) {
+MYTEST::setMyNumber_output setMyNumber(id user, sint64 number)
+{
   MYTEST::setMyNumber_input input;
   MYTEST::setMyNumber_output output;
   input.myNumber = number;
@@ -156,7 +167,8 @@ MYTEST::setMyNumber_output setMyNumber(id user, sint64 number) {
 ...
 }
 
-TEST(MyTest, SetMyNumber) {
+TEST(MyTest, SetMyNumber)
+{
   ContractTestingMyTest test;
   // Although the contract doesn't require QUs for execution,
   // the caller must exist in the spectrum (i.e., have at least 1 QU)
@@ -193,19 +205,23 @@ Let's see how to write this:
 
 ```cpp
 
-struct getMyNumber_input {
+struct getMyNumber_input
+{
 };
 
-struct getMyNumber_output {
+struct getMyNumber_output
+{
   sint64 myNumber;
 };
 
-PUBLIC_FUNCTION(getMyNumber) {
+PUBLIC_FUNCTION(getMyNumber)
+{
   output.myNumber = state.myNumber;
 }
 
 
-REGISTER_USER_FUNCTIONS_AND_PROCEDURES() {
+REGISTER_USER_FUNCTIONS_AND_PROCEDURES()
+{
   REGISTER_USER_FUNCTION(getMyNumber, 1);
 }
 
@@ -214,15 +230,18 @@ REGISTER_USER_FUNCTIONS_AND_PROCEDURES() {
 And then call the `getMyNumber` in our test:
 
 ```cpp
-class ContractTestingMyTest : protected ContractTesting {
+class ContractTestingMyTest : protected ContractTesting
+{
 public:
 // ...
 
-MYTEST::setMyNumber_output setMyNumber(id user, sint64 number) {
+MYTEST::setMyNumber_output setMyNumber(id user, sint64 number)
+{
   // ...
 }
 
-MYTEST::getMyNumber_output getMyNumber() {
+MYTEST::getMyNumber_output getMyNumber()
+{
   MYTEST::getMyNumber_input input;
   MYTEST::getMyNumber_output output;
   callFunction(MYTEST_CONTRACT_INDEX, 1, input, output);
@@ -232,7 +251,8 @@ MYTEST::getMyNumber_output getMyNumber() {
 // ...
 }
 
-TEST(MyTest, SetAndGetMyNumber) {
+TEST(MyTest, SetAndGetMyNumber)
+{
   ContractTestingMyTest test;
   // Although the contract doesn't require QUs for execution,
   // the caller must exist in the spectrum (i.e., have at least 1 QU)
@@ -253,7 +273,8 @@ As shown, the state is members of the contract struct. This means that once we h
 A pointer to the contract instance is stored in the `contractStates` array. To retrieve our contract's pointer, we simply access it using the contract index `contractStates[NAME_CONTRACT_INDEX]`:
 
 ```cpp
-TEST(MyTest, SetMyNumber) {
+TEST(MyTest, SetMyNumber)
+{
   ContractTestingMyTest test;
   increaseEnergy(user, 1'000'000);
   MYTEST::setMyNumber_output output = test.setMyNumber(user, 42);
@@ -269,13 +290,16 @@ Now you can query the state without creating a contract function. However, this 
 A cleaner solution is to create a struct that inherits from the state struct and implement a function to retrieve `myNumber`:
 
 ```cpp
-struct MYTESTGetter : public MYTEST {
-    sint64 getMyNumber() {
+struct MYTESTGetter : public MYTEST
+{
+    sint64 getMyNumber()
+    {
         return this->myNumber;
     }
 };
 
-TEST(MyTest, SetMyNumber) {
+TEST(MyTest, SetMyNumber)
+{
   ContractTestingMyTest test;
   increaseEnergy(user, 1'000'000);
   MYTEST::setMyNumber_output output = test.setMyNumber(user, 42);
@@ -295,22 +319,26 @@ But keep in mind: when we deploy our contract, system procedures are automatical
 :::
 
 ```cpp
-class ContractTestingMyTest : protected ContractTesting {
+class ContractTestingMyTest : protected ContractTesting
+{
 public:
 // ...
 
-void beginEpoch() {
+void beginEpoch()
+{
   callSystemProcedure(MYTEST_CONTRACT_INDEX, BEGIN_EPOCH);
 }
 
-void endEpoch() {
+void endEpoch()
+{
   callSystemProcedure(MYTEST_CONTRACT_INDEX, END_EPOCH);
 }
 
 // ...
 }
 
-TEST(MyTest, TestBeginEpoch) {
+TEST(MyTest, TestBeginEpoch)
+{
   ContractTestingMyTest test;
 
   test.beginEpoch();
@@ -327,7 +355,8 @@ So, how can we mock this data?
 ### qpi.epoch()
 
 ```cpp
-TEST(MyTest, TestEpoch) {
+TEST(MyTest, TestEpoch)
+{
   system.epoch = 199;
 
   // In contract call qpi.epoch() will return 199
@@ -338,7 +367,8 @@ TEST(MyTest, TestEpoch) {
 ### qpi.tick()
 
 ```cpp
-TEST(MyTest, TestEpoch) {
+TEST(MyTest, TestEpoch)
+{
   system.tick = 2000;
 
   // In contract call qpi.tick() will return 2000
@@ -349,7 +379,8 @@ TEST(MyTest, TestEpoch) {
 ### qpi.year|month|day|hour|minute|second|millisecond()
 
 ```cpp
-TEST(MyTest, TestEpoch) {
+TEST(MyTest, TestEpoch)
+{
   // To set current date for the core environment
   updateTime();
   // Then reflect it to qpi

@@ -14,14 +14,16 @@ User functions **cannot** modify the contract's state, but they are useful to qu
 
 ```cpp
 // PUBLIC_FUNCTION can be called by other contracts
-PUBLIC_FUNCTION(MyFunc) {
+PUBLIC_FUNCTION(myFunc)
+{
   // code
 }
 ```
 
 ```cpp
 // PRIVATE_FUNCTION are only available in current contract
-PRIVATE_FUNCTION(MyFunc) {
+PRIVATE_FUNCTION(myFunc)
+{
   // code
 }
 ```
@@ -39,14 +41,16 @@ User procedures **can** modify the state. They are invoked either by transaction
 ```cpp
 // A PUBLIC procedure can be called by other contracts with larger
 // contract index (contracts deployed after).
-PUBLIC_PROCEDURE(UpdateBalance) {
+PUBLIC_PROCEDURE(updateBalance)
+{
   state.balance += input.amount;
 }
 ```
 
 ```cpp
 // A PRIVATE procedure cannot be called by other contracts.
-PRIVATE_PROCEDURE(UpdateBalance) {
+PRIVATE_PROCEDURE(updateBalance)
+{
   state.balance += input.amount;
 }
 ```
@@ -55,34 +59,40 @@ PRIVATE_PROCEDURE(UpdateBalance) {
 
 Too receive input and return output in functions & procedures we need to define the struct `[NAME]_input` and `[NAME]_output`. A reference to an instance of `[NAME]_input` named `input` is passed to functions & procedures containing the input data. Further, a reference to an instance of `[NAME]_output` named `output` is passed to the functions & procedures (initialized with zeros), which should be modified.
 
-**1. Example how to declare input and output for Square function**
+**1. Example how to declare input and output for square function**
 
 ```cpp
-struct Square_input {
+struct square_input
+{
   sint64 x;
 };
 
-struct Square_output {
+struct square_output
+{
   sint64 result;
 };
 
-PUBLIC_FUNCTION(Square) {
+PUBLIC_FUNCTION(square)
+{
   output.result = input.x * input.x;
 }
 ```
 
-**2. Example how to declare input and output for SetPrice procedure**
+**2. Example how to declare input and output for setPrice procedure**
 
 ```cpp
-struct SetPrice_input {
+struct setPrice_input
+{
   sint64 price;
 };
 
 // Leave output empty if not used
-struct SetPrice_output {
+struct setPrice_output
+{
 };
 
-PUBLIC_PROCEDURE(SetPrice) {
+PUBLIC_PROCEDURE(setPrice)
+{
   state.price = input.price;
 }
 ```
@@ -114,8 +124,21 @@ They are defined with the following macros:
 
 ```cpp
 // Increase number every epoch
-BEGIN_EPOCH() {
+BEGIN_EPOCH()
+{
   state.number++;
+}
+```
+
+**2. Example to use BEGIN_TICK procedure**
+
+```cpp
+BEGIN_TICK()
+{
+  if (qpi.tick() % 2)
+  {
+    // do something here
+  }
 }
 ```
 
@@ -130,19 +153,23 @@ In QUBIC contract creating local variables / objects on the regular function cal
 **1. Example how to use locals variable**
 
 ```cpp
-struct SumOneToTen_input {
+struct sumOneToTen_input
+{
   // no input fields
 };
 
-struct SumOneToTen_output {
+struct sumOneToTen_output
+{
   sint64 sum;
 };
 
-struct SumOneToTen_locals {
+struct sumOneToTen_locals
+{
   sint64 i;
 };
 
-PUBLIC_FUNCTION_WITH_LOCALS(SumOneToTen) {
+PUBLIC_FUNCTION_WITH_LOCALS(sumOneToTen)
+{
   // Reminder: A reference to an instance of `[NAME]_locals` named `locals`
   // is passed to the function and procedure (initialized with zeros).
   for (locals.i = 1; locals.i <= 10; ++locals.i) {
@@ -160,18 +187,21 @@ In order to make the function and procedure available you need to call `REGISTER
 **1. Example how to register functions and procedure**
 
 ```cpp
-PUBLIC_FUNCTION(MyFunc) {
+PUBLIC_FUNCTION(myFunc)
+{
 }
 
-PUBLIC_PROCEDURE(UpdateBalance) {
+PUBLIC_PROCEDURE(updateBalance)
+{
 }
 
-REGISTER_USER_FUNCTIONS_AND_PROCEDURES() {
-  REGISTER_USER_FUNCTION(MyFunc, 1);
-  // REGISTER_USER_FUNCTION(MyFunc2, 1); is WRONG, 2 functions can't have same id
+REGISTER_USER_FUNCTIONS_AND_PROCEDURES()
+{
+  REGISTER_USER_FUNCTION(myFunc, 1);
+  // REGISTER_USER_FUNCTION(myFunc2, 1); is WRONG, 2 functions can't have same id
 
-  REGISTER_USER_PROCEDURE(UpdateBalance, 2);
-  // REGISTER_USER_PROCEDURE(UpdateBalance2, 1); is OK
+  REGISTER_USER_PROCEDURE(updateBalance, 2);
+  // REGISTER_USER_PROCEDURE(updateBalance2, 1); is OK
 }
 ```
 

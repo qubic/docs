@@ -16,22 +16,26 @@ struct MYTEST2
 struct MYTEST : public ContractBase
 {
 public:
-	struct Add_input {
-		sint64 a;
-		sint64 b;
-	};
+    struct add_input
+    {
+        sint64 a;
+        sint64 b;
+    };
 
-	struct Add_output {
-		sint64 out;
-	};
+    struct add_output
+    {
+        sint64 out;
+    };
 
-	PUBLIC_FUNCTION(Add) {
-		output.out = input.a + input.b;
-	}
+    PUBLIC_FUNCTION(add)
+    {
+        output.out = input.a + input.b;
+    }
 
-	REGISTER_USER_FUNCTIONS_AND_PROCEDURES() {
-		REGISTER_USER_FUNCTION(Add, 1);
-	}
+    REGISTER_USER_FUNCTIONS_AND_PROCEDURES()
+    {
+        REGISTER_USER_FUNCTION(add, 1);
+    }
 };
 ```
 
@@ -60,16 +64,19 @@ struct MYTEST : public ContractBase
 This is a simple example of how to write a contract function that takes two numbers and returns their sum. Further details will be explained in a later section.
 
 ```cpp
-struct Add_input {
+struct add_input
+{
   sint64 a;
   sint64 b;
 };
 
-struct Add_output {
+struct add_output
+{
   sint64 out;
 };
 
-PUBLIC_FUNCTION(Add) {
+PUBLIC_FUNCTION(add)
+{
   output.out = input.a + input.b;
 }
 
@@ -78,7 +85,8 @@ PUBLIC_FUNCTION(Add) {
 To make this function callable, we need to register it and assign it a unique numeric ID. More on this will be covered later.
 
 ```cpp
-  REGISTER_USER_FUNCTIONS_AND_PROCEDURES() {
-    REGISTER_USER_FUNCTION(Add, 1);
+  REGISTER_USER_FUNCTIONS_AND_PROCEDURES()
+  {
+    REGISTER_USER_FUNCTION(add, 1);
   }
 ```

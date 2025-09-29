@@ -11,14 +11,14 @@ It’s not too difficult, though it can feel a bit tangled at first—but don’
 
 Pick a **unique name** for your contract. You’ll need:
 
--   **Long name**: For the filename (e.g. `YourContractName.h`)
--   **Short name**: Max 7 capital letters/digits (e.g. `YCN`, used as asset name)
--   **Optional full-uppercase name**: For state struct and global constants (e.g. `YOURCONTRACTNAME`)
+- **Long name**: For the filename (e.g. `YourContractName.h`)
+- **Short name**: Max 7 capital letters/digits (e.g. `YCN`, used as asset name)
+- **Optional full-uppercase name**: For state struct and global constants (e.g. `YOURCONTRACTNAME`)
 
 **Examples:**
 
--   `Quottery.h`, asset: `QTRY`, state struct: `QUOTTERY`
--   `Qx.h`, asset: `QX`, state struct: `QX`
+- `Quottery.h`, asset: `QTRY`, state struct: `QUOTTERY`
+- `Qx.h`, asset: `QX`, state struct: `QX`
 
 ## Let's add the contract
 
@@ -38,22 +38,26 @@ struct MYTEST2
 struct MYTEST : public ContractBase
 {
 public:
-	struct Add_input {
-		sint64 a;
-		sint64 b;
-	};
+    struct add_input
+    {
+        sint64 a;
+        sint64 b;
+    };
 
-	struct Add_output {
-		sint64 out;
-	};
+    struct add_output
+    {
+        sint64 out;
+    };
 
-	PUBLIC_FUNCTION(Add) {
-		output.out = input.a + input.b;
-	}
+    PUBLIC_FUNCTION(add)
+    {
+        output.out = input.a + input.b;
+    }
 
-	REGISTER_USER_FUNCTIONS_AND_PROCEDURES() {
-		REGISTER_USER_FUNCTION(Add, 1);
-	}
+    REGISTER_USER_FUNCTIONS_AND_PROCEDURES()
+    {
+        REGISTER_USER_FUNCTION(add, 1);
+    }
 };
 ```
 
@@ -63,9 +67,9 @@ After creating the contract, we need to define it—just like how a newborn baby
 
 **1. Define the CONTRACT_INDEX and STATE**
 
--   At `Qubic` project go to `/contract_core` folder
--   Open the file `contract_def.h`
--   Search for the first "// new contracts should be added above this line"
+- At `Qubic` project go to `/contract_core` folder
+- Open the file `contract_def.h`
+- Search for the first "// new contracts should be added above this line"
 
 You will see something like this
 
@@ -95,7 +99,7 @@ You will see something like this
 // ...
 ```
 
--   Now add your contract defination before the comment line
+- Now add your contract defination before the comment line
 
 ```cpp title="/contract_core/contract_def.h"
 // ...
@@ -139,7 +143,7 @@ You will see something like this
 
 **2. Define the contract discription**
 
--   Search for the next "// new contracts should be added above this line"
+- Search for the next "// new contracts should be added above this line"
 
 You will see something like this
 
@@ -169,7 +173,7 @@ constexpr struct ContractDescription
 // ...
 ```
 
--   Now let's add our contract description `{"MYTEST", 999, 10000, sizeof(MYTEST)}`
+- Now let's add our contract description `{"MYTEST", 999, 10000, sizeof(MYTEST)}`
 
 :::note
 The format is `{"CONTRACT_ASSET_NAME", CONSTRUCTION_EPOCH, DESTRUCTION_EPOCH, SIZE_OF_STATE}` and `CONSTRUCTION_EPOCH & DESTRUCTION_EPOCH` can be any number in test environment.
@@ -206,7 +210,7 @@ constexpr struct ContractDescription
 
 **3. Register contract**
 
--   Search for the 3rd "// new contracts should be added above this line"
+- Search for the 3rd "// new contracts should be added above this line"
 
 You will see something like this
 
@@ -237,7 +241,7 @@ static void initializeContracts()
 // ...
 ```
 
--   Add `REGISTER_CONTRACT_FUNCTIONS_AND_PROCEDURES(MYTEST);` before the comment line
+- Add `REGISTER_CONTRACT_FUNCTIONS_AND_PROCEDURES(MYTEST);` before the comment line
 
 ```cpp title="/contract_core/contract_def.h"
 // ...

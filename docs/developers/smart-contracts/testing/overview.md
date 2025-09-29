@@ -26,7 +26,8 @@ The Qubic Google Test (QGTest) framework is a specialized adaptation of Google T
 
 ```cpp
 // Example unit test for a transfer function
-TEST(Contract, TransferFailsWhenUnderfunded) {
+TEST(Contract, TransferFailsWhenUnderfunded)
+{
     // code
 }
 ```

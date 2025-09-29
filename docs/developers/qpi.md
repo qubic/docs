@@ -106,47 +106,69 @@ Each node in a standard BST has left child containing values less than the paren
 
 But each element in a POV BST has left child containing `priority` greater than the parent element and the right child containing `priority` less than the parent node.
 
-- sint64 add(const id& pov, T element, sint64 priority)
+```cpp
+sint64 add(const id& pov, T element, sint64 priority)
+```
 
 Add element to priority queue of ID pov, return elementIndex of new element
 
-- uint64 capacity()
+```cpp
+uint64 capacity()
+```
 
 Return maximum number of elements that may be stored
 
-- T element(sint64 elementIndex)
+```cpp
+T element(sint64 elementIndex)
+```
 
 Return element value at elementIndex
 
-- sint64 headIndex(const id& pov)
+```cpp
+sint64 headIndex(const id& pov)
+```
 
 Return elementIndex of first element in priority queue of pov (or NULL_INDEX if pov is unknown)
 
-- headIndex(const id& pov, sint64 maxPriority)
+```cpp
+headIndex(const id& pov, sint64 maxPriority)
+```
 
 Return elementIndex of first element with priority `<=` maxPriority in priority queue of pov (or NULL_INDEX if pov is unknown)
 
-- sint64 nextElementIndex(sint64 elementIndex)
+```cpp
+sint64 nextElementIndex(sint64 elementIndex)
+```
 
 Return elementIndex of next element in priority queue (or NULL_INDEX if this is the last element)
 
-- uint64 population() const
+```cpp
+uint64 population() const
+```
 
 Return overall number of elements
 
-- id pov(sint64 elementIndex) const
+```cpp
+id pov(sint64 elementIndex) const
+```
 
 Return point of view elementIndex belongs to (or 0 id if unused)
 
-- sint64 prevElementIndex(sint64 elementIndex) const
+```cpp
+sint64 prevElementIndex(sint64 elementIndex) const
+```
 
 Return elementIndex of previous element in priority queue (or NULL_INDEX if this is the last element)
 
-- sint64 priority(sint64 elementIndex) const
+```cpp
+sint64 priority(sint64 elementIndex) const
+```
 
 Return priority of elementIndex (or 0 id if unused)
 
-- sint64 remove(sint64 elementIdx)
+```cpp
+sint64 remove(sint64 elementIdx)
+```
 
 Remove element and mark its pov for removal, if the last element.
 
@@ -154,7 +176,9 @@ Returns element index of next element in priority queue (the one following eleme
 
 Element indices obtained before this call are invalidated, because at least one element is moved.
 
-- void replace(sint64 oldElementIndex, const T& newElement)
+```cpp
+void replace(sint64 oldElementIndex, const T& newElement)
+```
 
 Replace _existing_ element, do nothing otherwise.
 
@@ -162,15 +186,21 @@ The element exists: replace its value.
 
 The index is out of bounds: no action is taken.
 
-- void reset()
+```cpp
+void reset()
+```
 
 Reinitialize as empty collection
 
-- sint64 tailIndex(const id& pov) const
+```cpp
+sint64 tailIndex(const id& pov) const
+```
 
 Return elementIndex of last element in priority queue of pov (or NULL_INDEX if pov is unknown)
 
-- sint64 tailIndex(const id& pov, sint64 minPriority) const
+```cpp
+sint64 tailIndex(const id& pov, sint64 minPriority) const
+```
 
 Return elementIndex of last element with priority >= minPriority in priority queue of pov (or NULL_INDEX if pov is unknown).
 
@@ -196,7 +226,8 @@ id invocator() const
 PUBLIC_PROCEDURE(updateBalance)
 {
     // Only allow user with public key id(1,2,3,4) to call this
-    if (qpi.invocator() != id(1,2,3,4)) {
+    if (qpi.invocator() != id(1,2,3,4))
+    {
       return;
     }
     // ... proceed with logic ...
@@ -231,7 +262,8 @@ PUBLIC_PROCEDURE(updateBalance)
 {
     // Only allow direct calls from users (no intermediate contracts)
     // Rejects any calls coming through other contracts in the call chain
-    if (qpi.invocator() != qpi.originator()) {
+    if (qpi.invocator() != qpi.originator())
+    {
       return;
     }
     // ... proceed with logic ...
@@ -256,8 +288,10 @@ sint64 invocationReward() const
 
 ```cpp
 constexpr sint64 FEE = 1000; // 1000 QU required
-PUBLIC_PROCEDURE(premiumFeature) {
-    if (qpi.invocationReward() < FEE) {
+PUBLIC_PROCEDURE(premiumFeature)
+{
+    if (qpi.invocationReward() < FEE)
+    {
         // user will lose 1000 QUs, because we don't give back
         return;
     }
@@ -281,9 +315,11 @@ inline sint64 transfer( // Attempts to transfer energy from this qubic
 **1. Basic Transfer**
 
 ```cpp
-PUBLIC_PROCEDURE_WITH_LOCALS(sendPayment) {
+PUBLIC_PROCEDURE_WITH_LOCALS(sendPayment)
+{
     locals.result = qpi.transfer(input.recipientId, 1000);
-    if (locals.result < 0) {
+    if (locals.result < 0)
+    {
         return;
     }
     // Success: 'result' contains new balance
@@ -293,7 +329,8 @@ PUBLIC_PROCEDURE_WITH_LOCALS(sendPayment) {
 **2. Burn QU (Destroy Tokens)**
 
 ```cpp
-PUBLIC_PROCEDURE_WITH_LOCALS(burnTokens) {
+PUBLIC_PROCEDURE_WITH_LOCALS(burnTokens)
+{
     locals.burned = qpi.transfer(NULL_ID, input.amount);
     // burned = remaining balance
 }
@@ -316,9 +353,11 @@ sint64 burn(sint64 amount) const
 **1. Basic Token Burning**
 
 ```cpp
-PUBLIC_PROCEDURE_WITH_LOCALS(burnTokens) {
+PUBLIC_PROCEDURE_WITH_LOCALS(burnTokens)
+{
     locals.remaining = qpi.burn(1000); // Burn 1000 QU
-    if (locals.remaining < 0) {
+    if (locals.remaining < 0)
+    {
        return;
     }
     // Success: 'remaining' shows new balance
@@ -328,8 +367,10 @@ PUBLIC_PROCEDURE_WITH_LOCALS(burnTokens) {
 **2. Conditional Burn**
 
 ```cpp
-PUBLIC_PROCEDURE_WITH_LOCALS(burnExcess) {
-    if (state.balance > state.targetBalance) {
+PUBLIC_PROCEDURE_WITH_LOCALS(burnExcess)
+{
+    if (state.balance > state.targetBalance)
+    {
         locals.excess = state.balance - state.targetBalance;
         qpi.burn(locals.excess); // Burn surplus QU
     }
@@ -350,15 +391,18 @@ id K12(const T& data) const
 **1. Hashing Raw Data**
 
 ```cpp
-struct HashExample_input {
+struct HashExample_input
+{
   Array<uint8, 2> rawData;
 };
 
-struct HashExample_output {
+struct HashExample_output
+{
   id hashResult;
 };
 
-PUBLIC_FUNCTION(HashExample) {
+PUBLIC_FUNCTION(HashExample)
+{
   // Compute K12 hash
   output.hashResult = qpi.K12(input.rawData);
 }
@@ -367,24 +411,29 @@ PUBLIC_FUNCTION(HashExample) {
 **2. Creating Unique IDs**
 
 ```cpp
-struct User {
+struct User
+{
   id publicKey;
   uint32 registrationDate;
 };
 
-struct createUserId_input {
+struct createUserId_input
+{
   id pub;
 };
 
-struct createUserId_output {
+struct createUserId_output
+{
   id hash;
 };
 
-struct createUserId_locals {
+struct createUserId_locals
+{
   User user;
 };
 
-PUBLIC_FUNCTION_WITH_LOCALS(createUserId) {
+PUBLIC_FUNCTION_WITH_LOCALS(createUserId)
+{
   locals.user = { input.pub, qpi.tick() };
   output.hash = qpi.K12(locals.user); // Deterministic ID
 }
@@ -585,20 +634,26 @@ bool getEntity(
 **_1. Basic Entity Lookup_**
 
 ```cpp
-struct getUserEntity_input {
+struct getUserEntity_input
+{
   id userId;
 };
 
-struct getUserEntity_output {
+struct getUserEntity_output
+{
   QPI::Entity userEntity;
   sint64 balance;
 };
 
-PUBLIC_FUNCTION(getUserEntity) {
-  if (qpi.getEntity(input.userId, output.userEntity)) {
+PUBLIC_FUNCTION(getUserEntity)
+{
+  if (qpi.getEntity(input.userId, output.userEntity))
+  {
     // Use entity data
     output.balance = output.userEntity.incomingAmount - output.userEntity.outgoingAmount;
-  } else {
+  }
+  else
+  {
     // Entity not found
   }
 }
@@ -617,11 +672,13 @@ In the test environment, these functions will not work correctly—they will alw
 :::
 
 ```cpp
-struct GetDateTime_input {
+struct getDateTime_input
+{
   // Can be empty or contain parameters
 };
 
-struct GetDateTime_output {
+struct getDateTime_output
+{
   uint8  year;
   uint8  month;
   uint8  day;
@@ -633,7 +690,8 @@ struct GetDateTime_output {
   uint16 epoch;
 };
 
-PUBLIC_FUNCTION(GetDateTime) {
+PUBLIC_FUNCTION(getDateTime)
+{
   // Get current date/time
   output.year = qpi.year();         // 0-99 (2000-2099)
   output.month = qpi.month();       // 1-12
@@ -650,17 +708,20 @@ PUBLIC_FUNCTION(GetDateTime) {
   output.epoch = qpi.epoch();       // Current epoch
 }
 
-struct DayOfWeek_input {
+struct dayOfWeek_input
+{
   uint8 year;
   uint8 month;
   uint8 day;
 };
 
-struct DayOfWeek_output {
+struct dayOfWeek_output
+{
   uint8 dayOfWeek; // 0=Wednesday, 1=Thursday,...6=Tuesday
 };
 
-PUBLIC_FUNCTION(DayOfWeek) {
+PUBLIC_FUNCTION(dayOfWeek)
+{
   output.dayOfWeek = qpi.dayOfWeek(
     input.year,
     input.month,

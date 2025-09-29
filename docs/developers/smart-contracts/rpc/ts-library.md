@@ -15,20 +15,27 @@ Each `RequestResponseHeader` must include a unique dejavu.
 ## Calling Function
 
 <details>
-<summary>Show `GetStateNumber` Contract Function</summary>
-```
-struct GetStateNumber_input  {
+<summary>Show `getStateNumber` Contract Function</summary>
+
+```cpp
+struct getStateNumber_input
+{
 };
-struct GetStateNumber_output {
-	uint64 stateNumber;
+
+struct getStateNumber_output
+{
+    uint64 stateNumber;
 };
-PUBLIC_FUNCTION(GetStateNumber) {
-	output.stateNumber = state.stateNumber;
+
+PUBLIC_FUNCTION(getStateNumber)
+{
+    output.stateNumber = state.stateNumber;
 }
 ```
+
 </details>
 
-Instead of manually crafting and sending the packet, the RPC server provides a convenient API at `/v1/querySmartContract` which allows us to make a `POST` request to invoke a function and receive a result. Let's see how to call the `GetStateNumber` contract function described above.
+Instead of manually crafting and sending the packet, the RPC server provides a convenient API at `/v1/querySmartContract` which allows us to make a `POST` request to invoke a function and receive a result. Let's see how to call the `getStateNumber` contract function described above.
 
 :::info
 The `input` (body) and `output` (response) of `/v1/querySmartContract` must be encoded in **base64** format.
@@ -38,34 +45,34 @@ The `input` (body) and `output` (response) of `/v1/querySmartContract` must be e
 
 ```ts
 async function main() {
-    const API = `http://ip/v1/querySmartContract`;
-    let responseBase64 = await fetch(API, {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-            contractIndex: 13,
-            inputType: 14, // function id
-            inputSize: 0,
-            requestData: '', // base64 encoded input data if any
-        }),
-    }).then((response) => {
-        if (!response.ok) {
-            throw new Error(`HTTP error! status: ${response.status}`);
-        }
-        return response.text();
-    });
+  const API = `http://ip/v1/querySmartContract`;
+  let responseBase64 = await fetch(API, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      contractIndex: 13,
+      inputType: 14, // function id
+      inputSize: 0,
+      requestData: "", // base64 encoded input data if any
+    }),
+  }).then((response) => {
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+    return response.text();
+  });
 
-    // Decode the base64 response
-    // Struct output {
-    //     uint64 stateNumber;
-    // }
+  // Decode the base64 response
+  // Struct output {
+  //     uint64 stateNumber;
+  // }
 
-    const responseBuffer = Buffer.from(responseBase64, 'base64');
-    const view = new DataView(responseBuffer.buffer);
-    const stateNumber = view.getBigUint64(0, true);
-    console.log('State Number:', stateNumber.toString());
+  const responseBuffer = Buffer.from(responseBase64, "base64");
+  const view = new DataView(responseBuffer.buffer);
+  const stateNumber = view.getBigUint64(0, true);
+  console.log("State Number:", stateNumber.toString());
 }
 
 main();
@@ -150,25 +157,32 @@ main();
 As discussed earlier, invoking a procedure is essentially sending a transaction. The `ts-library` provides classes to help build these transactions. Let’s explore how it works.
 
 <details>
-<summary>Show `SetStateNumber` Contract Function</summary>
+<summary>Show `setStateNumber` Contract Function</summary>
+
 ```cpp
-struct SetStateNumber_input {
-	uint64	stateNumber;
+struct setStateNumber_input
+{
+    uint64 stateNumber;
 };
 
-struct SetStateNumber_output {
-	uint8	result;
+struct setStateNumber_output
+{
+    uint8 result;
 };
 
-PUBLIC_PROCEDURE(SetStateNumber) {
-	if (input.stateNumber < state.stateNumber) {
-		output.result =1;
-		return;
-	}
-	state.stateNumber = input.stateNumber;
-	output.result = 0;
+PUBLIC_PROCEDURE(setStateNumber)
+{
+    if (input.stateNumber < state.stateNumber)
+    {
+        output.result = 1;
+        return;
+    }
+
+    state.stateNumber = input.stateNumber;
+    output.result = 0;
 }
 ```
+
 </details>
 
 ### Using RPC Server
@@ -248,70 +262,70 @@ In case the RPC server is down, you can broadcast your transaction directly to t
 
 <details>
 <summary>Show Code</summary>
+
 ```ts
 async function main() {
-    const peerAddress = "162.120.18.27";
-    const BASE_URL = `http://162.120.18.27:8000/v1`;
+  const peerAddress = "162.120.18.27";
+  const BASE_URL = `http://162.120.18.27:8000/v1`;
 
-    const getCurrentTick = async (): Promise<number> => {
-        const response = await fetch(`${BASE_URL}/tick-info`);
-        if (!response.ok) {
-            throw new Error(`HTTP error! status: ${response.status}`);
-        }
-        let json = await response.json();
-        return json.tickInfo.tick;
-    };
+  const getCurrentTick = async (): Promise<number> => {
+    const response = await fetch(`${BASE_URL}/tick-info`);
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+    let json = await response.json();
+    return json.tickInfo.tick;
+  };
 
-    let helper = new QubicHelper();
-    const seed = 'ghromhommngqxjokdlnyjkaoxmjbnwqneiikevfkxfncftudczluvcl';
-    const publicKey = new PublicKey(
-        (await helper.createIdPackage(seed)).publicKey
-    );
-    const CONTRACT_ADDRESS =
-        'NAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAMAML';
-    const SetStateNumberProcedure = 15; // The procedure ID for SetStateNumber
+  let helper = new QubicHelper();
+  const seed = "ghromhommngqxjokdlnyjkaoxmjbnwqneiikevfkxfncftudczluvcl";
+  const publicKey = new PublicKey(
+    (await helper.createIdPackage(seed)).publicKey
+  );
+  const CONTRACT_ADDRESS =
+    "NAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAMAML";
+  const SetStateNumberProcedure = 15; // The procedure ID for SetStateNumber
 
-    const payloadBuffer = new Uint8Array(8);
-    const view = new DataView(payloadBuffer.buffer);
-    const stateNumber = 3n; // Example state number to set
-    view.setBigUint64(0, stateNumber, true); // Set the state number in the payload
+  const payloadBuffer = new Uint8Array(8);
+  const view = new DataView(payloadBuffer.buffer);
+  const stateNumber = 3n; // Example state number to set
+  view.setBigUint64(0, stateNumber, true); // Set the state number in the payload
 
-    let payLoad = new DynamicPayload(payloadBuffer.length);
-    payLoad.setPayload(payloadBuffer);
+  let payLoad = new DynamicPayload(payloadBuffer.length);
+  payLoad.setPayload(payloadBuffer);
 
-    const tx = new QubicTransaction()
-        .setSourcePublicKey(publicKey)
-        .setDestinationPublicKey(CONTRACT_ADDRESS) // A transfer should go to the CONTRACT_ADDRESS
-        .setAmount(0) // SetStateNumber does not require any fee or cost
-        .setTick((await getCurrentTick()) + 10) // Set the target tick
-        .setInputType(SetStateNumberProcedure)
-        .setPayload(payLoad); // The payload contains the state number;
+  const tx = new QubicTransaction()
+    .setSourcePublicKey(publicKey)
+    .setDestinationPublicKey(CONTRACT_ADDRESS) // A transfer should go to the CONTRACT_ADDRESS
+    .setAmount(0) // SetStateNumber does not require any fee or cost
+    .setTick((await getCurrentTick()) + 10) // Set the target tick
+    .setInputType(SetStateNumberProcedure)
+    .setPayload(payLoad); // The payload contains the state number;
 
-    let txBuffer = await tx.build(seed);
-    const header = new RequestResponseHeader(
-        QubicPackageType.BROADCAST_TRANSACTION,
-        tx.getPackageSize()
-    );
-    header.randomizeDejaVu();
-    const builder = new QubicPackageBuilder(header.getSize());
-    builder.add(header);
-    builder.addRaw(txBuffer);
-    const data = builder.getData();
+  let txBuffer = await tx.build(seed);
+  const header = new RequestResponseHeader(
+    QubicPackageType.BROADCAST_TRANSACTION,
+    tx.getPackageSize()
+  );
+  header.randomizeDejaVu();
+  const builder = new QubicPackageBuilder(header.getSize());
+  builder.add(header);
+  builder.addRaw(txBuffer);
+  const data = builder.getData();
 
-    let connector = new QubicConnectorNode(31841);
-    connector.connect(peerAddress);
-    connector.onPeerConnected = () => {
-        if (connector.sendPackage(data)) {
-            console.log('Transaction sent successfully to the node.');
-            console.log('Target tick:', tx.tick);
-        }
-    };
-
+  let connector = new QubicConnectorNode(31841);
+  connector.connect(peerAddress);
+  connector.onPeerConnected = () => {
+    if (connector.sendPackage(data)) {
+      console.log("Transaction sent successfully to the node.");
+      console.log("Target tick:", tx.tick);
+    }
+  };
 }
 
 main();
-
 ```
+
 </details>
 
 ## References

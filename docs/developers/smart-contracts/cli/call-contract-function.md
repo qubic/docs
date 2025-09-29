@@ -4,20 +4,27 @@ We can call the contract function using `qubic-cli`, but unfortunately, we still
 
 ## Craft The Packet
 
-Let's say we have a function called `GetStateNumber` in our deployed contract
+Let's say we have a function called `getStateNumber` in our deployed contract
 
 <details>
-<summary>Show `GetStateNumber` Function</summary>
-```
-struct GetStateNumber_input  {
+<summary>Show `getStateNumber` Function</summary>
+
+```cpp
+struct getStateNumber_input
+{
 };
-struct GetStateNumber_output {
-	uint64 stateNumber;
+
+struct getStateNumber_output
+{
+    uint64 stateNumber;
 };
-PUBLIC_FUNCTION(GetStateNumber) {
-	output.stateNumber = state.stateNumber;
+
+PUBLIC_FUNCTION(getStateNumber)
+{
+    output.stateNumber = state.stateNumber;
 }
 ```
+
 </details>
 
 So we can create the packet with this following code (added as a test case in your test)
@@ -29,49 +36,53 @@ Remember to `#include "network_messages/contract.h"` in your test source first
 ```cpp
 static void byteToHex(const uint8_t* byte, char* hex, const int sizeInByte)
 {
-	for (int i = 0; i < sizeInByte; i++)
-	{
-		snprintf(hex + i * 2, 3, "%02x", byte[i]);
-	}
+    for (int i = 0; i < sizeInByte; i++)
+    {
+        snprintf(hex + i * 2, 3, "%02x", byte[i]);
+    }
 }
 
 static void hexToByte(const char* hex, uint8_t* byte, const int sizeInByte)
 {
-	for (int i = 0; i < sizeInByte; i++)
-	{
-		sscanf(hex + i * 2, "%2hhx", &byte[i]);
-	}
+    for (int i = 0; i < sizeInByte; i++)
+    {
+        sscanf(hex + i * 2, "%2hhx", &byte[i]);
+    }
 }
 
-TEST(Contract, CallFunction) {
-	struct {
-		RequestResponseHeader	 header;
-		RequestContractFunction rcf;
-		// Add your input here if needed
-		// Example: QNS::GetStateNumber_input input;
-	} packet;
+TEST(Contract, CallFunction)
+{
+    struct
+    {
+        RequestResponseHeader    header;
+        RequestContractFunction  rcf;
+        // Add your input here if needed
+        // Example: QNS::getStateNumber_input input;
+    } packet;
 
-	packet.header.setSize<sizeof(packet)>();
-	packet.header.randomizeDejavu();
-	packet.header.setType(RequestContractFunction::type);
+    packet.header.setSize<sizeof(packet)>();
+    packet.header.randomizeDejavu();
+    packet.header.setType(RequestContractFunction::type);
 
-	// GetStateNumber doesn't expect any input, so inputSize should be 0
-	// Example if you have input: packet.rcf.inputSize = sizeof(QNS::GetStateNumber_input);
-	packet.rcf.inputSize		= 0;
-	// In this case GetStateNumber has been registered with id = 14
-	packet.rcf.inputType		= 14;
-	// Change to your contract index
-	packet.rcf.contractIndex	= QNS_CONTRACT_INDEX;
+    // getStateNumber doesn't expect any input, so inputSize should be 0
+    // Example if you have input: packet.rcf.inputSize = sizeof(QNS::getStateNumber_input);
+    packet.rcf.inputSize        = 0;
+    // In this case getStateNumber has been registered with id = 14
+    packet.rcf.inputType        = 14;
+    // Change to your contract index
+    packet.rcf.contractIndex    = QNS_CONTRACT_INDEX;
 
-	// Modify the input if needed
-	// Example: packet.input.stateNumber = 0; but in this case we don't need input
+    // Modify the input if needed
+    // Example: packet.input.stateNumber = 0; but in this case we don't need input
 
-	unsigned char* hexStr		= new unsigned char[sizeof(packet) * 2 + 1];
-	byteToHex(reinterpret_cast<const uint8_t*>(&packet), reinterpret_cast<char*>(hexStr), sizeof(packet));
-	hexStr[sizeof(packet) * 2]	= '\0'; // Null-terminate the string
+    unsigned char* hexStr       = new unsigned char[sizeof(packet) * 2 + 1];
+    byteToHex(reinterpret_cast<const uint8_t*>(&packet), reinterpret_cast<char*>(hexStr), sizeof(packet));
+    hexStr[sizeof(packet) * 2]  = '\0'; // Null-terminate the string
 
-	cout << "Hex String: " << hexStr << endl;
-	cout << "Size: " << sizeof(packet) << endl;
+    cout << "Hex String: " << hexStr << endl;
+    cout << "Size: " << sizeof(packet) << endl;
+
+    delete[] hexStr;
 }
 ```
 
@@ -99,7 +110,7 @@ qubic-cli.exe -nodeip 162.120.19.25 -nodeport 31841 -sendrawpacket 1000002ae0238
 Example output
 
 ```bash
-C:\Users\Admin>C:\Users\Admin\Projects\qubic-cli\Debug\qubic-cli.exe -seed ghromhommngqxjokdlnyjkaoxmjbnwqneiikevfkxfncftudczluvcl -nodeip 162.120.19.25 -nodeport 31841 -sendrawpacket 1000002ab25f5c7d0d0000000e000000 16
+qubic-cli.exe -nodeip 162.120.19.25 -nodeport 31841 -sendrawpacket 1000002ab25f5c7d0d0000000e000000 16
 Received 16 bytes
 1000002bb25f5c7d0000000000000000
 ```

@@ -135,6 +135,7 @@ const sidebars = {
             "developers/smart-contracts/smart-contract/cross-inner-call",
             "developers/smart-contracts/smart-contract/assets-and-shares",
             "developers/smart-contracts/smart-contract/how-sc-actually-work",
+            "developers/smart-contracts/smart-contract/code-style",
             "developers/smart-contracts/smart-contract/programs-in-practice",
             "developers/smart-contracts/smart-contract/restrictions",
           ],

@@ -7,15 +7,20 @@ Similar to calling a function, we can use `qubic-cli` to invoke procedures. Howe
 To invoke a contract procedure, we must know the contract ID. You can retrieve it by running the following script in your test:
 
 ```cpp
-TEST(Contract, GetId) {
-	id contract(QNS_CONTRACT_INDEX, 0, 0, 0);
-	CHAR16* contractAddress = new CHAR16[61];
-	getIdentity(contract.m256i_u8, contractAddress, false);
-	cout << "Contract address: ";
-	for (int i = 0; i < 60; i++) {
-		cout << (char)contractAddress[i];
-	}
-	cout << endl;
+TEST(Contract, GetId)
+{
+    id contract(QNS_CONTRACT_INDEX, 0, 0, 0);
+    CHAR16* contractAddress = new CHAR16[61];
+    getIdentity(contract.m256i_u8, contractAddress, false);
+
+    cout << "Contract address: ";
+    for (int i = 0; i < 60; i++)
+    {
+        cout << static_cast<char>(contractAddress[i]);
+    }
+    cout << endl;
+
+    delete[] contractAddress;
 }
 ```
 
@@ -33,31 +38,37 @@ Contract address: NAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAMAML
 
 ## Craft The Packet
 
-Lets say we have a procedure called `SetNumberState`
+Lets say we have a procedure called `setNumberState`
 
 <details>
-<summary>Show `SetStateNumber` Contract Function</summary>
+<summary>Show `setStateNumber` Contract Function</summary>
+
 ```cpp
-struct SetStateNumber_input {
-	uint64	stateNumber;
+struct setStateNumber_input
+{
+    uint64 stateNumber;
 };
 
-struct SetStateNumber_output {
-	uint8	result;
+struct setStateNumber_output
+{
+    uint8 result;
 };
 
-PUBLIC_PROCEDURE(SetStateNumber) {
-	if (input.stateNumber < state.stateNumber) {
-		output.result =1;
-		return;
-	}
-	state.stateNumber = input.stateNumber;
-	output.result = 0;
+PUBLIC_PROCEDURE(setStateNumber)
+{
+    if (input.stateNumber < state.stateNumber)
+    {
+        output.result = 1;
+        return;
+    }
+    state.stateNumber = input.stateNumber;
+    output.result = 0;
 }
 ```
+
 </details>
 
-To invoke the procedure we need to prepare the hex data for `SetStateNumber_input`
+To invoke the procedure we need to prepare the hex data for `setStateNumber_input`
 
 ```cpp
 static void byteToHex(const uint8_t* byte, char* hex, const int sizeInByte)
@@ -77,7 +88,7 @@ static void hexToByte(const char* hex, uint8_t* byte, const int sizeInByte)
 }
 
 TEST(Contract, InvokeContract) {
-	QNS::SetStateNumber_input input;
+	QNS::setStateNumber_input input;
 	input.stateNumber = 1;
 	unsigned char* hexStr = new unsigned char[sizeof(input) * 2 + 1];
 	byteToHex(reinterpret_cast<const uint8_t*>(&input), reinterpret_cast<char*>(hexStr), sizeof(input));
@@ -136,7 +147,7 @@ to check your tx confirmation status
 
 Your procedure invocation is scheduled for tick `18480032`. The core node will process your procedure call and update the state when the network reaches that tick.
 
-After the procedure is processed, try calling the `GetStateNumber` function again to verify whether the state was actually updated.
+After the procedure is processed, try calling the `getStateNumber` function again to verify whether the state was actually updated.
 
 ```bash
 C:\Users\Admin>qubic-cli.exe -seed ghromhommngqxjokdlnyjkaoxmjbnwqneiikevfkxfncftudczluvcl -nodeip 162.120.19.25 -nodeport 31841 -sendrawpacket 1000002ab25f5c7d0d0000000e000000 16

@@ -28,22 +28,26 @@ struct MYTEST : public ContractBase
 public:
   sint64 myNumber;
 
-  struct ChangeNumber_input {
+  struct changeNumber_input
+  {
     sint64 myNumber;
   };
 
-  struct ChangeNumber_output {
+  struct changeNumber_output
+  {
   };
 
   // Reminder: The contract state is passed to the functions & procedures
   // as a reference named `state`.
-  PUBLIC_PROCEDURE(ChangeNumber) {
+  PUBLIC_PROCEDURE(changeNumber)
+  {
     // myNumber = input.myNumber; is wrong
     state.myNumber = input.myNumber;
   }
 
   // WRONG, function can't modify state
-  // PUBLIC_FUNCTION(ChangeNumber) {
+  // PUBLIC_FUNCTION(changeNumber)
+  // {
   //   state.myNumber = input.myNumber;
   // }
 };

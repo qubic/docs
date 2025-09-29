@@ -19,7 +19,8 @@ Navigate to the `test` project and create a new program called `contract_mytest.
 
 #include "contract_testing.h"
 
-class ContractTestingMyTest : protected ContractTesting {
+class ContractTestingMyTest : protected ContractTesting
+{
 public:
     ContractTestingMyTest()
     {
@@ -28,9 +29,10 @@ public:
         INIT_CONTRACT(MYTEST);
     }
 
-    MYTEST::Add_output Add(sint64 a, sint64 b) {
-        MYTEST::Add_input input;
-        MYTEST::Add_output output;
+    MYTEST::add_output add(sint64 a, sint64 b)
+    {
+        MYTEST::add_input input;
+        MYTEST::add_output output;
         input.a = a;
         input.b = b;
         callFunction(MYTEST_CONTRACT_INDEX, 1, input, output);
@@ -40,7 +42,7 @@ public:
 
 TEST(MyTest, TestAdd) {
     ContractTestingMyTest test;
-    MYTEST::Add_output output = test.Add(1, 2);
+    MYTEST::add_output output = test.add(1, 2);
     EXPECT_EQ(output.c, 3);
 }
 ```

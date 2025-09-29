@@ -17,7 +17,7 @@ Smart contracts run directly on the hardware—without an OS, VM, or container l
 
 **2. IPO-Based Deployment (Initial Public Offering)**
 
-Each contract must be proposed through an IPO process where the community allocates compute resources (votes) for execution. This crowdsourced validation ensures only useful or trusted logic consumes network power.
+Each contract must be proposed through a voting process, where the computor allocates compute resources for its execution. If the proposal is accepted, the contract will be integrated into the core code, after which the IPO process takes place. If all shares are successfully sold during the IPO, the contract will be constructed.
 
 **3. No Virtual Machine, No Gas Model**
 

@@ -21,43 +21,50 @@ Below program is to calculate sum 1 to 10 and square the sum:
 
 ```cpp
 ///////////// Square Function /////////////
-
-struct Square_input {
-	sint64 a;
+struct square_input
+{
+    sint64 a;
 };
 
-struct Square_output {
-	sint64 out;
+struct square_output
+{
+    sint64 out;
 };
 
 // We should private the function that only used internally
-PRIVATE_FUNCTION(Square) {
-	output.out = input.a * input.a;
+PRIVATE_FUNCTION(square)
+{
+    output.out = input.a * input.a;
 }
 
-///////////// SumSquareOneToTe Function /////////////
+///////////// SumSquareOneToTen Function /////////////
 
-struct SumSquareOneToTen_input {
+struct sumSquareOneToTen_input
+{
 };
 
-struct SumSquareOneToTen_output {
-	sint64 sum;
+struct sumSquareOneToTen_output
+{
+    sint64 sum;
 };
 
-struct SumSquareOneToTen_locals {
-	sint64 i;
-        // Define input and output for the call also need to be in locals
-	Square_input squareInput;
-	Square_output squareOutput;
+struct sumSquareOneToTen_locals
+{
+    sint64 i;
+    // Define input and output for the call also need to be in locals
+    square_input squareInput;
+    square_output squareOutput;
 };
 
-PUBLIC_FUNCTION_WITH_LOCALS(SumSquareOneToTen) {
-	for (locals.i = 1; locals.i <= 10; ++locals.i) {
-		output.sum += locals.i;
-	}
-	locals.squareInput.a = output.sum;
-	CALL(Square, locals.squareInput, locals.squareOutput);
-	output.sum = locals.squareOutput.out;
+PUBLIC_FUNCTION_WITH_LOCALS(sumSquareOneToTen)
+{
+    for (locals.i = 1; locals.i <= 10; ++locals.i)
+    {
+        output.sum += locals.i;
+    }
+    locals.squareInput.a = output.sum;
+    CALL(square, locals.squareInput, locals.squareOutput);
+    output.sum = locals.squareOutput.out;
 }
 ```
 
@@ -72,6 +79,10 @@ Cross-contract calls enable Qubic smart contracts to interact with each other, a
 #define INVOKE_OTHER_CONTRACT_PROCEDURE(contractStateType, procedure, input, output, invocationReward)
 ```
 
+:::warning INVOKE_OTHER_CONTRACT_PROCEDURE
+Your contract will pay `invocationReward` amount of Qubic if the invoked contract consume these.
+:::
+
 **Example Code**
 
 Let’s create an additional contract to interact with it.
@@ -85,35 +96,45 @@ Make sure to define the `Cross` contract in `contract_def.h` with a lower index 
 
 using namespace QPI;
 
-struct CROSS2 {};
+struct CROSS2
+{
+};
 
-struct CROSS : public ContractBase {
+struct CROSS : public ContractBase
+{
     public:
         sint64 crossStateNumber;
 
-        struct setCrossStateNumber_input {
+        struct setCrossStateNumber_input
+        {
             sint64 crossStateNumber;
         };
 
-        struct setCrossStateNumber_output {
+        struct setCrossStateNumber_output
+        {
         };
 
-        PUBLIC_PROCEDURE(setCrossStateNumber) {
+        PUBLIC_PROCEDURE(setCrossStateNumber)
+        {
             state.crossStateNumber = input.crossStateNumber;
         }
 
-        struct getCrossStateNumber_input {
+        struct getCrossStateNumber_input
+        {
         };
 
-        struct getCrossStateNumber_output {
+        struct getCrossStateNumber_output
+        {
             sint64 crossStateNumber;
         };
 
-        PUBLIC_FUNCTION(getCrossStateNumber) {
+        PUBLIC_FUNCTION(getCrossStateNumber)
+        {
             output.crossStateNumber = state.crossStateNumber;
         }
 
-        REGISTER_USER_FUNCTIONS_AND_PROCEDURES() {
+        REGISTER_USER_FUNCTIONS_AND_PROCEDURES()
+        {
           REGISTER_USER_PROCEDURE(setCrossStateNumber, 1);
           REGISTER_USER_FUNCTION(getCrossStateNumber, 1);
         }
@@ -133,15 +154,18 @@ struct MYTEST : public ContractBase
 {
   public:
 
-        struct crossSetStateNumberInMyTest_input {
+        struct crossSetStateNumberInMyTest_input
+        {
             sint64 crossStateNumber;
         };
 
-        struct crossSetStateNumberInMyTest_output {
+        struct crossSetStateNumberInMyTest_output
+        {
             bit success;
         };
 
-        struct crossSetStateNumberInMyTest_locals {
+        struct crossSetStateNumberInMyTest_locals
+        {
             // Input and Output the CROSS procedure invoke
             CROSS::setCrossStateNumber_input crossInputProcedure;
             CROSS::setCrossStateNumber_output crossOutputProcedure;
@@ -152,7 +176,8 @@ struct MYTEST : public ContractBase
             sint64 crossStateNumber;
         };
 
-        PUBLIC_PROCEDURE_WITH_LOCALS(crossSetStateNumberInMyTest) {
+        PUBLIC_PROCEDURE_WITH_LOCALS(crossSetStateNumberInMyTest)
+        {
             locals.crossInputProcedure.crossStateNumber = input.crossStateNumber;
             // Set the cross state number in the CROSS contract
             INVOKE_OTHER_CONTRACT_PROCEDURE(CROSS, setCrossStateNumber, locals.crossInputProcedure, locals.crossOutputProcedure, qpi.invocationReward());
@@ -161,14 +186,18 @@ struct MYTEST : public ContractBase
 
             locals.crossStateNumber = locals.crossGetOutputFunction.crossStateNumber;
             // Check if the cross state number is set correctly
-            if (locals.crossStateNumber != input.crossStateNumber) {
+            if (locals.crossStateNumber != input.crossStateNumber)
+            {
               output.success = false;
-            } else {
+            }
+            else
+            {
               output.success = true;
             }
         }
 
-        REGISTER_USER_FUNCTIONS_AND_PROCEDURES() {
+        REGISTER_USER_FUNCTIONS_AND_PROCEDURES()
+        {
             REGISTER_USER_PROCEDURE(crossSetStateNumberInMyTest, 10);
         }
 };
