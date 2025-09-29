@@ -27,7 +27,7 @@ QPI exposes a minimal but powerful set of features, including:
 | Capability                       | Description                                                                                                                                |
 | -------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------ |
 | **Custom Data Types**            | Use safe and deterministic types like `sint64`, `uint32`, `Array`, `BitArray`, `id`, etc.                                                  |
-| **Contract Communication**       | Allows sending and receiving messages to/from other contracts.                                                                             |
+| **Contract Communication**       | Allows running procedures and functions of other contracts.                                                                                |
 | **Asset and Share Handling**     | Provides methods to issue, burn, transfer, and manage asset ownership.                                                                     |
 | **Tick & Epoch Lifecycle Hooks** | Contracts can react to epoch/tick transitions via `BEGIN_EPOCH()`, `END_TICK()`, etc.                                                      |
 | **Contract Metadata Access**     | Access to `qpi.invocator()`, `qpi.originator()`, `qpi.invocationReward()`, and similar context data.                                       |
@@ -40,21 +40,21 @@ Adherence to these guidelines is crucial for ensuring the proper functionality a
 
 ## Concepts
 
-The state is the persistent memory of the contract that is kept aligned in all nodes. A contract can have member functions and procedures. 
+The state is the persistent memory of the contract that is kept aligned in all nodes. A contract can have member functions and procedures.
 
-Functions cannot change the state of the contract. They can be called via a `RequestContractFunction` network message. 
+Functions cannot change the state of the contract. They can be called via a `RequestContractFunction` network message.
 
-Procedures can change the state of the contract. They are invoked by a transaction and run when the tick containing the transaction is processed. 
+Procedures can change the state of the contract. They are invoked by a transaction and run when the tick containing the transaction is processed.
 
-There are some special procedures that are called by the system at the beginning of the tick etc. 
+There are some special procedures that are called by the system at the beginning of the tick etc.
 
-A call of a user procedure usually goes along with a transfer of an invocation reward from the invoking user to the contract. 
+A call of a user procedure usually goes along with a transfer of an invocation reward from the invoking user to the contract.
 
-Procedures can call procedures and functions of the same contract and of contracts with lower contract index. 
+Procedures can call procedures and functions of the same contract and of contracts with lower contract index.
 
-Functions can call functions of the same contract and of contracts with lower contract ID. 
+Functions can call functions of the same contract and of contracts with lower contract ID.
 
-Private functions and procedures cannot be called from other contracts. 
+Private functions and procedures cannot be called from other contracts.
 
 In order to be available for invocation by transaction and network message, procedures and functions need to be registered in the special member function `REGISTER_USER_FUNCTIONS_AND_PROCEDURES`.
 
@@ -90,19 +90,19 @@ Currently, the maximum contract state size is capped at 1 GiB (03/02/2024). This
 - The same goes for `uint8_x`, `sint16_x`, `uint16_x`, `sint32_x`, `uint32_x`, `sint64_x`, `uint64_x`, `id_x`.
 - struct `collection`
 
-This shows collection of priority queue of elements with type T and total element capacity L. 
+This shows collection of priority queue of elements with type T and total element capacity L.
 
-Each ID pov (point of view) has an own queue. 
+Each ID pov (point of view) has an own queue.
 
-Array of elements (filled sequentially), each belongs to one PoV / priority queue (or is empty). 
+Array of elements (filled sequentially), each belongs to one PoV / priority queue (or is empty).
 
-Elements of a POV entry will be stored as a binary search tree (BST): so this structure has some properties related to BST(bstParentIndex, bstLeftIndex, bstRightIndex). 
+Elements of a POV entry will be stored as a binary search tree (BST): so this structure has some properties related to BST(bstParentIndex, bstLeftIndex, bstRightIndex).
 
 Look at the [Binary Search Tree](https://www.geeksforgeeks.org/binary-search-tree-data-structure) to learn more.
 
 - Difference between standard BST and POV BST
 
-Each node in a standard BST has left child containing values less than the parent node and the right child containing values greater than the parent node. 
+Each node in a standard BST has left child containing values less than the parent node and the right child containing values greater than the parent node.
 
 But each element in a POV BST has left child containing `priority` greater than the parent element and the right child containing `priority` less than the parent node.
 
@@ -148,17 +148,17 @@ Return priority of elementIndex (or 0 id if unused)
 
 - sint64 remove(sint64 elementIdx)
 
-Remove element and mark its pov for removal, if the last element. 
+Remove element and mark its pov for removal, if the last element.
 
-Returns element index of next element in priority queue (the one following elementIdx). 
+Returns element index of next element in priority queue (the one following elementIdx).
 
 Element indices obtained before this call are invalidated, because at least one element is moved.
 
 - void replace(sint64 oldElementIndex, const T& newElement)
 
-Replace _existing_ element, do nothing otherwise. 
+Replace _existing_ element, do nothing otherwise.
 
-The element exists: replace its value. 
+The element exists: replace its value.
 
 The index is out of bounds: no action is taken.
 
@@ -178,7 +178,11 @@ Return elementIndex of last element with priority >= minPriority in priority que
 
 ### qpi.invocator()
 
-The `qpi.invocator()` function returns the ID of the entity (user or contract) that directly called the current contract function/procedure.
+The `qpi.invocator()` function returns the ID of the entity (user or contract) that directly called the current **contract procedure**.
+
+:::info
+`qpi.invocator()` returns a zero public key when called inside a function, because it is triggered by a network message and therefore has no associated entity.
+:::
 
 **Function Signature**
 
@@ -202,6 +206,10 @@ PUBLIC_PROCEDURE(updateBalance)
 ### qpi.originator()
 
 The `qpi.originator()` function returns the ID of the original transaction sender—the entity (user or contract) that initiated the entire call chain leading to the current contract execution.
+
+:::info
+`qpi.originator()` returns a zero public key when called inside a function, because it is triggered by a network message and therefore has no associated entity.
+:::
 
 **Function Signature**
 
@@ -234,6 +242,10 @@ PUBLIC_PROCEDURE(updateBalance)
 
 Returns the amount of Qu (Qubic's native token) attached to the current contract call as an invocation reward.
 
+:::info
+`qpi.invocationReward()` returns zero when called inside a function, since it is triggered by a network message rather than a transaction, and therefore no reward amount is specified.
+:::
+
 **Function Signature**
 
 ```cpp
@@ -246,7 +258,7 @@ sint64 invocationReward() const
 constexpr sint64 FEE = 1000; // 1000 QU required
 PUBLIC_PROCEDURE(premiumFeature) {
     if (qpi.invocationReward() < FEE) {
-        // user will lost 1000 QUs, because we don't give back
+        // user will lose 1000 QUs, because we don't give back
         return;
     }
     // Grant access...
@@ -290,6 +302,10 @@ PUBLIC_PROCEDURE_WITH_LOCALS(burnTokens) {
 ### qpi.burn()
 
 Permanently removes QU (Qubic's native token) from circulation by burning them from the contract's balance.
+
+:::info
+In the future, contracts will be required to burn QU in order to remain active.
+:::
 
 **Function Signature**
 
@@ -392,18 +408,18 @@ sint64 issueAsset(
 
 **Parameters**
 
-| Parameter             | Type     | Range                 | Description                                   | Example Value         |
-| --------------------- | -------- | --------------------- | --------------------------------------------- | --------------------- |
-| **assetName**         | `uint64` | 0 to 2<sup>64</sup>-1 | 8-byte asset identifier (ASCII or hex)        | `0x444C4F47` ("GOLD") |
-| **issuer**            | `id`     | 256-bit               | Owner's public key (must match caller)        | `id(_A,_B,...,_Z)`    |
-| **decimalPlaces**     | `sint8`  | -128 to 127           | Number of decimal digits for fractional units | `3` (milli-units)     |
-| **numberOfShares**    | `sint64` | 1 to 2<sup>63</sup>-1 | Total supply to mint (must be positive)       | `1_000_000`           |
-| **unitOfMeasurement** | `uint64` | 0 to 2<sup>64</sup>-1 | Physical unit code (ASCII or hex)             | `0x6B67` ("kg")       |
+| Parameter             | Type     | Range                                                         | Description                                    | Example Value         |
+| --------------------- | -------- | ------------------------------------------------------------- | ---------------------------------------------- | --------------------- |
+| **assetName**         | `uint64` | Up to 7 uppser case from A-Z characters (encoded to `uint64`) | 8-byte asset identifier (ASCII or hex)         | `0x444C4F47` ("GOLD") |
+| **issuer**            | `id`     | 256-bit                                                       | Initial owner's public key (must match caller) | `id(_A,_B,...,_Z)`    |
+| **decimalPlaces**     | `sint8`  | -128 to 127                                                   | Number of decimal digits for fractional units  | `3` (milli-units)     |
+| **numberOfShares**    | `sint64` | `1` to `1000000000000000`                                     | Total supply to mint (must be positive)        | `1_000_000`           |
+| **unitOfMeasurement** | `uint64` | 0 to 2<sup>64</sup>-1                                         | Physical unit code (ASCII or hex)              | `0x6B67` ("kg")       |
 
 **Key Notes:**
 
 1. **Uniqueness**: `assetName` must be unique per issuer
-2. **Authorization**: Caller must be the `issuer`
+2. **Authorization**: Caller must be the `issuer` (caller can be `qpi.invocator()` or current contract `SELF`)
 3. **Precision**: Negative `decimalPlaces` are allowed but uncommon
 4. **Unit Codes**: Use SI unit abbreviations in hex
 
@@ -447,7 +463,7 @@ sint64 transferShareOwnershipAndPossession(
 | **`issuer`**               | `id`     | 256-bit address of the original asset creator                              | Yes      | `ID(_A, _B,...,_Z)`   |
 | **`owner`**                | `id`     | Current legal owner's address                                              | Yes      | `ID(_C, _B,...,_Y)`   |
 | **`possessor`**            | `id`     | Current holder's address (may differ from owner in custodial arrangements) | Yes      | `ID(_E, _B,...,_Z)`   |
-| **`numberOfShares`**       | `sint64` | Positive quantity of shares to transfer (1 to 2<sup>63</sup>-1)            | Yes      | `500`                 |
+| **`numberOfShares`**       | `sint64` | Positive quantity of shares to transfer (`1` to `1000000000000000`)        | Yes      | `500`                 |
 | **`newOwnerAndPossessor`** | `id`     | Recipient address or (`NULL_ID` burns shares)                              | Yes      | `ID(_B, _B,...,_D)`   |
 
 **Special Values**
@@ -459,11 +475,11 @@ sint64 transferShareOwnershipAndPossession(
 
 The caller must be:
 
-1. The current **owner** (for ownership transfer)  
-   **OR**
-2. The current **possessor** (for possession transfer)  
-   **OR**
-3. An authorized **managing contract**
+The **managing contract**
+
+:::info
+It’s up to the **managing contract** to define the rules (e.g., whether a possessor can reassign possession).
+:::
 
 **Example Usage:**
 
@@ -542,11 +558,13 @@ For ownership/possession filters:
 AssetOwnershipSelect::any() // All owners
 AssetOwnershipSelect::byOwner(specificId) // Specific owner
 AssetOwnershipSelect::byManagingContract(index) // Managed by contract
+AssetOwnershipSelect{specificId, index} // Specific owner and contract
 
 // Possession filters
 AssetPossessionSelect::any() // All possessors
 AssetPossessionSelect::byPossessor(specificId) // Specific holder
 AssetPossessionSelect::byManagingContract(index) // Managed by contract
+AssetPossessionSelect{specificId, index} // Specific holder and contract
 ```
 
 ### qpi.getEntity()
@@ -573,13 +591,13 @@ struct getUserEntity_input {
 
 struct getUserEntity_output {
   QPI::Entity userEntity;
-  sint64 netFlow;
+  sint64 balance;
 };
 
 PUBLIC_FUNCTION(getUserEntity) {
   if (qpi.getEntity(input.userId, output.userEntity)) {
     // Use entity data
-    output.netFlow = output.userEntity.incomingAmount - output.userEntity.outgoingAmount;
+    output.balance = output.userEntity.incomingAmount - output.userEntity.outgoingAmount;
   } else {
     // Entity not found
   }
@@ -652,5 +670,3 @@ PUBLIC_FUNCTION(DayOfWeek) {
 ```
 
 For more detailed examples and advanced usage, see our [Smart Contract Examples](smart-contracts/sc-by-examples/assets-and-shares.md) and [Contract Structure Guide](smart-contracts/smart-contract/contract-structure.md).
-
-

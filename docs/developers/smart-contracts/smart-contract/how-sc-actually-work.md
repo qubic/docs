@@ -19,4 +19,4 @@ In Qubic, a smart contract is simply a C++ class with methods. The state of your
 ## Interacting with Smart Contracts in Qubic
 
 - **Function:** Invoked via TCP messages. You send a message to a node requesting it to call a specific function, and the node immediately returns the response.
-- **Procedure:** Invoked via transactions. Since it modifies the contract state, all nodes must execute it and update the state. The transaction specifies the contract address, the **procedure** to call, and its **parameters** (encoded in `inputHex`).
+- **Procedure:** Invoked via transactions. Since it modifies the contract state, all nodes must execute it and update the state. The transaction specifies the contract address, the **procedure** to call, and its **parameters**.

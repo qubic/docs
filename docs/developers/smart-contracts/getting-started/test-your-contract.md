@@ -79,14 +79,18 @@ As you can see, your test is not executed first. Waiting for other tests can was
 
 ## How To Run Your Test First
 
+:::info
+Fast trick without change .vcxproj, pass `--gtest_filter=MyTest.*` when execute the test executable to only execute our tests.
+:::
+
 **1. Unload the Project**
 
--   Right click the `test` project then choose `Unload project`
+- Right click the `test` project then choose `Unload project`
 
 **2. Edit the Project File**
 
--   Right-click the unloaded project → Edit Project File
--   Find the section like this:
+- Right-click the unloaded project → Edit Project File
+- Find the section like this:
 
 ```xml title="test.vcxproj"
 ...
@@ -172,8 +176,8 @@ Move the contract_mytest.cpp entry above all other files, like so:
 
 **4. Save and Reload**
 
--   Save the .vcxproj file.
--   Right-click the project → Reload Project
+- Save the .vcxproj file.
+- Right-click the project → Reload Project
 
 Now, rebuild and run the test again. You should see your test run first:
 

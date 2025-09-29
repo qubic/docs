@@ -25,7 +25,7 @@ bit notSure = true & false;
 
 ## Id
 
-To respersent user public key we can use the `id` data type
+To respersent user public key we can use the `id` data type, which consists of 256 bits
 
 ```cpp
 id user1 = id(1,2,3,4);

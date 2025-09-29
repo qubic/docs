@@ -125,7 +125,7 @@ System procedures 1 to 5 have no input and output. The input and output of syste
 
 ## Local Variables
 
-In QUBIC contract creating local variables / objects on the regular function call stack is **forbidden**. If we want to use local variable (eg. tmp variables, `i` for the `forloop`) we will need help of postfix `_WITH_LOCALS` before declare Function and Procedure macros. Function and Procedure end with `_WITH_LOCALS` have to define the struct `[NAME]_locals`. A reference to an instance of `[NAME]_locals` named `locals` is passed to the function and procedure (initialized with zeros).
+In QUBIC contract creating local variables / objects on the regular function call stack is **forbidden**. If we want to use local variable (eg. tmp variables, `i` for the `for` loop) we will need help of postfix `_WITH_LOCALS` before declare Function and Procedure macros. Function and Procedure end with `_WITH_LOCALS` have to define the struct `[NAME]_locals`. A reference to an instance of `[NAME]_locals` named `locals` is passed to the function and procedure (initialized with zeros).
 
 **1. Example how to use locals variable**
 

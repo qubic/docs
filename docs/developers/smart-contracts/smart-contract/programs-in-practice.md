@@ -49,13 +49,17 @@ enum ContractNameError {
 
 ## SELF And SELF_INDEX
 
--   `SELF` is your contract id (public key). Or you can generate it manually by `id(CONTRACT_INDEX, 0, 0 , 0)`.
+- `SELF` is your contract id (public key). Or you can generate it manually by `id(CONTRACT_INDEX, 0, 0 , 0)`.
 
--   `SELF_INDEX` is your contract index.
+- `SELF_INDEX` is your contract index.
 
 ## Smart Contract Initialization
 
 Always initialize all state variables explicitly in `INITIALIZE()` procedure.
+
+:::info
+The contract’s state will be implicitly initialized to zero.
+:::
 
 ```cpp
 INITIALIZE() {
@@ -87,6 +91,7 @@ balances.set(userId, 1000);
 
 // Fast lookup
 sint64 amount;
+// get() will return false if userId does not exist in the HashMap
 if (balances.get(userId, amount)) {
     qpi.transfer(recipient, amount);
 }
@@ -143,7 +148,7 @@ Task getNextTask(const id& pov) {
 }
 ```
 
-### HashSet (Array Of Unique Elements)
+### HashSet (Container Of Unique Elements)
 
 **Example:**
 

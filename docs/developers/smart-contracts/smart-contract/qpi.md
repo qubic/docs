@@ -444,13 +444,13 @@ struct getUserEntity_input {
 
 struct getUserEntity_output {
   QPI::Entity userEntity;
-  sint64 netFlow;
+  sint64 balance;
 };
 
 PUBLIC_FUNCTION(getUserEntity) {
   if (qpi.getEntity(input.userId, output.userEntity)) {
     // Use entity data
-    output.netFlow = output.userEntity.incomingAmount - output.userEntity.outgoingAmount;
+    output.balance = output.userEntity.incomingAmount - output.userEntity.outgoingAmount;
   } else {
     // Entity not found
   }
