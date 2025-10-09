@@ -212,6 +212,8 @@ The `qpi.invocator()` function returns the ID of the entity (user or contract) t
 
 :::info
 `qpi.invocator()` returns a zero public key when called inside a function, because it is triggered by a network message and therefore has no associated entity.
+
+**Exception:** If a function is called inside a procedure, `qpi.invocator()` will return the invocator of the procedure.
 :::
 
 **Function Signature**
@@ -240,6 +242,8 @@ The `qpi.originator()` function returns the ID of the original transaction sende
 
 :::info
 `qpi.originator()` returns a zero public key when called inside a function, because it is triggered by a network message and therefore has no associated entity.
+
+**Exception:** If a function is called inside a procedure, `qpi.originator()` will return the originator of the procedure.
 :::
 
 **Function Signature**
@@ -276,6 +280,8 @@ Returns the amount of Qu (Qubic's native token) attached to the current contract
 
 :::info
 `qpi.invocationReward()` returns zero when called inside a function, since it is triggered by a network message rather than a transaction, and therefore no reward amount is specified.
+
+**Exception:** If a function is called inside a procedure, `qpi.invocationReward()` will return the reward amount of the procedure.
 :::
 
 **Function Signature**
@@ -457,13 +463,13 @@ sint64 issueAsset(
 
 **Parameters**
 
-| Parameter             | Type     | Range                                                         | Description                                    | Example Value         |
-| --------------------- | -------- | ------------------------------------------------------------- | ---------------------------------------------- | --------------------- |
-| **assetName**         | `uint64` | Up to 7 uppser case from A-Z characters (encoded to `uint64`) | 8-byte asset identifier (ASCII or hex)         | `0x444C4F47` ("GOLD") |
-| **issuer**            | `id`     | 256-bit                                                       | Initial owner's public key (must match caller) | `id(_A,_B,...,_Z)`    |
-| **decimalPlaces**     | `sint8`  | -128 to 127                                                   | Number of decimal digits for fractional units  | `3` (milli-units)     |
-| **numberOfShares**    | `sint64` | `1` to `1000000000000000`                                     | Total supply to mint (must be positive)        | `1_000_000`           |
-| **unitOfMeasurement** | `uint64` | 0 to 2<sup>64</sup>-1                                         | Physical unit code (ASCII or hex)              | `0x6B67` ("kg")       |
+| Parameter             | Type     | Range                                                        | Description                                    | Example Value         |
+| --------------------- | -------- | ------------------------------------------------------------ | ---------------------------------------------- | --------------------- |
+| **assetName**         | `uint64` | Up to 7 upper case from A-Z characters (encoded to `uint64`) | 8-byte asset identifier (ASCII or hex)         | `0x444C4F47` ("GOLD") |
+| **issuer**            | `id`     | 256-bit                                                      | Initial owner's public key (must match caller) | `id(_A,_B,...,_Z)`    |
+| **decimalPlaces**     | `sint8`  | -128 to 127                                                  | Number of decimal digits for fractional units  | `3` (milli-units)     |
+| **numberOfShares**    | `sint64` | `1` to `1000000000000000`                                    | Total supply to mint (must be positive)        | `1_000_000`           |
+| **unitOfMeasurement** | `uint64` | 0 to 2<sup>64</sup>-1                                        | Physical unit code (ASCII or hex)              | `0x6B67` ("kg")       |
 
 **Key Notes:**
 
