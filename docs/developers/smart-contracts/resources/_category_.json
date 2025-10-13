@@ -1,0 +1,8 @@
+{
+  "label": "Resources",
+  "position": 8,
+  "link": {
+    "type": "generated-index",
+    "description": "Welcome to the Resources documentation! This guide will help you find useful tools, libraries, and references for working with smart contracts."
+  }
+}
