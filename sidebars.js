@@ -210,6 +210,13 @@ const sidebars = {
             "developers/library-rust",
           ],
         },
+        {
+          type: "category",
+          label: "External Services", // Third-party integrations
+          items: [
+            "developers/exolix-integration", // Exolix exchange integration
+          ],
+        },
       ],
     },
     {
