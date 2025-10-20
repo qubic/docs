@@ -212,7 +212,7 @@ const sidebars = {
         },
         {
           type: "category",
-          label: "External Services", // Third-party integrations
+          label: "Community/Ecosystem Services", // Third-party integrations
           items: [
             "developers/external-services", // External services and tools
           ],

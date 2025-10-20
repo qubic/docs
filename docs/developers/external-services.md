@@ -1,9 +1,9 @@
 ---
-title: External Services
-sidebar_label: 'External Services'
+title: Community/Ecosystem Services
+sidebar_label: 'Community/Ecosystem Services'
 ---
 
-# External Services
+# Community/Ecosystem Services
 
 This page lists third-party services and tools that support Qubic. These services are not affiliated with or endorsed by Qubic.
 
