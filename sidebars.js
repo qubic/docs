@@ -210,6 +210,13 @@ const sidebars = {
             "developers/library-rust",
           ],
         },
+        {
+          type: "category",
+          label: "Community/Ecosystem Services", // Third-party integrations
+          items: [
+            "developers/external-services", // External services and tools
+          ],
+        },
       ],
     },
     {
