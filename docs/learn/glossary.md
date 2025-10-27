@@ -28,9 +28,9 @@ The amount of QUs per identity on the Spectrum (similar to "balance").
 A one-week time period from Wednesday 12 UTC to Wednesday 12 UTC during which 1 trillion QUs are generated.
 
 ## Identity
-Qubic's equivalent of an address
+Qubic's equivalent of an address.
 
-## Miners
+## Miners
 Miners in Qubic are essential for supporting Computors. Miners acquire problems or tasks from Computors. Upon finding a solution to these tasks for a given qubic ID, miners transmit their results back to the Computors. This continuous exchange of tasks and solutions is pivotal for determining scores for each ID during an epoch. High scores are instrumental for a Computor to retain its position amidst the top 676 Computors.
 
 ## Oracles
