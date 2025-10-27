@@ -37,7 +37,7 @@ Miners in Qubic are essential for supporting Computors. Miners acquire problems 
 A feature in development for Qubic. In blockchain technology, oracles are third-party services that provide smart contracts with external information, enabling them to interact with the outside world.
 
 ## $QUBIC
-QUs or QUBIC [Qubic Units](/learn/tokenomics) is the native coin and positioned as equivalent of "energy" units spent to run smart contracts and access other services in Qubic (e.g. donations to oracles). Yes, QUs can be used as money, but they are more than that. Transfers are feeless and notion of "fee" for smart contracts doesn't make much sense, because qus are destroyed, not given to computors. When one asks an oracle he "burns" QUs as a sacrifice, not as a payment, it's not even guaranteed that the oracle will answer. 
+QUs or QUBIC [Qubic Units](/learn/tokenomics) is the native coin and positioned as equivalent of "energy" units spent to run smart contracts and access other services in Qubic (e.g. donations to oracles). Yes, QUs can be used as money, but they are more than that. Transfers are feeless and notion of "fee" for smart contracts doesn't make much sense, because QUs are destroyed, not given to computors. When one asks an oracle he "burns" QUs as a sacrifice, not as a payment, it's not even guaranteed that the oracle will answer. 
 
 ## Quorum
 A quorum is the minimum number of computors necessary to conduct any sort of business. In Qubic the [Quorum](/learn/quorum) is ⅔ (or 451) of all Computors to reach consensus.
