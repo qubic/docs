@@ -1,7 +1,7 @@
 # Testnet
 
 :::info
-We recommend to use [Qubic Lite Core](../resources/qubic-lite-core) to create a local testnet instead of using VM to run .efi (tutorial below). It's much more easy to start!
+We recommend to use [Qubic Lite Core](https://github.com/hackerby888/qubic-core-lite) to create a local testnet instead of using VM to run .efi (tutorial below). It's much more easy to start!
 :::
 
 Now let's learn how to deploy your custom smart contract to the Qubic Testnet. Unfortunately, deploying your contract requires setting up and running your own Qubic node on virtual machine, which can be a complex and challenging task.
