@@ -38,7 +38,6 @@ Qubic supports multiple wallet integration options, all demonstrated in the [HM2
 
 Your application will need to connect to a Qubic node via the RPC API:
 
-- **Public testnet node**: `https://testnet-rpc.qubic.org`
 - **Public mainnet node**: `https://rpc.qubic.org`
 - **Custom node**: Your own deployed node (see [Qubic Node documentation](qubic-node.md))
 
@@ -46,7 +45,7 @@ The [Qubic TypeScript Library](https://github.com/qubic/ts-library) provides too
 
 ```javascript
 import { QubicConnector } from 'qubic-ts-library/dist/qubicConnector'
-const connector = new QubicConnector("https://testnet-rpc.qubic.org");
+const connector = new QubicConnector("https://rpc.qubic.org");
 ```
 
 ## Smart Contract Interaction Patterns
