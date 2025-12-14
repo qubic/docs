@@ -40,7 +40,6 @@ If you want to build applications that interact with the Qubic network:
 1. **Connect to Qubic Nodes**
    - Use our [RPC endpoints](../api/rpc.md) to connect to public nodes or set up your own
    - Follow the [RPC Setup Guide](smart-contracts/rpc/setup-rpc.md) for detailed configuration
-   - The main testnet endpoint is available at `https://testnet-rpc.qubic.org`
 
 2. **Integrate Wallet Solutions**
    - For complete wallet integration examples (MetaMask Snap, WalletConnect, Seed phrases, Vault files), check out the [HM25 Frontend Example](https://github.com/icyblob/hm25-frontend)

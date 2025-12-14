@@ -11,11 +11,10 @@ The Qubic RPC (Remote Procedure Call) API provides a way for applications to int
 
 ## 2. Public RPC Endpoints
 
-| Base URL                      | Version/State | Use Case                                                                                      |
-| ----------------------------- | ------------- | --------------------------------------------------------------------------------------------- |
-| https://rpc.qubic.org         | V1            | Public RPC/API for general purposes. Use this in production applications.                     |
-| https://testnet-rpc.qubic.org | V1            | Testnet RPC for development and testing                                                       |
-| https://rpc-staging.qubic.org | V2            | Public RPC/API for staging (production testing) purposes. Normally only for internal testing. |
+| Base URL                      | Use Case                                                                                      |
+| ----------------------------- | --------------------------------------------------------------------------------------------- |
+| https://rpc.qubic.org         | Public RPC/API for general purposes. Use this in production applications.                     |
+| https://rpc-staging.qubic.org | Public RPC/API for staging (production testing) purposes. Normally only for internal testing. |
 
 ### Using RPC Endpoints
 

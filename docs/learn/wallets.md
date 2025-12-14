@@ -19,11 +19,7 @@ All official wallets are open source.
 
 ## Community-Developed Wallets
 
-1. Desktop Wallet
-2. Mobile Wallet
-3. Web Extensions
-
-For detailed information and links to all available wallets, please visit [qubic.org](https://qubic.org/#wallets).
+For community-developed wallets, visit [qubic.org](https://qubic.org/#wallets) and select "By Community".
 
 ## Hardware Wallets
 
