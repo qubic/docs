@@ -34,7 +34,7 @@
 </pre>
 
 - <span style={{backgroundColor: 'var(--code-highlighter-green)'}}>Aligned Votes (votes on the left)</span>: These computors have the same data for the tick and are potentially aligned with tick leaders view. To proceed to next tick quorum (451+) must be aligned.
-- <span style={{backgroundColor: 'var(--code-highlighter-red)'}}>Misaligned votes (votes on the right)</span>: computors can have different view, meaning they are misalgined if they do not agree with majority.
+- <span style={{backgroundColor: 'var(--code-highlighter-red)'}}>Misaligned votes (votes on the right)</span>: computors can have different view, meaning they are misaligned if they do not agree with majority.
 - <span style={{backgroundColor: 'var(--code-highlighter-blue)'}}>Computors ahead of your computor</span> 
 
 

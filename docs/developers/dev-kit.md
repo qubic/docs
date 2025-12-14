@@ -64,7 +64,7 @@ The Dev Kit provides a streamlined workflow for:
 After setting up your environment:
 
 1. **Learn Smart Contract Structure**: Check out our [Smart Contract Overview](smart-contracts/overview.md)
-2. **Follow the Getting Started Guide**: Complete the [Getting Started Tutorial](smart-contracts/getting-started/setup-enviroment.md)
+2. **Follow the Getting Started Guide**: Complete the [Getting Started Tutorial](smart-contracts/getting-started/setup-environment.md)
 3. **Understand QPI**: Read about the [Qubic Programming Interface](qpi.md)
 4. **Explore Examples**: Look at [Smart Contract Examples](smart-contracts/sc-by-examples/assets-and-shares.md)
 

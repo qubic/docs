@@ -6,7 +6,7 @@ sidebar_label: 'Joining a Pool'
 
 Embarking on a journey to mine Qubic might seem like a monumental task if you're doing it alone. Pool mining is akin to collaborating with a team to conquer the task more efficiently and collectively reap the rewards.
 
-## The Treasure Hunt Analogy:
+## The Treasure Hunt Analogy
 In Qubic mining, the "treasure" represents the reward received in QUs, the native token of the Qubic ecosystem. To earn this reward, Computors compete to achieve a high enough score on Artificial Intelligence (AI) training tasks.
 
 ## The Challenge of Solo Mining

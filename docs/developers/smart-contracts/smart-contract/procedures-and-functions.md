@@ -55,9 +55,9 @@ PRIVATE_PROCEDURE(updateBalance)
 }
 ```
 
-## Input & Ouput
+## Input & Output
 
-Too receive input and return output in functions & procedures we need to define the struct `[NAME]_input` and `[NAME]_output`. A reference to an instance of `[NAME]_input` named `input` is passed to functions & procedures containing the input data. Further, a reference to an instance of `[NAME]_output` named `output` is passed to the functions & procedures (initialized with zeros), which should be modified.
+To receive input and return output in functions & procedures we need to define the struct `[NAME]_input` and `[NAME]_output`. A reference to an instance of `[NAME]_input` named `input` is passed to functions & procedures containing the input data. Further, a reference to an instance of `[NAME]_output` named `output` is passed to the functions & procedures (initialized with zeros), which should be modified.
 
 **1. Example how to declare input and output for square function**
 

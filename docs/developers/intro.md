@@ -18,7 +18,7 @@ If you want to create and deploy smart contracts on Qubic:
 
 2. **Set Up Your Environment**
    - Follow our [Development Environment Setup](dev-kit.md) guide for Visual Studio and Qubic Core
-   - Complete the [Getting Started Tutorial](smart-contracts/getting-started/setup-enviroment.md) for hands-on experience
+   - Complete the [Getting Started Tutorial](smart-contracts/getting-started/setup-environment.md) for hands-on experience
 
 3. **Learn Contract Development**
    - Master the [Qubic Programming Interface (QPI)](qpi.md) - your complete guide to contract APIs

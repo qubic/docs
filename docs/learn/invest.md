@@ -57,7 +57,7 @@ Android Wallet: https://play.google.com/store/apps/details?id=org.qubic.wallet&p
 
 ## 5. Stay Informed
 
-For those interested in additional information about the network, visit [qubic.li](https://app.qubic.li/network/transfers). Click on "Log In" (you can use prefilled data, no need to create an account for now) to see the network stats.
+For those interested in additional information about the network, visit the [Qubic Explorer](https://explorer.qubic.org/).
 
 ## 6. Future Developments
 

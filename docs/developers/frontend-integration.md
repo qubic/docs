@@ -31,10 +31,8 @@ Qubic supports multiple wallet integration options, all demonstrated in the [HM2
 
 - **MetaMask Snap integration** - For users who already use MetaMask
 - **WalletConnect support** - For interoperability with compatible wallets
-# Start of Selection
 - **Seed phrase login** - For direct access with a seed phrase (not recommended)
 - **Vault file authentication** - For secure stored identities (not recommended)
-# End of Selection
 
 ## Connecting to Nodes
 

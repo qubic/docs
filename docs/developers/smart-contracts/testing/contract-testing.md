@@ -183,7 +183,7 @@ It’s almost like calling a function, right? But there are some differences.
 
 To invoke a procedure, we use the `invokeUserProcedure` function. The first argument is the contract index, the second is the procedure ID, followed by the input and output structs.
 
-Since invoking a procedure in Qubic is actually make a transaction, we must also provide the sender (the user who creates the transaction) and the amount of QUs being transferred — which is 0 in our case.
+Since invoking a procedure in Qubic is actually making a transaction, we must also provide the sender (the user who creates the transaction) and the amount of QUs being transferred — which is 0 in our case.
 
 Finally, we check the return value of `invokeUserProcedure` to ensure the procedure call was successful by asserting it returns `true`.
 

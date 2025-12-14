@@ -21,5 +21,5 @@ The Spectrum can be accessed directly on any [Computor](/learn/nodes) via the [q
 The Spectrum's decentralised structure ensures that control is not vested in a single entity. Instead, the Spectrum is distributed across all Computors. This decentralisation bolsters the resistance of the Spectrum to censorship and fraudulent attempts. Alterations to the Spectrum would necessitate the consensus of the majority of Computors, making it practically impossible.
 
 
-## Overview
+## Summary
 The Spectrum, as the clear and unalterable ledger within the Qubic network, maintains a comprehensive log of transactions executed on the network per epoch. With decentralised nodes managing its consensus, the Spectrum underscores its transparency, security, and decentralisation. These characteristics solidify it as a core component of the Qubic network, fostering trust and transparency for users across the globe.

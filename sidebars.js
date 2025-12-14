@@ -116,7 +116,7 @@ const sidebars = {
           label: "Getting Started",
           items: [
             "developers/dev-kit", // Enhanced setup guide
-            "developers/smart-contracts/getting-started/setup-enviroment",
+            "developers/smart-contracts/getting-started/setup-environment",
             "developers/smart-contracts/getting-started/add-your-contract",
             "developers/smart-contracts/getting-started/test-your-contract",
             "developers/smart-contracts/getting-started/congratulations",
@@ -214,7 +214,7 @@ const sidebars = {
     },
     {
       type: "category",
-      label: "3. Developer Guide",
+      label: "Developer Guide",
       items: [
         "developers/ticks-and-concurrency",
         "developers/smart-contract-architecture",
@@ -222,7 +222,7 @@ const sidebars = {
     },
     {
       type: "category",
-      label: "4. Tools & Clients", // General tools
+      label: "Tools & Clients", // General tools
       items: [
         "developers/qubic-node",
         "developers/qubic-cli",
@@ -231,7 +231,7 @@ const sidebars = {
     },
     {
       type: "category",
-      label: "5. Community & Programs", // Other resources
+      label: "Community & Programs",
       items: [
         "developers/contribute",
         "developers/grants",
@@ -240,7 +240,7 @@ const sidebars = {
     },
     {
       type: "category",
-      label: "6. Tutorials", // Keep tutorials separate for now
+      label: "Tutorials",
       items: ["developers/tutorials"],
     },
   ],

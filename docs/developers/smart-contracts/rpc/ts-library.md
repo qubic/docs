@@ -140,8 +140,8 @@ async function main() {
             return;
         }
         let view = new DataView(packageData.payLoad.buffer);
-        let statateNumber = view.getBigUint64(0, true);
-        console.log('State Number: ', statateNumber.toString());
+        let stateNumber = view.getBigUint64(0, true);
+        console.log('State Number: ', stateNumber.toString());
     };
 
 }
@@ -330,4 +330,4 @@ main();
 
 ## References
 
-For me details about `ts-libray` please see https://github.com/qubic/ts-library
+For more details about `ts-library` please see https://github.com/qubic/ts-library

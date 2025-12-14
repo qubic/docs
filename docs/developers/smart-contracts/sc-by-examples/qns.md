@@ -3,7 +3,7 @@
 [**Source Code**](https://github.com/hackerby888/qubic-sc-examples/tree/qubic-name-service)
 
 :::warning
-This QNS contract is only for reference only and it's not the QNS contract that being developed in Qubic Eco System
+This QNS contract is for reference only and it's not the QNS contract that is being developed in the Qubic Ecosystem
 :::
 
 ## Qubic Name Service (QNS) Contract Documentation

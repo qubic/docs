@@ -279,7 +279,7 @@ And your node should display the following screen:
 
 ![png](/img/qrdp_3.png)
 
-Once receive computors list, your node should begin ticking:
+Once the computors list is received, your node should begin ticking:
 
 ![png](/img/qrdp_4.png)
 

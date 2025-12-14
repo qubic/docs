@@ -52,7 +52,7 @@ root@31217:~/core-docker# docker-compose up -d
  ✔ Container stats-api        Started                                                                              0.0s
 ```
 
-Your RPC is running at `IP:8000`, See [RPC Docs](https://qubic.github.io/integration/Partners/qubic-rpc-doc.html?urls.primaryName=Qubic%20RPC%20Live%20Tree) for more details.
+Your RPC is running at `IP:8000`. See the [Swagger API reference](https://qubic.github.io/integration/Partners/swagger/qubic-rpc-doc.html?urls.primaryName=Qubic%20RPC%20Live%20Tree) for a complete list of available endpoints.
 
 Let's test if our RPC is running by make a GET request to `http://IP:8000/v1/tick-info`, Example output
 

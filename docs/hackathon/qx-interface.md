@@ -204,7 +204,7 @@ async function main() {
 await main()
 ```
 > **Note:** Creating a bid (buy) order will remove the amount of funds needed to purchase the assets.  
-> If the funds are unavailable, the transaction will fail and no funds will bre transferred.
+> If the funds are unavailable, the transaction will fail and no funds will be transferred.
 
 Similar for a user that wants to sell an asset, the same information is needed, and he should create the sell order that will match the buy order:
 
@@ -326,6 +326,4 @@ await main()
 ```
 > **Note:** Creating an ask (sell) order, as well as canceling orders, does not cost funds.  
 > Cancelling orders is done the same as in the previous example, but the order action needs to be `QX_REMOVE_ASK_ORDER` or `QX_REMOVE_BID_ORDER`, depending on which kind of order you wish to cancel.
-
-pending
 
