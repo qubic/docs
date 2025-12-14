@@ -5,16 +5,17 @@ sidebar_label: 'Wallets'
 # Wallets
 
 :::info
-Qubic offers various wallet options to suit different user needs and preferences. For the most up-to-date list of available wallets, please consult https://qubic.org/#wallets.
+Qubic offers various wallet options to suit different user needs and preferences. For the most up-to-date list of available wallets, please consult [qubic.org](https://qubic.org/#wallets).
 :::
 
 ## Wallets by the Core Team
 
-1. Web Wallet: https://wallet.qubic.org
-2. iOS Wallet: https://apps.apple.com/us/app/qubic-wallet/id6502265811
-3. Android Wallet: https://play.google.com/store/apps/details?id=org.qubic.wallet&pli=1
+All official wallets are open source.
 
-To view the source code of the official wallet app developed by the core team, visit the GitHub repository: https://github.com/qubic/wallet-app
+- 🌐 [Web Wallet](https://wallet.qubic.org) ([source code](https://github.com/qubic/wallet))
+- 📱 Mobile ([source code](https://github.com/qubic/wallet-app))
+  - [iOS - App Store](https://apps.apple.com/us/app/qubic-wallet/id6502265811)
+  - [Android - Google Play](https://play.google.com/store/apps/details?id=org.qubic.wallet)
 
 ## Community-Developed Wallets
 
@@ -22,11 +23,11 @@ To view the source code of the official wallet app developed by the core team, v
 2. Mobile Wallet
 3. Web Extensions
 
-For detailed information and links to all available wallets, please visit https://qubic.org/#wallets.
+For detailed information and links to all available wallets, please visit [qubic.org](https://qubic.org/#wallets).
 
 ## Hardware Wallets
 
-1. HashWallet: https://www.gethashwallet.com/qubic-wallet
+1. [HashWallet](https://www.gethashwallet.com/qubic-wallet)
 
 ## Types of Wallets
 

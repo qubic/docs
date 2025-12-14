@@ -6,17 +6,15 @@ title: Smart Contract Architecture
 
 ## Open Source and Transparent
 
-**Public availability**: All contracts are available in the official repository
+One of Qubic's most significant advantages is complete transparency. Unlike many blockchain platforms where smart contracts are deployed as compiled bytecode that's difficult to audit, Qubic takes a radically different approach: every smart contract running on Qubic mainnet has its full C++ source code publicly available.
 
-One of Qubic's most significant advantages is complete transparency. Unlike many blockchain platforms where smart contracts are deployed as compiled bytecode that's difficult to audit, Qubic takes a radically different approach.
+**Source code**: https://github.com/qubic/core/tree/main/src/contracts
 
-- **Location**: https://github.com/qubic/core/tree/main/src/contracts
-- **Complete source code**: Every smart contract running on Qubic mainnet has its full C++ source code publicly available in the official repository
 - **No hidden logic**: There are no proprietary contracts or closed-source components. What you see in the repository is exactly what's running on the network
-- **Community auditing**: The open-source nature enables the entire community to review, audit, and understand the behavior of all contracts
+- **Community auditing**: The open-source nature enables the entire community to review, audit, and understand the behavior of all contracts. To report vulnerabilities, see the [Qubic Vulnerability Evaluation process](https://github.com/qubic/qct/tree/main/qve)
 - **Version control**: The git history shows how contracts have evolved over time, providing transparency about changes and updates
 
-**Technical implementation**:
+## Technical Implementation
 
 - **C++ implementation**: Smart contracts are written in C++ and compiled to native machine code, not bytecode
 - **Direct execution on UEFI ("bare metal")**: Contracts run directly on the Computor hardware through the UEFI layer, without any virtual machine, which is why Qubic achieves such exceptional performance.
@@ -25,86 +23,34 @@ One of Qubic's most significant advantages is complete transparency. Unlike many
 
 ## Contract Identification System
 
-**Deterministic identification**: Each smart contract is assigned a numerical index, from which its unique public key identifier is derived in a deterministic way.
+Each smart contract is identified by two values:
 
-All smart contracts in Qubic use a dual identification system for deterministic addressing and transaction targeting. Each contract has:
+1. **Contract index** - A numerical identifier assigned to the contract
+2. **Contract address** - A 60-character string deterministically derived from the index
 
-1. **Hardcoded numerical index** - Used for contract registration and internal referencing
-2. **Public key identifier** - 60-character string used for targeting transactions
+Common usage examples:
+- The **index** is used in RPC calls like `querySmartContract`
+- The **address** is used as the `destination` field when sending transactions to the contract
 
-### Contract Indices and Identifiers
+For example, the **QUTIL** contract has index `4` and address `EAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAVWRF`, while the **QX** contract has index `1` and address `BAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAARMID`.
 
-```json
-{
-  "QX": {
-    "index": 1,
-    "id": "BAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAARMID"
-  },
-  "QUOTTERY": {
-    "index": 2,
-    "id": "CAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACNKL"
-  },
-  "RANDOM": {
-    "index": 3,
-    "id": "DAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAANMIG"
-  },
-  "QUTIL": {
-    "index": 4,
-    "id": "EAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAVWRF"
-  },
-  "MLM": {
-    "index": 5,
-    "id": "FAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAYWJB"
-  },
-  "GQMPROP": {
-    "index": 6,
-    "id": "GAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQGNM"
-  },
-  "SWATCH": {
-    "index": 7,
-    "id": "HAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAHYCM"
-  },
-  "CCF": {
-    "index": 8,
-    "id": "IAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABXSH"
-  },
-  "QEARN": {
-    "index": 9,
-    "id": "JAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAVKHO"
-  },
-  "QVAULT": {
-    "index": 10,
-    "id": "KAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAXIUO"
-  },
-  "MSVAULT": {
-    "index": 11,
-    "id": "LAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAKPTJ"
-  },
-  "QBAY": {
-    "index": 12,
-    "id": "MAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAWLWD"
-  }
-}
-```
+You can find contract indexes and addresses using:
 
-**Usage contexts**:
-
-- **Contract Index**: Used in RPC calls like `querySmartContract` to specify which contract to interact with
-- **Public Key ID**: Used as the `destination` field in transactions when calling contract procedures
-
-**Additional resources**:
-
+- **Smart contract explorer**: https://explorer.qubic.org/network/assets/smart-contracts
 - **Contract discovery and specifications**: https://qforge.qubicdev.com/
-- **Contract and token explorer**: https://explorer.qubic.org/network/assets/smart-contracts
-
-The explorer provides comprehensive information about all contracts and tokens deployed on the Qubic network, including their current state, transaction history, and interaction details.
+- **Smart contract registry (JSON)**: https://static.qubic.org/v1/general/data/smart_contracts.json (data extracted from the tickchain in JSON format, plus additional metadata useful for app development)
 
 ## Functions vs Procedures - Separation of Concerns
 
-### Functions (Read-Only)
+### Functions (Read-Only Operations)
+
+- Cannot modify contract state
+- Don't require transactions, only RPC queries
+- Always return the same result for the same state
+
+Example from QX contract:
 
 ```cpp
-// Example from QX contract
 struct Fees_output {
     uint32 assetIssuanceFee;
     uint32 transferFee;
@@ -118,16 +64,15 @@ PUBLIC_FUNCTION(Fees) {
 }
 ```
 
-**Characteristics**:
-
-- **Immutable**: Cannot modify contract state
-- **No cost**: Don't require transactions, only RPC queries
-- **Deterministic**: Always return the same result for the same state
-
 ### Procedures (Write Operations)
 
+- Can modify contract state
+- Must be invoked through signed transactions
+- May require QUs depending on contract logic
+
+Example from QX contract:
+
 ```cpp
-// Example from QX contract
 struct AddToBidOrder_input {
     id issuer;
     uint64 assetName;
@@ -148,16 +93,17 @@ PUBLIC_PROCEDURE(AddToBidOrder) {
 }
 ```
 
-**Characteristics**:
+## Registering Functions and Procedures
 
-- **Mutable**: Can modify contract state
-- **Require transactions**: Must be invoked through signed transactions
-- **Potentially costly**: May require QUs depending on contract logic
+Each function and procedure must be registered with a unique numeric index to be callable externally.
 
-## Registration and Indexing System
+- **Unique identification**: Each function/procedure has a specific numeric index
+- **Public interface**: Defines the contract's available API
+- **Validation**: Only registered functions can be invoked externally
+
+Example from QX contract:
 
 ```cpp
-// Mapping functions to numeric indices
 REGISTER_USER_FUNCTIONS_AND_PROCEDURES() {
     // Functions (queries)
     REGISTER_USER_FUNCTION(Fees, 1);                    // inputType = 1
@@ -172,9 +118,3 @@ REGISTER_USER_FUNCTIONS_AND_PROCEDURES() {
     REGISTER_USER_PROCEDURE(RemoveFromAskOrder, 7);     // inputType = 7
 }
 ```
-
-**Registration importance**:
-
-- **Unique identification**: Each function/procedure has a specific numeric index
-- **Public interface**: Defines the contract's available API
-- **Validation**: Only registered functions can be invoked externally

@@ -235,7 +235,6 @@ const sidebars = {
       items: [
         "developers/contribute",
         "developers/grants",
-        "developers/bug-bounty",
       ],
     },
     {

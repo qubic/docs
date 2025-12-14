@@ -65,7 +65,7 @@ Everything you need to start developing on Qubic:
 
 ## Development Programs
 - [Grants Program](developers/grants.md): Foster development of high-quality smart contracts and solutions.
-- [Bug Bounty Program](developers/bug-bounty.md): Contribute to Qubic's security by finding and reporting bugs.
+- [Vulnerability Evaluation Program](https://github.com/qubic/qct/tree/main/qve): Contribute to Qubic's security by reporting vulnerabilities.
 
 ## Contribute
 
