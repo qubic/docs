@@ -36,38 +36,18 @@ Current Tick (N) → Offset (+10) → Target Tick (N+10) → Execution
 
 **Architectural implications**:
 
-- **No mempool**: Because transactions are scheduled for specific ticks, there's no need for a traditional mempool where transactions wait to be processed. Either your transaction makes it into its designated tick or it's lost forever
+- **No traditional mempool**: Because transactions are scheduled for specific ticks, there's no need for a traditional mempool where transactions wait to be processed. In Qubic, there is a pending transaction pool that collects all transactions for a specific tick. In case that there are more than the maximum number of transactions scheduled for a tick, the lowest priority transactions are discarded. Transactions that don't make it into their target tick are not automatically retried; the client must detect this and resubmit if needed.
+
+  *A note on priority: protocol transactions always have maximum priority; other transactions are prioritized by balance and address inactivity, meaning addresses that have recently sent or received Qubics have lower priority.*
 - **Deterministic execution**: You must specify exactly WHEN your transaction will execute (the target tick number), not just submit it and hope for the best
 - **Time window planning**: You need a minimum of 3 ticks offset to ensure network propagation, though most applications use 10+ ticks for safety
 - **Single opportunity**: If the target tick passes and your transaction wasn't included (due to network issues, invalid signature, etc.), the transaction is irreversibly lost. There's no retry mechanism - you must create and send a new transaction
 
-## 3. Concurrency Restriction
+## 3. Restrictions
 
-**Current limitation**: An identifier (ID) can currently have only **one pending transaction** at a time.
+**Current limitations**: Transactions cannot be scheduled **infinitely in the future**. Currently, transactions can be scheduled ~10 minutes in advance to ensure memory efficiency.
 
-This may be surprising for developers coming from other blockchain platforms. In Qubic, each identity (public key) generally has only one pending transaction at a given moment. This restriction exists for technical reasons related to how the network maintains state consistency, although future updates may allow multiple pending transactions per identity.
-
-```
-ID State Example:
-- Transaction A scheduled for tick N+5 (pending)
-- Transaction B sent for tick N+7 (new)
-- Result: Transaction A is automatically replaced by Transaction B
-```
-
-![Id State Example](../../static/img/id_state.png)
-
-**Practical implications** (subject to change with future updates):
-
-- **Transaction replacement**: If you send a new transaction while another is pending, the old one may currently be discarded.
-- **Timing coordination**: Carefully plan the timing of multiple operations from the same identity.
-- **No batching**: Currently, you cannot send multiple transactions simultaneously from the same identity.
-
-**Mitigation strategies**:
-
-- **Sequential timing**: Space out transactions to different future ticks (e.g., tick N+5, N+6, N+7).
-- **Temporary identities**: Create additional key pairs for operations that need to happen in parallel.
-- **Application-level queuing**: Implement transaction queues in your application logic to manage multiple operations.
-- **State checking**: Always verify the current pending transaction before sending a new one.
+**Past limitations**: Until epoch 184, an identifier (ID) could only have one pending transaction at a time. Starting from epoch 184, there is no restriction on the number of pending transactions anymore (enabled by the introduction of the pending transaction pool).
 
 
 
