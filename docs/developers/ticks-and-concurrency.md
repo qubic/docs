@@ -36,7 +36,9 @@ Current Tick (N) → Offset (+10) → Target Tick (N+10) → Execution
 
 **Architectural implications**:
 
-- **No traditional mempool**: Because transactions are scheduled for specific ticks, there's no need for a traditional mempool where transactions wait to be processed. In Qubic, there is a pending transaction pool that collects all transactions for a specific tick. In case that there are more than the maximum number of transactions scheduled for a tick, the lowest priority transactions are discarded. Either your transaction makes it into its designated tick or it's lost forever.
+- **No traditional mempool**: Because transactions are scheduled for specific ticks, there's no need for a traditional mempool where transactions wait to be processed. In Qubic, there is a pending transaction pool that collects all transactions for a specific tick. In case that there are more than the maximum number of transactions scheduled for a tick, the lowest priority transactions are discarded. Transactions that don't make it into their target tick are not automatically retried; the client must detect this and resubmit if needed.
+
+  *A note on priority: protocol transactions always have maximum priority; other transactions are prioritized by balance and address inactivity, meaning addresses that have recently sent or received Qubics have lower priority.*
 - **Deterministic execution**: You must specify exactly WHEN your transaction will execute (the target tick number), not just submit it and hope for the best
 - **Time window planning**: You need a minimum of 3 ticks offset to ensure network propagation, though most applications use 10+ ticks for safety
 - **Single opportunity**: If the target tick passes and your transaction wasn't included (due to network issues, invalid signature, etc.), the transaction is irreversibly lost. There's no retry mechanism - you must create and send a new transaction
