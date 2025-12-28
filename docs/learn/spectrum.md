@@ -15,7 +15,7 @@ Logging Transactions: When a transaction is executed, it is recorded as a new en
 Immutable Records: Upon a transaction's recording in an epoch, it cannot be altered. This immutable nature of the Spectrum ensures the accuracy and security of the network's transaction history.
 
 ## Accessibility
-The Spectrum can be accessed directly on any [Computor](/learn/nodes) via the [qubic.li Spectrum Info Tool (CLI)](https://github.com/qubic-li/spectrumInfo). Make sure to use the current Qubic protocol number and the IP address of a peer in the latest tick. Check [https://app.qubic.li/network/live](https://app.qubic.li/network/live) for the latest network data.
+The Spectrum can be obtained directly from any Qubic node (Core/Full, Lite, or Bob) or downloaded from [storage.qubic.li](https://storage.qubic.li/network/).
 
 ## Security and Decentralization
 The Spectrum's decentralised structure ensures that control is not vested in a single entity. Instead, the Spectrum is distributed across all Computors. This decentralisation bolsters the resistance of the Spectrum to censorship and fraudulent attempts. Alterations to the Spectrum would necessitate the consensus of the majority of Computors, making it practically impossible.
