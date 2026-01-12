@@ -14,9 +14,27 @@ The Qubic network utilizes $QUBIC (and not $QU) as its official financial ticker
 :::
 
 ## Epoch and QU Generation
-Each epoch in the Qubic network spans seven days and produces 1 trillion $QUBIC. These units are predominantly allocated to [Computors](/learn/nodes), the backbone nodes of the network. In scenarios of maximum efficiency, a Computor can potentially receive a revenue equivalent to 1 trillion $QUBIC divided by 676 (i.e. 1.479 billion $QUBIC). The distribution model is designed to encourage efficiency; Computors operating at suboptimal levels will witness a dip in their revenue. The remaining balance of $QUBIC is assigned to the [Arbitrator](/learn/arbitrator). The Arbitrator plays no role in smart contract governance, voting or $QUBIC distribution, ensuring equilibrium within the Qubic economic framework.
+Each epoch in the Qubic network spans seven days and produces 1 trillion $QUBIC. These units are allocated to [Computors](/learn/nodes), the Computor Controlled Fund (CCF), QEarn, and burns. In scenarios of maximum efficiency, a Computor can potentially receive a revenue equivalent to 1 trillion $QUBIC divided by 676 (i.e. 1.479 billion $QUBIC). The distribution model encourages efficiency; Computors operating at suboptimal levels see reduced revenue.
 
-Regarding the overall supply, it isn't indefinite. The circulating coins are capped at 200 trillion, as per a recent community decision to reduce the max supply from the original 1000 trillion. This reduction, which was voted and approved by the community (see the proposal [here](https://app.qubic.li/public/proposal/81ca1427-2ebc-4e78-a662-25a643f48292)), aims to boost the Qubic ecosystem and attract new entrepreneurs. Along with this reduction, an emission schedule has been implemented which will burn Qubic. For the first year, the reduction will be a maximum of 15% of emissions. Afterwards, Qubic will have a halving of emissions every year.
+## Max Supply and Emission Schedule
+The circulating supply is capped at 200 trillion $QUBIC, reduced from the original 1000 trillion via [community vote](https://app.qubic.li/public/proposal/81ca1427-2ebc-4e78-a662-25a643f48292).
+
+To reach this cap, Qubic implements a halving schedule that reduces net emissions by ~50% each halving (exact rates determined by quorum before each halving):
+
+| Epochs | Net Emissions per Epoch |
+|--------|------------------------|
+| 0-126 | 1 trillion $QUBIC |
+| 127-174 | 850 billion $QUBIC |
+| 175-226 | 450 billion $QUBIC |
+| 227-278 | ~240 billion $QUBIC |
+| 279-330 | ~125 billion $QUBIC |
+| 331-382 | ~65 billion $QUBIC |
+| 383-434 | ~35 billion $QUBIC |
+| 435-486 | ~20 billion $QUBIC |
+| 487-538 | ~10 billion $QUBIC |
+| 539+ | ~5 billion $QUBIC |
+
+The first halving occurred at **Epoch 175** (August 2025), reducing net emissions from 850B to 450B per epoch. The Supply Watcher Smart Contract dynamically adjusts emissions based on real-time supply data.
 
 ## Transfers and Fees
 Qubic stands apart from traditional systems with its approach to transfers and fees. Transfers within the Qubic network are **feeless**, contributing to the efficiency and user-friendly nature of the platform. Furthermore, 'fees' associated with executing smart contracts are not fees in the traditional sense. This $QUBIC is burned and not given to Computors, further reinforcing the concept of $QUBIC as 'energy' rather than money.
