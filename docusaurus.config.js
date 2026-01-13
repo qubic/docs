@@ -41,6 +41,45 @@ const config = {
     locales: ['en'],
   },
 
+  plugins: [
+    [
+      '@scalar/docusaurus',
+      {
+        id: 'query-api',
+        label: false,
+        route: '/apis/query',
+        configuration: {
+          spec: {
+            url: '/openapi/query-services.openapi.yaml',
+          },
+          metaData: {
+            title: 'Query API',
+          },
+          defaultOpenAllTags: true,
+          hideModels: true,
+        },
+      },
+    ],
+    [
+      '@scalar/docusaurus',
+      {
+        id: 'live-api',
+        label: false,
+        route: '/apis/live',
+        configuration: {
+          spec: {
+            url: '/openapi/qubic-http.openapi.yaml',
+          },
+          metaData: {
+            title: 'Live API',
+          },
+          defaultOpenAllTags: true,
+          hideModels: true,
+        },
+      },
+    ],
+  ],
+
   presets: [
     [
       'classic',
@@ -98,9 +137,8 @@ const config = {
             position: 'left',
           },
           {
-            label: 'API',
-            type: 'docSidebar',
-            sidebarId: 'apiSidebar',
+            label: 'API Center',
+            to: '/apis',
             position: 'left',
           },
           {
@@ -133,8 +171,8 @@ const config = {
                 to: '/developers/intro',
               },
               {
-                label: 'API',
-                to: '/api/rpc',
+                label: 'API Center',
+                to: '/apis',
               },
             ],
           },

@@ -242,15 +242,6 @@ const sidebars = {
       items: ["developers/tutorials"],
     },
   ],
-  apiSidebar: [
-    {
-      type: "category",
-      label: "API Reference",
-      items: [
-        "api/rpc", // Keep the pure RPC reference here
-      ],
-    },
-  ],
 };
 
 module.exports = sidebars;
