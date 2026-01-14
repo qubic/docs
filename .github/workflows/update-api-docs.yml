@@ -1,0 +1,123 @@
+name: Update API Docs
+
+on:
+  workflow_dispatch:
+    inputs:
+      api:
+        description: 'Which API to update'
+        required: true
+        default: 'both'
+        type: choice
+        options:
+          - both
+          - live
+          - query
+  repository_dispatch:
+    types: [live-api-update, query-api-update]
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  update-live-api:
+    if: >
+      github.event_name == 'repository_dispatch' && github.event.action == 'live-api-update' ||
+      github.event_name == 'workflow_dispatch' && (github.event.inputs.api == 'live' || github.event.inputs.api == 'both')
+    runs-on: ubuntu-latest
+    concurrency:
+      group: update-live-api
+      cancel-in-progress: true
+    steps:
+      - name: Checkout docs repo
+        uses: actions/checkout@v4
+
+      - name: Checkout qubic-http
+        uses: actions/checkout@v4
+        with:
+          repository: qubic/qubic-http
+          path: tmp/qubic-http
+          sparse-checkout: |
+            protobuff/qubic.openapi.yaml
+
+      - name: Copy OpenAPI file
+        run: cp tmp/qubic-http/protobuff/qubic.openapi.yaml static/openapi/qubic-http.openapi.yaml
+
+      - name: Check for changes
+        id: changes
+        run: |
+          if git diff --quiet static/openapi/qubic-http.openapi.yaml; then
+            echo "changed=false" >> $GITHUB_OUTPUT
+          else
+            echo "changed=true" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Create Pull Request
+        if: steps.changes.outputs.changed == 'true'
+        uses: peter-evans/create-pull-request@v6
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          commit-message: "docs: update Live API OpenAPI specification"
+          title: "docs: update Live API OpenAPI specification"
+          body: |
+            This PR updates the Live API OpenAPI specification from [qubic/qubic-http](https://github.com/qubic/qubic-http).
+
+            This PR was automatically generated.
+          branch: docs/update-live-api-spec
+          delete-branch: true
+          labels: automated
+
+      - name: Cleanup
+        if: always()
+        run: rm -rf tmp/
+
+  update-query-api:
+    if: >
+      github.event_name == 'repository_dispatch' && github.event.action == 'query-api-update' ||
+      github.event_name == 'workflow_dispatch' && (github.event.inputs.api == 'query' || github.event.inputs.api == 'both')
+    runs-on: ubuntu-latest
+    concurrency:
+      group: update-query-api
+      cancel-in-progress: true
+    steps:
+      - name: Checkout docs repo
+        uses: actions/checkout@v4
+
+      - name: Checkout archive-query-service
+        uses: actions/checkout@v4
+        with:
+          repository: qubic/archive-query-service
+          path: tmp/archive-query-service
+          sparse-checkout: |
+            v2/api/archive-query-service/v2/query_services.openapi.yaml
+
+      - name: Copy OpenAPI file
+        run: cp tmp/archive-query-service/v2/api/archive-query-service/v2/query_services.openapi.yaml static/openapi/query-services.openapi.yaml
+
+      - name: Check for changes
+        id: changes
+        run: |
+          if git diff --quiet static/openapi/query-services.openapi.yaml; then
+            echo "changed=false" >> $GITHUB_OUTPUT
+          else
+            echo "changed=true" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Create Pull Request
+        if: steps.changes.outputs.changed == 'true'
+        uses: peter-evans/create-pull-request@v6
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          commit-message: "docs: update Query API OpenAPI specification"
+          title: "docs: update Query API OpenAPI specification"
+          body: |
+            This PR updates the Query API OpenAPI specification from [qubic/archive-query-service](https://github.com/qubic/archive-query-service).
+
+            This PR was automatically generated.
+          branch: docs/update-query-api-spec
+          delete-branch: true
+          labels: automated
+
+      - name: Cleanup
+        if: always()
+        run: rm -rf tmp/
