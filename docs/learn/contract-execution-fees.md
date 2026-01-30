@@ -24,11 +24,21 @@ This means, it will mostly be unusable until the reserve is refilled (for except
 
 ## What Operations Require Execution Fees
 
-The execution fee system checks whether a contract has positive `executionFeeReserve` at different entry points.
+The execution fee system checks whether a contract has positive execution fee reserve at different entry points.
 Contract user functions are never checked and their execution time does not contribute to the overall fee.
 Contract procedures generally only run with positive reserve and their execution time contributes to the fee.
 There are some special system procedures and callbacks that will run even with non-positive reserve to ensure overall operation of the Qubic network, however, their execution time still contributes to the deducted fee.
 For details, please see [this developer documentation](https://github.com/qubic/core/blob/main/doc/execution_fees.md#what-operations-require-execution-fees).
+
+## Consolidating Fees Across Computors
+
+To ensure that the state of the Qubic network stays consistent across all nodes, each computor has to deduct the same execution fee amount for each contract.
+However, the actual execution time will vary due e.g. different hardware setups.
+To account for that, each computor can define their own multiplier to scale the raw execution time. 
+To consolidate the scaled execution times from each computor into a single consistent execution fee value, the quorum value is used.
+
+Every computor sends their scaled execution time to the network as transaction.
+After all transactions are sent, the received execution fee values are sorted in ascending order and the value at the quorum position `2/3 * NUMBER_OF_COMPUTORS + 1 = 451` is taken as final execution fee to be deducted. 
 
 ## Best Practices
 
