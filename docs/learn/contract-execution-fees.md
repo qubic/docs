@@ -33,7 +33,7 @@ For details, please see [this developer documentation](https://github.com/qubic/
 ## Consolidating Fees Across Computors
 
 To ensure that the state of the Qubic network stays consistent across all nodes, each computor has to deduct the same execution fee amount for each contract.
-However, the actual execution time will vary due e.g. different hardware setups.
+However, the actual execution time will vary due to e.g. different hardware setups.
 To account for that, each computor can define their own multiplier to scale the raw execution time. 
 To consolidate the scaled execution times from each computor into a single consistent execution fee value, the so called *quorum value* is used:
 
@@ -48,7 +48,7 @@ After all transactions are sent, the received execution fee values are sorted in
 2. **Burn collected invocation rewards**: Regularly burn QUs to replenish the execution fee reserve.
 3. **Monitor reserve**: Implement a function to expose current reserve level.
 4. **Graceful degradation**: Consider what happens when reserve runs low.
-5. **Handle inter-contract call errors**: After calling procesdures of another contract, verify that the call succeeded. Handle errors gracefully (e.g., skip operations, use fallback logic). You can also proactively verify the called contract has positive fee reserve using the query function provided in QPI before calling.
+5. **Handle inter-contract call errors**: After calling procedures of another contract, verify that the call succeeded. Handle errors gracefully (e.g., skip operations, use fallback logic). You can also proactively verify the called contract has positive fee reserve using the query function provided in QPI before calling.
 
 ### For Contract Users
 
