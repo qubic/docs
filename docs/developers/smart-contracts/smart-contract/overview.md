@@ -10,8 +10,6 @@ To isolate contracts, access to other contracts and Core internals is only allow
 
 A contract has a state struct, containing all its data as member variables. The memory available to the contract is allocated statically, but extending the state will be possible between epochs through special `EXPAND` events.
 
-**Contract developers should note that some parts of the Qubic protocol are not yet implemented.**
+**Important considerations for contract developers:**
 
-- Contract execution will eventually incur fees, paid from a fee reserve funded by QUs burned during the IPO and through ongoing burns. A contract must continue burning QUs to stay active—once the reserve is empty, it stops executing.
-
-- In the future, managing contracts will also need to pay for ledger entries, so collecting fees during asset issuance is recommended.
+- Contract execution incurs fees, paid from an execution fee reserve funded by QUs burned during the IPO and through ongoing burns. A contract must continue burning QUs to stay active—once the reserve is empty, it stops executing. See [Contract Execution Fees](/learn/contract-execution-fees) for details.
