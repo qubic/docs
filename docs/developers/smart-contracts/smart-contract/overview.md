@@ -12,4 +12,4 @@ A contract has a state struct, containing all its data as member variables. The 
 
 **Important considerations for contract developers:**
 
-- Contract execution incurs fees, paid from an execution fee reserve funded by QUs burned during the IPO and through ongoing burns. A contract must continue burning QUs to stay active—once the reserve is empty, it stops executing. See [Contract Execution Fees](/docs/learn/contract-execution-fees) for details.
+- Contract execution incurs fees, paid from an execution fee reserve funded by QUs burned during the IPO and through ongoing burns. A contract must continue burning QUs to stay active—once the reserve is empty, it stops executing. See [Contract Execution Fees](/learn/contract-execution-fees) for details.
