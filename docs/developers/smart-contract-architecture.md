@@ -16,7 +16,7 @@ One of Qubic's most significant advantages is complete transparency. Unlike many
 
 ## Technical Implementation
 
-- **C++ implementation**: Smart contracts are written in C++ and compiled to native machine code, not bytecode
+- **C++ implementation**: Smart contracts are written in a restricted variant of C++ and compiled to native machine code, not bytecode. See [Language Restrictions](/developers/smart-contracts/smart-contract/restrictions) for the full list of enforced rules
 - **Direct execution on UEFI ("bare metal")**: Contracts run directly on the Computor hardware through the UEFI layer, without any virtual machine, which is why Qubic achieves such exceptional performance.
 - **Deterministic compilation**: The same source code always produces identical executable contracts, ensuring reproducible deployments
 - **No runtime interpretation**: Unlike Ethereum's EVM or other VM-based systems, there's no runtime interpretation overhead
@@ -117,3 +117,7 @@ REGISTER_USER_FUNCTIONS_AND_PROCEDURES() {
     REGISTER_USER_PROCEDURE(RemoveFromAskOrder, 7);     // inputType = 7
 }
 ```
+
+## Development, Review, and Deployment
+
+Every contract developer should be familiar with the full lifecycle of a smart contract, from development to review and deployment on mainnet. See the [Smart Contract Development Guide](https://github.com/qubic/core/blob/main/doc/contracts.md) in the official core repository.
