@@ -576,7 +576,7 @@ Here's how to use the complete implementation with real working values:
 ```javascript
 // Buy 100 CFB tokens at 4 QU each - using real working configuration
 const result = await runQXBidOrder({
-  rpc: "https://testnet-rpc.qubicdev.com/",
+  rpc: "https://testnet-rpc.qubic.org/",
   seed: "fwqatwliqyszxivzgtyyfllymopjimkyoreolgyflsnfpcytkhagqii",
   sourcePublicKey: "YOUR_PUBLIC_KEY_HERE",
   contractAddress:

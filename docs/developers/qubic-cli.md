@@ -39,14 +39,6 @@ When working with test accounts, you can use a seed phrase to sign transactions:
 ./qubic-cli -nodeip YOUR_NODE_IP -nodeport YOUR_NODE_PORT -seed YOUR_SEED -somecommand
 ```
 
-## Online CLI IDE
-
-For interacting with deployed contracts, you can also use the online [CLI IDE](https://qubicdev.com/) which offers:
-
-- Execute Qubic CLI commands directly from the browser
-- Save and manage code files for your projects
-- AI assistance for generating optimal commands and troubleshooting
-
 ## Smart Contract Interaction
 
 The CLI is particularly useful for testing smart contracts. For example, to interact with a deployed smart contract:

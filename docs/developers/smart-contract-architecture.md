@@ -37,7 +37,6 @@ For example, the **QUTIL** contract has index `4` and address `EAAAAAAAAAAAAAAAA
 You can find contract indexes and addresses using:
 
 - **Smart contract explorer**: https://explorer.qubic.org/network/assets/smart-contracts
-- **Contract discovery and specifications**: https://qforge.qubicdev.com/
 - **Smart contract registry (JSON)**: https://static.qubic.org/v1/general/data/smart_contracts.json (data extracted from the tickchain in JSON format, plus additional metadata useful for app development)
 
 ## Functions vs Procedures - Separation of Concerns

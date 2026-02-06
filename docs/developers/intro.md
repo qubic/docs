@@ -69,7 +69,6 @@ To interact with existing smart contracts:
 - **TypeScript development**: [Qubic TypeScript Library](https://github.com/qubic/ts-library)
 - **Wallet management**: [Qubic Vault TypeScript Library](https://github.com/qubic/ts-vault-library)
 - **Frontend example**: [HM25 Frontend](https://github.com/icyblob/hm25-frontend)
-- **Online CLI interface**: [QubicDev.com](https://qubicdev.com)
 
 ## Getting Help
 
