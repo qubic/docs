@@ -56,7 +56,7 @@ jobs:
         if: steps.changes.outputs.changed == 'true'
         uses: peter-evans/create-pull-request@v6
         with:
-          token: ${{ secrets.GITHUB_TOKEN }}
+          token: ${{ secrets.PAT_TOKEN }}
           commit-message: "docs: update Live API OpenAPI specification"
           title: "docs: update Live API OpenAPI specification"
           body: |
@@ -107,7 +107,7 @@ jobs:
         if: steps.changes.outputs.changed == 'true'
         uses: peter-evans/create-pull-request@v6
         with:
-          token: ${{ secrets.GITHUB_TOKEN }}
+          token: ${{ secrets.PAT_TOKEN }}
           commit-message: "docs: update Query API OpenAPI specification"
           title: "docs: update Query API OpenAPI specification"
           body: |
