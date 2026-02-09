@@ -6,8 +6,10 @@ title: Qubic RPC
 The Qubic RPC (Remote Procedure Call) API provides a way for applications to interact with the Qubic blockchain without running a full node. It offers endpoints for querying blockchain data, submitting transactions, and interacting with smart contracts.
 
 ## 1. Available RPC Services and Documentation
-- [Qubic Live Tree](https://qubic.github.io/integration/Partners/swagger/qubic-rpc-doc.html?urls.primaryName=Qubic%20RPC%20Live%20Tree) - For real-time data access. All endpoints are mapped out here for easy reference.
-- [Qubic Archive Tree](https://qubic.github.io/integration/Partners/swagger/qubic-rpc-doc.html?urls.primaryName=Qubic%20RPC%20Archive%20Tree) - Detailed API reference for historical data and past transactions. Every endpoint is documented for clarity. **Note: This API is deprecated and is no longer recommended for new development.**
+
+- [Live API](/apis/live) - Real-time data access (interactive docs)
+- [Query API](/apis/query) - Historical data and archive queries (interactive docs)
+- [Full Swagger Reference](https://qubic.github.io/integration/Partners/swagger/qubic-rpc-doc.html) - Complete API reference including all services (Archiver, Query, Live, Stats)
 
 ## 2. Public RPC Endpoints
 
@@ -24,89 +26,7 @@ These endpoints can be accessed via HTTP requests (e.g., using `curl`, a TypeScr
 curl https://rpc.qubic.org/v1/status
 ```
 
-## 3. RPC Fundamentals
-
-This section introduces the essential building blocks of interacting with the Qubic network through Remote Procedure Calls. It highlights where to find the complete API reference, outlines the most commonly used endpoints, and explains what each call returns. By understanding these core operations you gain the foundation needed to build reliable integrations and debug network activity effectively.
-
-### Official RPC Documentation
-
-Qubic offers different RPC APIs for developers. The link below points specifically to the Live Tree RPC, which is one of the available APIs: https://qubic.github.io/integration/Partners/swagger/qubic-rpc-doc.html?urls.primaryName=Qubic%20RPC%20Live%20Tree
-
-The official RPC documentation provides comprehensive details about all available endpoints, request/response formats, and usage examples. This is your primary reference for implementing Qubic integrations.
-
-### Core RPC Endpoints
-
-#### Network Status and Information
-
-**`GET /status`**
-
-- Returns current network state including tick information, epoch details, and network health metrics
-- Essential for determining the current tick before scheduling transactions
-- Response includes active tick, current epoch, and network statistics
-
-**`GET /ticks/{tickNumber}`**
-
-- Retrieves detailed information about a specific tick
-- Includes all transactions executed in that tick and their results
-- Crucial for verifying transaction inclusion and debugging failed executions
-
-#### Account and Balance Operations
-
-**`GET /balances/{identityId}`**
-
-- Query QU balance for any identity
-- Returns current balance and pending transaction information
-- Use the 256-bit public key as the identity identifier
-
-**`GET /v1/assets/{identity}/owned`**
-
-- Retrieve all assets owned by an identity
-- Includes asset names, quantities, and metadata
-- Essential for applications dealing with custom tokens
-
-#### Smart Contract Interactions
-
-**`POST /querySmartContract`**
-
-```json
-{
-  "contractIndex": 1,
-  "inputType": 2,
-  "inputSize": 40,
-  "requestData": "base64EncodedPayload"
-}
-```
-
-- Execute read-only contract functions
-- No transaction required, immediate response
-- Response data needs to be decoded based on contract output structure
-
-**`POST /broadcastTransaction`**
-
-```json
-{
-  "encodedTransaction": "base64EncodedSignedTransaction"
-}
-```
-
-- Submit signed transactions to the network
-- Transaction must be properly formatted and scheduled for future tick
-- Returns transaction ID for tracking
-
-#### Transaction Verification
-
-**`GET /transactions/{transactionId}`**
-
-- Check transaction status and inclusion
-- Returns execution tick, status, and any error messages
-- Essential for confirming transaction success
-
-**`GET /entities/{entityId}`**
-
-- Get detailed entity information including transaction history (where available within current epoch)
-- Useful for debugging and account state verification
-
-## 4. Basic API Examples
+## 3. Basic API Examples
 
 The following examples demonstrate how to use JavaScript scripts to interact with Qubic RPC APIs. These practical examples showcase common operations and provide ready-to-use code snippets for developers.
 
@@ -163,23 +83,7 @@ export async function runTickInfo({ rpc }) {
 }
 ```
 
-### Example 4: Get Transactions by Tick
-
-Retrieves all transactions that occurred in a specific tick.
-
-```javascript
-import { normalizeEndpoint, fetchJson } from "./common";
-
-export async function runTxByTick({ rpc, tick }) {
-  const base = normalizeEndpoint(rpc);
-  if (!tick) throw new Error("Missing tick number");
-  const url = `${base}v2/ticks/${tick}/transactions`;
-  const data = await fetchJson(url);
-  return data; // { transactions: [...] }
-}
-```
-
-## 5. Smart Contract Interaction Flow
+## 4. Smart Contract Interaction Flow
 
 Here's how to interact with a smart contract through RPC:
 
@@ -210,7 +114,7 @@ Similarly, the `responseData` received from such endpoints is often encoded in b
    - Sign the transaction with your private key
    - Broadcast it using `/v1/broadcast-transaction`
 
-## 6. Transaction Anatomy
+## 5. Transaction Anatomy
 
 This section provides a clear breakdown of every component that forms a valid Qubic transaction. It explains the conceptual structure, how to determine the exact input size expected by a smart contract, and how the data is serialized into a base64 payload. You’ll also see the end-to-end flow for both read-only queries and state-changing procedures, helping you understand how transactions are built, signed, and executed on the network.
 
@@ -304,7 +208,7 @@ pseudocode:
 5. parse_output_struct(response_bytes)
 ```
 
-## 7. Complete Transaction Example
+## 6. Complete Transaction Example
 
 This section demonstrates how to construct payloads for QX smart contract interactions. QX is Qubic's decentralized exchange (contract index 1), and these examples show the most common operations developers need to implement.
 
@@ -752,21 +656,19 @@ async function broadcastTransaction(transaction, rpcUrl) {
 **Solution**: Use adequate tick offset (30+ for smart contracts) and verify current tick before sending.
 
 
-## 8. Testing Custom Smart Contracts
+## 7. Testing Custom Smart Contracts
 
 When interacting with custom smart contracts:
 
 - For custom contracts not yet deployed on mainnet, initial testing should be done through a testnet node. Refer to the [Testnet Resources](../developers/testnet-resources.md) for information on testnet nodes and faucets.
 - After verifying your contract works correctly, you can integrate it with frontend applications following the patterns in the example applications.
 
-## 9. Best Practices
+## 8. Best Practices
 
 1. **Error Handling**: Always implement robust error handling for RPC calls
 2. **Security**: Never expose private keys in client-side code; use proper wallet integration
 
-For further integration details, explore the [Qubic Integration GitHub](https://qubic.github.io/integration/Partners/swagger/qubic-rpc-doc.html).
-
-## 10. Further Reading
+## 9. Further Reading
 
 For additional context and deeper understanding of the Qubic ecosystem, explore:
 
