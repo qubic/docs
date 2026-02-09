@@ -3,531 +3,597 @@
 
 openapi: 3.0.3
 info:
-    title: Qubic Query API
-    description: API for querying archived Qubic data.
-    version: 1.0.0
+  title: Qubic Query API
+  description: API for querying historical Qubic ledger data.
+  version: 1.0.0
 servers:
-    - url: https://rpc.qubic.org/query/v1
+  - url: https://rpc.qubic.org/query/v1
 paths:
-    /getComputorListsForEpoch:
-        post:
-            tags:
-                - Network
-            summary: Get Epoch Computors
-            description: |-
-                Get the list(s) of computors for one epoch. These are the computors (IDs signed by the arbitrator) that
-                 are allowed to make quorum decisions. It is possible that this list changes within the epoch in case of
-                 arbitrator intervention.
-            operationId: ArchiveQueryService_GetComputorsListsForEpoch
-            requestBody:
-                content:
-                    application/json:
-                        schema:
-                            $ref: "#/components/schemas/GetComputorListsForEpochRequest"
-                required: true
-            responses:
-                "200":
-                    description: OK
-                    content:
-                        application/json:
-                            schema:
-                                $ref: "#/components/schemas/GetComputorListsForEpochResponse"
-    /getLastProcessedTick:
-        get:
-            tags:
-                - Ticks
-            summary: Get Last Processed Tick
-            description: |-
-                Get the last processed tick and other processing information from the archive.
-                 All data queried from the archive is only fully processed up to this tick.
-                 Before calling the service you should check the last processed tick to be sure to get
-                 valid data and do not request data for future ticks that are not processed yet. You can use
-                 the epoch and initial tick information in the response to switch to a new interval.
-            operationId: ArchiveQueryService_GetLastProcessedTick
-            responses:
-                "200":
-                    description: OK
-                    content:
-                        application/json:
-                            schema:
-                                $ref: "#/components/schemas/GetLastProcessedTickResponse"
-    /getProcessedTickIntervals:
-        get:
-            tags:
-                - Ticks
-            summary: Get Processed Tick Intervals
-            description: |-
-                Get the tick intervals that are available in the archive. A new tick interval is typically
-                 created on epoch change or network restart within the epoch. Use this endpoint to skip the
-                 tick numbers that are not part of the intervals. This endpoint is only necessary for users
-                 that need to process all available ticks. For most users it is enough to switch to a new
-                 interval by using the `get last processed tick` endpoint.
-            operationId: ArchiveQueryService_GetProcessedTickIntervals
-            responses:
-                "200":
-                    description: OK
-                    content:
-                        application/json:
-                            schema:
-                                $ref: "#/components/schemas/GetProcessedTickIntervalsResponse"
-    /getTickData:
-        post:
-            tags:
-                - Ticks
-            summary: Get Tick Data
-            description: Get the tick data for one tick.
-            operationId: ArchiveQueryService_GetTickData
-            requestBody:
-                content:
-                    application/json:
-                        schema:
-                            $ref: "#/components/schemas/GetTickDataRequest"
-                required: true
-            responses:
-                "200":
-                    description: OK
-                    content:
-                        application/json:
-                            schema:
-                                $ref: "#/components/schemas/GetTickDataResponse"
-    /getTransactionByHash:
-        post:
-            tags:
-                - Transactions
-            summary: Get Transaction By Hash
-            description: Get a single transaction by its hash.
-            operationId: ArchiveQueryService_GetTransactionByHash
-            requestBody:
-                content:
-                    application/json:
-                        schema:
-                            $ref: "#/components/schemas/GetTransactionByHashRequest"
-                required: true
-            responses:
-                "200":
-                    description: OK
-                    content:
-                        application/json:
-                            schema:
-                                $ref: "#/components/schemas/GetTransactionByHashResponse"
-    /getTransactionsForIdentity:
-        post:
-            tags:
-                - Transactions
-            summary: Get Transactions For Identity
-            description: |-
-                Get the transactions for one identity sorted by tick number descending.
+  /getComputorListsForEpoch:
+    post:
+      tags:
+        - Network
+      summary: Get Epoch Computors
+      description: |-
+        Get the list(s) of computors for one epoch. These are the computors (IDs signed by the arbitrator) that
+         are allowed to make quorum decisions. It is possible that this list changes within the epoch in case of
+         arbitrator intervention.
+      operationId: ArchiveQueryService_GetComputorsListsForEpoch
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/GetComputorListsForEpochRequest'
+        required: true
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetComputorListsForEpochResponse'
+  /getLastProcessedTick:
+    get:
+      tags:
+        - Archive
+      summary: Get Last Processed Tick
+      description: |-
+        Get the last processed tick and other processing information from the archive.
+         All data queried from the archive is only fully processed up to this tick.
+         Before calling the service you should check the last processed tick to be sure to get
+         valid data and do not request data for future ticks that are not processed yet. You can use
+         the epoch and initial tick information in the response to switch to a new interval.
+      operationId: ArchiveQueryService_GetLastProcessedTick
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetLastProcessedTickResponse'
+  /getProcessedTickIntervals:
+    get:
+      tags:
+        - Archive
+      summary: Get Processed Tick Intervals
+      description: |-
+        Get the tick intervals that are available in the archive. A new tick interval is typically
+         created on epoch change or network restart within the epoch. Use this endpoint to skip the
+         tick numbers that are not part of the intervals. This endpoint is only necessary for users
+         that need to process all available ticks. For most users it is enough to switch to a new
+         interval by using the `get last processed tick` endpoint.
+      operationId: ArchiveQueryService_GetProcessedTickIntervals
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetProcessedTickIntervalsResponse'
+  /getTickData:
+    post:
+      tags:
+        - Ticks
+      summary: Get Tick Data
+      description: Get the tick data for one tick.
+      operationId: ArchiveQueryService_GetTickData
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/GetTickDataRequest'
+        required: true
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetTickDataResponse'
+  /getTransactionByHash:
+    post:
+      tags:
+        - Transactions
+      summary: Get Transaction By Hash
+      description: Get a single transaction by its hash.
+      operationId: ArchiveQueryService_GetTransactionByHash
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/GetTransactionByHashRequest'
+        required: true
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetTransactionByHashResponse'
+  /getTransactionsForIdentity:
+    post:
+      tags:
+        - Transactions
+      summary: Get Transactions For Identity
+      description: |-
+        Get the transactions for one identity sorted by tick number descending.
 
-                  ###  Request structure
+         ###  Request structure
 
-                  | Name       | Type               | Necessity | Description                                                                                                       |
-                  |------------|--------------------|-----------|-------------------------------------------------------------------------------------------------------------------|
-                  | identity   | string             | required  | 60 characters uppercase identity.                                                                                 |
-                  | filters    | map<string,string> | optional  | Filters that restrict results to single value.<br/> Allowed fields are: source, destination, amount, inputType    |
-                  | ranges     | map<string,Range>  | optional  | Filters that restrict results to a value range.<br/> Allowed fields are: amount, tickNumber, inputType, timestamp |
-                  | pagination | Pagination         | optional  | Allows to specify the first record and the number of records to be retrieved.                                     |
+         | Name       | Type               | Necessity | Description                                                                    |
+         |------------|--------------------|-----------|--------------------------------------------------------------------------------|
+         | identity   | string             | required  | 60 characters uppercase identity.                                              |
+         | filters    | map<string,string> | optional  | Filters that restrict results to single value.                                 |
+         | ranges     | map<string,Range>  | optional  | Filters that restrict results to a value range.                                |
+         | pagination | Pagination         | optional  | Allows to specify the first record and the number of records to be retrieved.  |
 
-                  Without filters and ranges all transactions from and to that identity ordered by tick number descending are returned.
-                  Data type for all values is string.
+         Without filters and ranges all transactions from and to that identity ordered by tick number descending are returned.
 
-                  ### Filters
+         ### Filters
 
-                  Filters restrict the results by single values.
+         Filters restrict the results by single values.
 
-                  #### Allowed properties
+         #### Allowed properties
 
-                  | Name        |  Type   | Format                 | Description                                                        |
-                  |-------------|---------|------------------------|--------------------------------------------------------------------|
-                  | source      |  string | 60 character identity  | Only find transactions that were sent from the specified identity. |
-                  | destination |  string | 60 character identity  | Only find transactions that were sent to the specified identity.   |
-                  | amount      |  string | Numeric                | Only find transactions with the specified amount.                  |
-                  | inputType   |  string | Numeric                | Only find transactions with the specified input type.              |
+         | Name        |  Type   | Format                 | Description                                                        |
+         |-------------|---------|------------------------|--------------------------------------------------------------------|
+         | source      | string | 60 character identity, up to 5, comma separated. | Only find transactions that were sent from the specified identities. |
+         | source-exclude | string | 60 character identity, up to 5, comma separated.  | Only find transactions that were not sent from the specified identities. |
+         | destination | string | 60 character identity, up to 5, comma separated.  | Only find transactions that were sent to the specified identities.   |
+         | destination-exclude | string | 60 character identity, up to 5, comma separated.  | Only find transactions that were not sent to the specified identities.   |
+         | amount      | string | Numeric                | Only find transactions with the specified amount.                  |
+         | inputType   | string | Numeric                | Only find transactions with the specified input type.              |
+         | tickNumber  | string | Numeric                | Only find transactions with the specified tick number.             |
 
-                  #### Examples
+         source` and `source-exclude` are mutually exclusive.
+         destination` and `destination-exclude` are mutually exclusive.
 
-                  ```
-                  "source": "IIJHZSNPDRYYXCQBWNGKBSWYYDCARTYPOBXGOXZEVEZMMWYHPBVXZLJARRCB",
-                  "destination": "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAFXIB"
-                  "amount": "1000000"
-                  "inputType": "0"
-                  ```
+         #### Examples
 
-                  ### Ranges
+         ```
+         "source": "IIJHZSNPDRYYXCQBWNGKBSWYYDCARTYPOBXGOXZEVEZMMWYHPBVXZLJARRCB",
+         "destination": "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAFXIB"
+         "amount": "1000000"
+         "inputType": "0"
+         ```
 
-                  Ranges restrict the results by a range of values. On range per property is supported.
+         ### Ranges
 
-                  #### Allowed properties
+         Ranges restrict the results by a range of values. On range per property is supported.
 
-                  | Name       | Type   | Format                                   | Description                                 |
-                  |------------|--------|------------------------------------------|---------------------------------------------|
-                  | amount     | string | Numeric                                  | Only find transactions in amount range.     |
-                  | tickNumber | string | Numeric                                  | Only find transactions in tick range.       |
-                  | inputType  | string | Numeric                                  | Only find transactions in input type range. |
-                  | timestamp  | string | Numeric (Unix Timestamp in milliseconds) | Only find transactions in time range.       |
+         #### Allowed properties
 
-                  #### Range definition
+         | Name       | Type   | Format                                   | Description                                 |
+         |------------|--------|------------------------------------------|---------------------------------------------|
+         | amount     | string | Numeric                                  | Only find transactions in amount range.     |
+         | tickNumber | string | Numeric                                  | Only find transactions in tick range.       |
+         | inputType  | string | Numeric                                  | Only find transactions in input type range. |
+         | timestamp  | string | Numeric (Unix Timestamp in milliseconds) | Only find transactions in time range.       |
 
-                  A range with size of 0 or 1 is not allowed.
+         #### Range definition
 
-                  | Name      | Type   | Necessity | Description                               |
-                  |-----------|--------|-----------|-------------------------------------------|
-                  | field | string | required  | Name of the field you wish to search for. |
-                  | gt        | string | optional  | Greater than.                             |
-                  | gte       | string | optional  | Greater than or equal to.                 |
-                  | lt        | string | optional  | Less than.                                |
-                  | lte       | string | optional  | Less than or equal to.                    |
+         A range with size of 0 or 1 is not allowed.
 
-                  Only one lower bound and one upper bound can be specified.
+         | Name      | Type   | Necessity | Description                               |
+         |-----------|--------|-----------|-------------------------------------------|
+         | field | string | required  | Name of the field you wish to search for. |
+         | gt        | string | optional  | Greater than.                             |
+         | gte       | string | optional  | Greater than or equal to.                 |
+         | lt        | string | optional  | Less than.                                |
+         | lte       | string | optional  | Less than or equal to.                    |
 
-                  #### Examples
+         Only one lower bound and one upper bound can be specified.
 
-                  ```
-                  "amount": { "gt": "1000000" }
-                  "tickNumber": { "gte": "25563000", "lte": "28300000" }
-                  "inputType": { "gt": "0" }
-                  "timestamp": { "lt": "1757376000000" }
-                  ```
+         #### Examples
 
-                  ### Pagination
+         ```
+         "amount": { "gt": "1000000" }
+         "tickNumber": { "gte": "25563000", "lte": "28300000" }
+         "inputType": { "gt": "0" }
+         "timestamp": { "lt": "1757376000000" }
+         ```
 
-                  | Name   | Type   | Necessity | Description                                                                                         |
-                  |--------|--------|-----------|-----------------------------------------------------------------------------------------------------|
-                  | offset | uint32 | optional  | The offset of the first record to return. Defaults to zero (first record). Maximum offset is 10000. |
-                  | size   | uint32 | optional  | Defaults to 10. Maximum size is 1000. Zero value is ignored (uses default). |
-            operationId: ArchiveQueryService_GetTransactionsForIdentity
-            requestBody:
-                content:
-                    application/json:
-                        schema:
-                            $ref: "#/components/schemas/GetTransactionsForIdentityRequest"
-                required: true
-            responses:
-                "200":
-                    description: OK
-                    content:
-                        application/json:
-                            schema:
-                                $ref: "#/components/schemas/GetTransactionsForIdentityResponse"
-    /getTransactionsForTick:
-        post:
-            tags:
-                - Transactions
-            summary: Get Transactions For Tick
-            description: Get the transactions that are in included in one tick.
-            operationId: ArchiveQueryService_GetTransactionsForTick
-            requestBody:
-                content:
-                    application/json:
-                        schema:
-                            $ref: "#/components/schemas/GetTransactionsForTickRequest"
-                required: true
-            responses:
-                "200":
-                    description: OK
-                    content:
-                        application/json:
-                            schema:
-                                $ref: "#/components/schemas/GetTransactionsForTickResponse"
-    /health:
-        get:
-            tags:
-                - Network
-            summary: Get Health
-            description: Health check. This is for internal use only and can change any time. Do not rely on this endpoint.
-            operationId: ArchiveQueryService_GetHealth
-            responses:
-                "200":
-                    description: OK
-                    content:
-                        application/json:
-                            schema:
-                                $ref: "#/components/schemas/HealthResponse"
+         ### Pagination
+
+         | Name   | Type   | Necessity | Description                                                                                         |
+         |--------|--------|-----------|-----------------------------------------------------------------------------------------------------|
+         | offset | uint32 | optional  | The offset of the first record to return. Defaults to zero (first record). Maximum offset is 10000. |
+         | size   | uint32 | optional  | Defaults to 10. Maximum size is 1000. Zero value is ignored (uses default). |
+      operationId: ArchiveQueryService_GetTransactionsForIdentity
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/GetTransactionsForIdentityRequest'
+        required: true
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetTransactionsForIdentityResponse'
+  /getTransactionsForTick:
+    post:
+      tags:
+        - Transactions
+      summary: Get Transactions For Tick
+      description: |-
+        Get the transactions that are in included in one tick.
+
+         ###  Request structure
+
+         | Name       | Type               | Necessity | Description                                     |
+         |------------|--------------------|-----------|-------------------------------------------------|
+         | identity   | string             | required  | 60 characters uppercase identity.               |
+         | filters    | map<string,string> | optional  | Filters that restrict results to single value.  |
+         | ranges     | map<string,Range>  | optional  | Filters that restrict results to a value range. |
+
+         ### Filters
+
+         Filters restrict the results by single values.
+
+         #### Allowed properties
+
+         | Name        |  Type   | Format                 | Description                                                        |
+         |-------------|---------|------------------------|--------------------------------------------------------------------|
+         | source      | string  | 60 character identity  | Only find transactions that were sent from the specified identities. |
+         | destination | string  | 60 character identity  | Only find transactions that were sent to the specified identities.   |
+         | amount      | string  | Numeric                | Only find transactions with the specified amount.                  |
+         | inputType   | string  | Numeric                | Only find transactions with the specified input type.              |
+
+         ### Ranges
+
+         Ranges restrict the results by a range of values. On range per property is supported.
+
+         #### Allowed properties
+
+         | Name       | Type   | Format                                   | Description                                 |
+         |------------|--------|------------------------------------------|---------------------------------------------|
+         | amount     | string | Numeric                                  | Only find transactions in amount range.     |
+         | inputType  | string | Numeric                                  | Only find transactions in input type range. |
+
+         #### Range definition
+
+         A range with size of 0 or 1 is not allowed.
+
+         | Name      | Type   | Necessity | Description                               |
+         |-----------|--------|-----------|-------------------------------------------|
+         | field | string | required  | Name of the field you wish to search for. |
+         | gt        | string | optional  | Greater than.                             |
+         | gte       | string | optional  | Greater than or equal to.                 |
+         | lt        | string | optional  | Less than.                                |
+         | lte       | string | optional  | Less than or equal to.                    |
+
+         Only one lower bound and one upper bound can be specified.
+
+         For examples how to use filters and ranges see the GetTransactionsForIdentity endpoint documentation.
+      operationId: ArchiveQueryService_GetTransactionsForTick
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/GetTransactionsForTickRequest'
+        required: true
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetTransactionsForTickResponse'
 components:
-    schemas:
-        ComputorList:
-            type: object
-            properties:
-                epoch:
-                    type: integer
-                    description: Epoch number.
-                    format: uint32
-                tickNumber:
-                    type: integer
-                    description: Tick number when the list was received by the archive after it was published.
-                    format: uint32
-                identities:
-                    type: array
-                    items:
-                        type: string
-                    description: List of computor identities (signed by arbitrator).
-                signature:
-                    type: string
-                    description: Signature of the arbitrator.
-            description: ComputorList
-        GetComputorListsForEpochRequest:
-            type: object
-            properties:
-                epoch:
-                    type: integer
-                    description: The epoch number to get the computor lists for.
-                    format: uint32
-            description: GetComputorListsForEpochRequest
-        GetComputorListsForEpochResponse:
-            type: object
-            properties:
-                computorsLists:
-                    type: array
-                    items:
-                        $ref: "#/components/schemas/ComputorList"
-                    description: The lists of computors that voted in this epoch.
-            description: GetComputorListsForEpochResponse
-        GetLastProcessedTickResponse:
-            type: object
-            properties:
-                tickNumber:
-                    type: integer
-                    description: The last processed tick that is available in the archive.
-                    format: uint32
-                epoch:
-                    type: integer
-                    description: The epoch the last processed tick is in.
-                    format: uint32
-                intervalInitialTick:
-                    type: integer
-                    description: The initial tick of the current tick interval.
-                    format: uint32
-            description: GetLastProcessedTickResponse
-        GetProcessedTickIntervalsResponse:
-            type: object
-            properties:
-                processedTickIntervals:
-                    type: array
-                    items:
-                        $ref: "#/components/schemas/ProcessedTickInterval"
-                    description: A list of tick intervals that were processed.
-            description: GetProcessedTickIntervalsResponse
-        GetTickDataRequest:
-            type: object
-            properties:
-                tickNumber:
-                    type: integer
-                    description: The number of tick the tick data is requested for.
-                    format: uint32
-            description: GetTickDataRequest
-        GetTickDataResponse:
-            type: object
-            properties:
-                tickData:
-                    $ref: "#/components/schemas/TickData"
-            description: GetTickDataResponse
-        GetTransactionByHashRequest:
-            type: object
-            properties:
-                hash:
-                    type: string
-                    description: The hash of the transaction.
-            description: GetTransactionByHashRequest
-        GetTransactionByHashResponse:
-            type: object
-            properties:
-                transaction:
-                    $ref: "#/components/schemas/Transaction"
-            description: GetTransactionByHashResponse
-        GetTransactionsForIdentityRequest:
-            example:
-                identity: AFZPUAIYVPNUYGJRQVLUKOPPVLHAZQTGLYAAUUNBXFTVTAMSBKQBLEIEPCVJ
-                filters:
-                    destination: AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAFXIB
-                    inputType: "0"
-                ranges:
-                    amount:
-                        gte: "1000000000"
-                pagination:
-                    offset: 0
-                    size: 10
-            type: object
-            properties:
-                identity:
-                    type: string
-                    description: The identity to get the transactions for. Incoming and outgoing transactions are queried by default.
-                filters:
-                    type: object
-                    additionalProperties:
-                        type: string
-                    description: Filters restrict the results by single values.
-                ranges:
-                    type: object
-                    additionalProperties:
-                        $ref: "#/components/schemas/Range"
-                    description: Ranges restrict the results by a maximum and minimum value.
-                pagination:
-                    $ref: "#/components/schemas/Pagination"
-            description: GetTransactionsForIdentityRequest
-        GetTransactionsForIdentityResponse:
-            type: object
-            properties:
-                validForTick:
-                    type: integer
-                    description: The response is valid for this tick number.
-                    format: uint32
-                hits:
-                    $ref: "#/components/schemas/Hits"
-                transactions:
-                    type: array
-                    items:
-                        $ref: "#/components/schemas/Transaction"
-                    description: List of transactions that matched the search criteria.
-            description: GetTransactionsForIdentityResponse
-        GetTransactionsForTickRequest:
-            type: object
-            properties:
-                tickNumber:
-                    type: integer
-                    description: The tick number to get the transactions for.
-                    format: uint32
-            description: GetTransactionsForTickRequest
-        GetTransactionsForTickResponse:
-            type: object
-            properties:
-                transactions:
-                    type: array
-                    items:
-                        $ref: "#/components/schemas/Transaction"
-                    description: The transactions for the requested tick number.
-            description: GetTransactionsForTickResponse
-        HealthResponse:
-            type: object
-            properties:
-                status:
-                    type: string
-                    description: Health status information.
-            description: HealthResponse
-        Hits:
-            type: object
-            properties:
-                total:
-                    type: integer
-                    description: The total number of hits available in the archive. Capped at 10000.
-                    format: uint32
-                from:
-                    type: integer
-                    description: Starting offset of the hits that were returned.
-                    format: uint32
-                size:
-                    type: integer
-                    description: Number of returned hits.
-                    format: uint32
-            description: Provides information about the number of results.
-        Pagination:
-            type: object
-            properties:
-                offset:
-                    type: integer
-                    description: The offset specifies the starting point of the returned data. Defaults to zero.
-                    format: uint32
-                size:
-                    type: integer
-                    description: The size specifies how many results should be returned. Defaults to 10.
-                    format: uint32
-            description: The number of maximum results (offset + size) is limited to 10000.
-        ProcessedTickInterval:
-            type: object
-            properties:
-                epoch:
-                    type: integer
-                    description: The epoch the interval is in.
-                    format: uint32
-                firstTick:
-                    type: integer
-                    description: The initial processed tick of the interval.
-                    format: uint32
-                lastTick:
-                    type: integer
-                    description: The last processed tick of the interval.
-                    format: uint32
-            description: ProcessedTickInterval
-        Range:
-            type: object
-            properties:
-                gt:
-                    type: string
-                    description: Greater than.
-                gte:
-                    type: string
-                    description: Greater than or equal.
-                lt:
-                    type: string
-                    description: Less than.
-                lte:
-                    type: string
-                    description: Less than or equal.
-            description: Range
-        TickData:
-            type: object
-            properties:
-                tickNumber:
-                    type: integer
-                    format: uint32
-                epoch:
-                    type: integer
-                    format: uint32
-                computorIndex:
-                    type: integer
-                    format: uint32
-                timestamp:
-                    type: string
-                varStruct:
-                    type: string
-                timeLock:
-                    type: string
-                transactionHashes:
-                    type: array
-                    items:
-                        type: string
-                contractFees:
-                    type: array
-                    items:
-                        type: string
-                signature:
-                    type: string
-            description: TickData
-        Transaction:
-            type: object
-            properties:
-                hash:
-                    type: string
-                amount:
-                    type: string
-                source:
-                    type: string
-                destination:
-                    type: string
-                tickNumber:
-                    type: integer
-                    format: uint32
-                timestamp:
-                    type: string
-                inputType:
-                    type: integer
-                    format: uint32
-                inputSize:
-                    type: integer
-                    format: uint32
-                inputData:
-                    type: string
-                signature:
-                    type: string
-                moneyFlew:
-                    type: boolean
-                    description: Money flew is an additional information provided by some nodes with the tx status addon patch.
-            description: Transaction
+  schemas:
+    ComputorList:
+      type: object
+      properties:
+        epoch:
+          type: integer
+          description: Epoch number.
+          format: uint32
+        tickNumber:
+          type: integer
+          description: Tick number when the list was received by the archive after it was published.
+          format: uint32
+        identities:
+          type: array
+          items:
+            type: string
+          description: List of computor identities (signed by arbitrator).
+        signature:
+          type: string
+          description: Signature of the arbitrator.
+      description: ComputorList
+    GetComputorListsForEpochRequest:
+      type: object
+      properties:
+        epoch:
+          type: integer
+          description: The epoch number to get the computor lists for.
+          format: uint32
+      description: GetComputorListsForEpochRequest
+    GetComputorListsForEpochResponse:
+      type: object
+      properties:
+        computorsLists:
+          type: array
+          items:
+            $ref: '#/components/schemas/ComputorList'
+          description: The lists of computors that voted in this epoch.
+      description: GetComputorListsForEpochResponse
+    GetLastProcessedTickResponse:
+      type: object
+      properties:
+        tickNumber:
+          type: integer
+          description: The last processed tick that is available in the archive.
+          format: uint32
+        epoch:
+          type: integer
+          description: The epoch the last processed tick is in.
+          format: uint32
+        intervalInitialTick:
+          type: integer
+          description: The initial tick of the current tick interval.
+          format: uint32
+      description: GetLastProcessedTickResponse
+    GetProcessedTickIntervalsResponse:
+      type: object
+      properties:
+        processedTickIntervals:
+          type: array
+          items:
+            $ref: '#/components/schemas/ProcessedTickInterval'
+          description: A list of tick intervals that were processed.
+      description: GetProcessedTickIntervalsResponse
+    GetTickDataRequest:
+      type: object
+      properties:
+        tickNumber:
+          type: integer
+          description: The number of tick the tick data is requested for.
+          format: uint32
+      description: GetTickDataRequest
+    GetTickDataResponse:
+      type: object
+      properties:
+        tickData:
+          $ref: '#/components/schemas/TickData'
+      description: GetTickDataResponse
+    GetTransactionByHashRequest:
+      type: object
+      properties:
+        hash:
+          type: string
+          description: The hash of the transaction.
+      description: GetTransactionByHashRequest
+    GetTransactionByHashResponse:
+      type: object
+      properties:
+        transaction:
+          $ref: '#/components/schemas/Transaction'
+      description: GetTransactionByHashResponse
+    GetTransactionsForIdentityRequest:
+      example:
+        identity: AFZPUAIYVPNUYGJRQVLUKOPPVLHAZQTGLYAAUUNBXFTVTAMSBKQBLEIEPCVJ
+        filters:
+          destination: AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAFXIB
+          inputType: "0"
+        ranges:
+          amount:
+            gte: "1000000000"
+        pagination:
+          offset: 0
+          size: 10
+      type: object
+      properties:
+        identity:
+          type: string
+          description: The identity to get the transactions for. Incoming and outgoing transactions are queried by default.
+        filters:
+          type: object
+          additionalProperties:
+            type: string
+          description: Filters restrict the results by single values.
+        ranges:
+          type: object
+          additionalProperties:
+            $ref: '#/components/schemas/Range'
+          description: Ranges restrict the results by a maximum and minimum value.
+        pagination:
+          $ref: '#/components/schemas/Pagination'
+      description: GetTransactionsForIdentityRequest
+    GetTransactionsForIdentityResponse:
+      type: object
+      properties:
+        validForTick:
+          type: integer
+          description: The response is valid for this tick number.
+          format: uint32
+        hits:
+          $ref: '#/components/schemas/Hits'
+        transactions:
+          type: array
+          items:
+            $ref: '#/components/schemas/Transaction'
+          description: List of transactions that matched the search criteria.
+      description: GetTransactionsForIdentityResponse
+    GetTransactionsForTickRequest:
+      example:
+        tickNumber: 42977140
+        filters:
+          destination: AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAFXIB
+        ranges:
+          amount:
+            gte: "1"
+      type: object
+      properties:
+        tickNumber:
+          type: integer
+          description: The tick number to get the transactions for.
+          format: uint32
+        filters:
+          type: object
+          additionalProperties:
+            type: string
+          description: 'Filters restrict the results by single values. Allowed: source, destination, amount, inputType'
+        ranges:
+          type: object
+          additionalProperties:
+            $ref: '#/components/schemas/Range'
+          description: 'Ranges restrict the results by a maximum and minimum value. Allowed: amount, inputType'
+      description: GetTransactionsForTickRequest
+    GetTransactionsForTickResponse:
+      type: object
+      properties:
+        transactions:
+          type: array
+          items:
+            $ref: '#/components/schemas/Transaction'
+          description: The transactions for the requested tick number.
+      description: GetTransactionsForTickResponse
+    HealthResponse:
+      type: object
+      properties:
+        status:
+          type: string
+          description: Health status information.
+      description: HealthResponse
+    Hits:
+      type: object
+      properties:
+        total:
+          type: integer
+          description: The total number of hits available in the archive. Capped at 10000.
+          format: uint32
+        from:
+          type: integer
+          description: Starting offset of the hits that were returned.
+          format: uint32
+        size:
+          type: integer
+          description: Number of returned hits.
+          format: uint32
+      description: Provides information about the number of results.
+    Pagination:
+      type: object
+      properties:
+        offset:
+          type: integer
+          description: The offset specifies the starting point of the returned data. Defaults to zero.
+          format: uint32
+        size:
+          type: integer
+          description: The size specifies how many results should be returned. Defaults to 10.
+          format: uint32
+      description: The number of maximum results (offset + size) is limited to 10000.
+    ProcessedTickInterval:
+      type: object
+      properties:
+        epoch:
+          type: integer
+          description: The epoch the interval is in.
+          format: uint32
+        firstTick:
+          type: integer
+          description: The initial processed tick of the interval.
+          format: uint32
+        lastTick:
+          type: integer
+          description: The last processed tick of the interval.
+          format: uint32
+      description: ProcessedTickInterval
+    Range:
+      type: object
+      properties:
+        gt:
+          type: string
+          description: Greater than.
+        gte:
+          type: string
+          description: Greater than or equal.
+        lt:
+          type: string
+          description: Less than.
+        lte:
+          type: string
+          description: Less than or equal.
+      description: Range
+    TickData:
+      type: object
+      properties:
+        tickNumber:
+          type: integer
+          format: uint32
+        epoch:
+          type: integer
+          format: uint32
+        computorIndex:
+          type: integer
+          format: uint32
+        timestamp:
+          type: string
+        varStruct:
+          type: string
+        timeLock:
+          type: string
+        transactionHashes:
+          type: array
+          items:
+            type: string
+        contractFees:
+          type: array
+          items:
+            type: string
+        signature:
+          type: string
+      description: TickData
+    Transaction:
+      type: object
+      properties:
+        hash:
+          type: string
+        amount:
+          type: string
+        source:
+          type: string
+        destination:
+          type: string
+        tickNumber:
+          type: integer
+          format: uint32
+        timestamp:
+          type: string
+        inputType:
+          type: integer
+          description: Smart contract procedure index. (The smart contract procedure this transaction is supposed to trigger)
+          format: uint32
+        inputSize:
+          type: integer
+          description: Size of input_data byte array.
+          format: uint32
+        inputData:
+          type: string
+          description: Base64 encoded byte array containing a smart contract payload.
+        signature:
+          type: string
+          description: Base64 encoded byte array representing the transactions's signature.
+        moneyFlew:
+          type: boolean
+          description: Money flew is an additional information provided by some nodes with the tx status addon patch.
+      description: Transaction
 tags:
-    - name: Ticks
-      description: Query tick data and processing information from the archive.
-    - name: Transactions
-      description: Search and retrieve transaction history.
-    - name: Network
-      description: Network status and computor information.
+  - name: Archive
+    description: Archive processing status and coverage information.
+  - name: ArchiveQueryService
+    description: Qubic Query API
+    x-scalar-ignore: true
+  - name: Network
+    description: Network status and computor information.
+  - name: Ticks
+    description: Query tick data from the archive.
+  - name: Transactions
+    description: Search and retrieve transaction history.
 externalDocs:
-    description: GitHub
-    url: https://github.com/qubic/archive-query-service
+  description: GitHub
+  url: https://github.com/qubic/archive-query-service
