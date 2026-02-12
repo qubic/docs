@@ -23,7 +23,8 @@ const config = {
   scripts: [
     {
       src: "https://dashboard.letmeexplain.ai/embed/lme_chatbot_widget.js", // LetMeExplain embed script
-      async: false,
+      async: true,
+      defer: true,
     },
     {
       src: "/js/enable_lme_chatbot.js", // Custom initialization script
