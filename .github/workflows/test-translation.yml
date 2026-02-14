@@ -103,6 +103,31 @@ jobs:
             }
           }
 
+          // Hilfsfunktion um Frontmatter als YAML zu formatieren
+          function formatFrontmatter(obj) {
+            const lines = [];
+            for (const [key, value] of Object.entries(obj)) {
+              if (value === null || value === undefined) {
+                lines.push(`${key}:`);
+              } else if (typeof value === 'string') {
+                // Strings mit Sonderzeichen in Anführungszeichen
+                if (value.includes(':') || value.includes('#') || value.includes('"') || value.includes("'") || value.includes('\n')) {
+                  lines.push(`${key}: "${value.replace(/"/g, '\\"')}"`);
+                } else {
+                  lines.push(`${key}: ${value}`);
+                }
+              } else if (typeof value === 'number' || typeof value === 'boolean') {
+                lines.push(`${key}: ${value}`);
+              } else if (Array.isArray(value)) {
+                lines.push(`${key}:`);
+                value.forEach(item => lines.push(`  - ${item}`));
+              } else {
+                lines.push(`${key}: ${value}`);
+              }
+            }
+            return lines.join('\n');
+          }
+
           async function translateFile(inputPath, outputPath) {
             console.log(`\n========================================`);
             console.log(`Testing translation of: ${inputPath}`);
@@ -111,11 +136,6 @@ jobs:
             // Prüfe ob Datei existiert
             if (!fs.existsSync(inputPath)) {
               console.error(`❌ Datei nicht gefunden: ${inputPath}`);
-              console.log(`\nVerfügbare Dateien im docs/ Ordner:`);
-              const { glob } = require('glob');
-              const allFiles = glob.sync('docs/**/*.md');
-              allFiles.slice(0, 10).forEach(f => console.log(`  - ${f}`));
-              if (allFiles.length > 10) console.log(`  ... und ${allFiles.length - 10} weitere`);
               process.exit(1);
             }
             
@@ -124,7 +144,7 @@ jobs:
             
             console.log(`✓ Datei geladen: ${inputPath}`);
             console.log(`✓ Größe: ${content.length} Zeichen`);
-            console.log(`✓ Frontmatter gefunden: ${Object.keys(parsed.frontmatter).length} Felder\n`);
+            console.log(`✓ Frontmatter gefunden: ${Object.keys(parsed.frontmatter).join(', ')}\n`);
 
             console.log('Starte Übersetzung...\n');
 
@@ -141,18 +161,15 @@ jobs:
               console.log('Übersetze Beschreibung...');
               translatedFrontmatter.description = await translateText(parsed.frontmatter.description);
             }
-
-            // Zusammenbauen
-            let output = '---\n';
-            for (const [key, value] of Object.entries(translatedFrontmatter)) {
-              if (typeof value === 'string' && value.includes(':')) {
-                output += `${key}: "${value}"\n`;
-              } else {
-                output += `${key}: ${value}\n`;
-              }
+            // sidebar_label auch übersetzen falls vorhanden
+            if (parsed.frontmatter.sidebar_label) {
+              console.log('Übersetze sidebar_label...');
+              translatedFrontmatter.sidebar_label = await translateText(parsed.frontmatter.sidebar_label);
             }
-            output += '---\n\n';
-            output += translatedBody;
+
+            // Zusammenbauen mit korrektem YAML-Format
+            const yamlFrontmatter = formatFrontmatter(translatedFrontmatter);
+            const output = `---\n${yamlFrontmatter}\n---\n\n${translatedBody}`;
 
             // Sicherstellen, dass das Ausgabeverzeichnis existiert
             fs.mkdirSync(path.dirname(outputPath), { recursive: true });
@@ -162,11 +179,13 @@ jobs:
             console.log(`✓ Ausgabegröße: ${output.length} Zeichen`);
             
             // Zeige ersten Absatz als Vorschau
-            console.log(`\n--- Vorschau (erster Absatz) ---`);
+            console.log(`\n--- Vorschau Frontmatter ---`);
+            console.log(`---\n${yamlFrontmatter}\n---`);
+            console.log(`\n--- Vorschau Inhalt (erster Absatz) ---`);
             const firstParagraph = translatedBody.split('\n\n')[0];
             console.log(firstParagraph.substring(0, 300));
             if (firstParagraph.length > 300) console.log('...');
-            console.log(`\n✓ Übersetzung komplett - siehe Datei im Repository`);
+            console.log(`\n✓ Übersetzung komplett!`);
           }
 
           async function main() {
@@ -180,6 +199,7 @@ jobs:
               console.log('========================================\n');
             } catch (error) {
               console.error('\n❌ Fehler bei der Übersetzung:', error.message);
+              console.error(error.stack);
               process.exit(1);
             }
           }
@@ -217,7 +237,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: german-translation
-          path: i18n/de/docusaurus-plugin-content-docs/current/${{ env.TEST_FILE }}
+          path: i18n/de/docusaurus-plugin-content-docs/current/overview/introduction.md
           retention-days: 7
           
       - name: Show download info
@@ -228,3 +248,6 @@ jobs:
           echo "Du kannst die Datei hier herunterladen:"
           echo "  GitHub Actions → Dieser Workflow-Run → Artifacts"
           echo "========================================"
+          echo ""
+          echo "Die übersetzte Datei liegt unter:"
+          echo "  i18n/de/docusaurus-plugin-content-docs/current/overview/introduction.md"
