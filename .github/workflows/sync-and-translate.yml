@@ -290,8 +290,12 @@ jobs:
           Automated translation of changed documentation files.
           Review required before creating upstream PR."
           
-          # Branch erstellen und pushen
-          BRANCH_NAME="${{ env.TRANSLATION_BRANCH }}-$(date +%Y%m%d)"
+          # Branch erstellen und pushen (mit eindeutigem Namen)
+          BRANCH_NAME="${{ env.TRANSLATION_BRANCH }}-$(date +%Y%m%d)-${{ github.run_id }}"
+          
+          # Falls Branch schon existiert, löschen
+          git push origin --delete $BRANCH_NAME 2>/dev/null || true
+          
           git checkout -b $BRANCH_NAME
           git push origin $BRANCH_NAME
           
