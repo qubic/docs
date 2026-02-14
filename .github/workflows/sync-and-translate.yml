@@ -304,27 +304,27 @@ jobs:
       # 10. PR im Fork erstellen (für deinen Review)
       - name: Create Review PR
         if: steps.changes.outputs.files_changed == 'true' || steps.changes.outputs.is_initial_sync == 'true'
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          gh pr create \
-            --title "[REVIEW NEEDED] Translation Sync - $(date +%Y-%m-%d)" \
-            --body "## Übersetzungssync erstellt
-          
-          **Datum:** $(date +%Y-%m-%d)
-          **Quelle:** qubic/docs
-          
-          ### Änderungen:
-          Übersetzte Dateien im Overview-Ordner
-          
-          ### Nächste Schritte:
-          1. [ ] Review der Übersetzungen durchführen
-          2. [ ] Korrekturen direkt in diesen Branch commiten
-          3. [ ] Nach Approval: Automatischer PR an qubic/docs wird erstellt
-          
-          **Wichtig:** Bitte innerhalb von 48h reviewn." \
-            --head ${{ env.branch_name }} \
-            --base main
+        uses: peter-evans/create-pull-request@v7
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          branch: ${{ env.branch_name }}
+          base: main
+          title: "[REVIEW NEEDED] Translation Sync - $(date +%Y-%m-%d)"
+          body: |
+            ## Übersetzungssync erstellt
+            
+            **Datum:** $(date +%Y-%m-%d)
+            **Quelle:** qubic/docs
+            
+            ### Änderungen:
+            Übersetzte Dateien im Overview-Ordner
+            
+            ### Nächste Schritte:
+            1. [ ] Review der Übersetzungen durchführen
+            2. [ ] Korrekturen direkt in diesen Branch commiten
+            3. [ ] Nach Approval: Automatischer PR an qubic/docs wird erstellt
+            
+            **Wichtig:** Bitte innerhalb von 48h reviewn.
 
       # 12. Benachrichtigung senden (optional)
       - name: Send notification
