@@ -1,0 +1,57 @@
+name: Create Upstream PR
+
+on:
+  pull_request:
+    types: [closed]
+    branches: [main]
+
+jobs:
+  create-upstream-pr:
+    if: github.event.pull_request.merged == true && contains(github.event.pull_request.title, '[REVIEW NEEDED]')
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Create Upstream PR
+        env:
+          GITHUB_TOKEN: ${{ secrets.UPSTREAM_PR_TOKEN }}  # Personal Access Token mit Repo-Rechten
+        run: |
+          # PR an qubic/docs erstellen
+          gh pr create \
+            --repo qubic/docs \
+            --title "German Translation Update - $(date +%Y-%m-%d)" \
+            --body "$(cat << 'PRBODY'
+          ## German Translation Update
+          
+          This PR contains the latest German translations for the Qubic documentation.
+          
+          ### What's included:
+          - Synchronized with upstream changes from the last 24 hours
+          - AI-translated via DeepSeek API with human review
+          - All technical terms preserved accurately
+          
+          ### Files changed:
+          - German translations in `i18n/de/`
+          
+          ### Review Notes:
+          - Translations have been reviewed by the German translation team
+          - Ready for merge
+          - Docusaurus i18n configuration handles the routing automatically
+          
+          ### Testing:
+          - [ ] Verify Docusaurus builds successfully
+          - [ ] Check `/de/` paths are accessible
+          
+          ---
+          *Automated translation workflow by @${{ github.actor }}*
+          PRBODY
+          )" \
+            --head ${{ github.actor }}:${{ github.event.pull_request.head.ref }} \
+            --base main

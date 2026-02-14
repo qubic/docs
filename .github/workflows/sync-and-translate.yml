@@ -1,0 +1,295 @@
+name: Sync and Translate Qubic Docs
+
+on:
+  schedule:
+    # Täglich um 02:00 UTC (außerhalb der Hauptnutzungszeiten)
+    - cron: '0 2 * * *'
+  workflow_dispatch:  # Manuelles Triggern möglich
+
+env:
+  UPSTREAM_REPO: qubic/docs
+  UPSTREAM_BRANCH: main
+  TRANSLATION_BRANCH: translation-sync
+  DEEPSEEK_API_KEY: ${{ secrets.DEEPSEEK_API_KEY }}
+
+jobs:
+  sync-and-translate:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+
+    steps:
+      # 1. Checkout des Forks
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      # 2. Git-Konfiguration
+      - name: Configure Git
+        run: |
+          git config user.name "Qubic Translation Bot"
+          git config user.email "translation-bot@qubic-network.de"
+
+      # 3. Upstream Repository hinzufügen
+      - name: Add upstream remote
+        run: |
+          git remote add upstream https://github.com/${{ env.UPSTREAM_REPO }}.git
+          git fetch upstream
+
+      # 4. Änderungen seit letztem Sync ermitteln
+      - name: Detect changes
+        id: changes
+        run: |
+          # Letzten Sync-Commit finden
+          LAST_SYNC=$(git log --grep="Translation sync" --format="%H" -n 1 || echo "")
+          
+          if [ -z "$LAST_SYNC" ]; then
+            # Erster Durchlauf - alle Dateien
+            echo "changed_files=all" >> $GITHUB_OUTPUT
+            echo "is_initial_sync=true" >> $GITHUB_OUTPUT
+          else
+            # Änderungen seit letztem Sync
+            git diff --name-only $LAST_SYNC upstream/${{ env.UPSTREAM_BRANCH }} -- docs/ > changed_files.txt
+            
+            if [ -s changed_files.txt ]; then
+              echo "changed_files=changed_files.txt" >> $GITHUB_OUTPUT
+              echo "files_changed=true" >> $GITHUB_OUTPUT
+              echo "Changed files:"
+              cat changed_files.txt
+            else
+              echo "files_changed=false" >> $GITHUB_OUTPUT
+              echo "No changes detected"
+            fi
+          fi
+
+      # 5. Node.js Setup
+      - name: Setup Node.js
+        if: steps.changes.outputs.files_changed == 'true' || steps.changes.outputs.is_initial_sync == 'true'
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      # 6. Dependencies installieren
+      - name: Install dependencies
+        if: steps.changes.outputs.files_changed == 'true' || steps.changes.outputs.is_initial_sync == 'true'
+        run: |
+          npm init -y
+          npm install axios front-matter glob
+
+      # 7. Übersetzungsscript erstellen
+      - name: Create translation script
+        if: steps.changes.outputs.files_changed == 'true' || steps.changes.outputs.is_initial_sync == 'true'
+        run: |
+          cat > translate.js << 'EOF'
+          const fs = require('fs');
+          const path = require('path');
+          const axios = require('axios');
+          const matter = require('front-matter');
+          const glob = require('glob');
+
+          const DEEPSEEK_API_URL = 'https://api.deepseek.com/v1/chat/completions';
+          const DEEPSEEK_API_KEY = process.env.DEEPSEEK_API_KEY;
+
+          // Übersetzungsprompt für technische Dokumentation
+          const TRANSLATION_PROMPT = `Du bist ein professioneller Übersetzer für technische Blockchain-Dokumentation.
+          Übersetze den folgenden Text ins Deutsche:
+          
+          Regeln:
+          1. Behalte alle Markdown-Formatierungen bei (##, **, \`\`\`, etc.)
+          2. Übersetze Code-Kommentare, aber NICHT Code-Blöcke
+          3. Behalte technische Begriffe wie "quorum", "computor", "epoch" bei oder übersetze sie konsistent
+          4. Behalte URLs und Dateipfade unverändert
+          5. Behalte YAML-Frontmatter-Struktur bei
+          6. Verwende professionelle, klare Sprache
+          7. Achte auf korrekte deutsche Grammatik und Zeichensetzung
+          
+          Text zum Übersetzen:
+          `;
+
+          async function translateText(text) {
+            try {
+              const response = await axios.post(
+                DEEPSEEK_API_URL,
+                {
+                  model: 'deepseek-chat',
+                  messages: [
+                    {
+                      role: 'system',
+                      content: 'Du bist ein Experte für technische Übersetzungen im Blockchain-Bereich.'
+                    },
+                    {
+                      role: 'user',
+                      content: TRANSLATION_PROMPT + text
+                    }
+                  ],
+                  temperature: 0.3,  // Niedrige Temperatur für konsistente Übersetzungen
+                  max_tokens: 4000
+                },
+                {
+                  headers: {
+                    'Authorization': `Bearer ${DEEPSEEK_API_KEY}`,
+                    'Content-Type': 'application/json'
+                  }
+                }
+              );
+
+              return response.data.choices[0].message.content;
+            } catch (error) {
+              console.error('Translation error:', error.response?.data || error.message);
+              throw error;
+            }
+          }
+
+          function splitContent(content) {
+            // Extrahiere Frontmatter
+            const parsed = matter(content);
+            
+            return {
+              frontmatter: parsed.frontmatter,
+              body: parsed.body,
+              originalFrontmatter: content.split('---').slice(0, 2).join('---') + '---'
+            };
+          }
+
+          async function translateFile(inputPath, outputPath) {
+            console.log(`Translating: ${inputPath}`);
+            
+            const content = fs.readFileSync(inputPath, 'utf-8');
+            const { frontmatter, body } = splitContent(content);
+
+            // Übersetze den Hauptinhalt
+            const translatedBody = await translateText(body);
+
+            // Frontmatter: Übersetze nur bestimmte Felder
+            const translatedFrontmatter = { ...frontmatter };
+            if (frontmatter.title) {
+              translatedFrontmatter.title = await translateText(frontmatter.title);
+            }
+            if (frontmatter.description) {
+              translatedFrontmatter.description = await translateText(frontmatter.description);
+            }
+
+            // Zusammenbauen
+            let output = '---\n';
+            for (const [key, value] of Object.entries(translatedFrontmatter)) {
+              if (typeof value === 'string' && value.includes(':')) {
+                output += `${key}: "${value}"\n`;
+              } else {
+                output += `${key}: ${value}\n`;
+              }
+            }
+            output += '---\n\n';
+            output += translatedBody;
+
+            // Sicherstellen, dass das Ausgabeverzeichnis existiert
+            fs.mkdirSync(path.dirname(outputPath), { recursive: true });
+            fs.writeFileSync(outputPath, output);
+            
+            console.log(`✓ Saved: ${outputPath}`);
+          }
+
+          async function main() {
+            const isInitialSync = process.env.IS_INITIAL_SYNC === 'true';
+            const changedFilesPath = process.env.CHANGED_FILES;
+
+            let filesToProcess = [];
+
+            if (isInitialSync) {
+              // Alle Markdown-Dateien im docs-Verzeichnis
+              filesToProcess = glob.sync('docs/**/*.md');
+              console.log(`Initial sync: Found ${filesToProcess.length} files`);
+            } else if (changedFilesPath && fs.existsSync(changedFilesPath)) {
+              // Nur geänderte Dateien
+              const changedFiles = fs.readFileSync(changedFilesPath, 'utf-8')
+                .split('\n')
+                .filter(f => f.endsWith('.md'));
+              filesToProcess = changedFiles;
+              console.log(`Processing ${filesToProcess.length} changed files`);
+            }
+
+            // Übersetze jede Datei
+            for (const file of filesToProcess) {
+              const outputPath = file.replace('docs/', 'i18n/de/docusaurus-plugin-content-docs/current/');
+              
+              try {
+                await translateFile(file, outputPath);
+              } catch (error) {
+                console.error(`Failed to translate ${file}:`, error);
+                process.exit(1);
+              }
+            }
+
+            // Erstelle Summary
+            const summary = {
+              timestamp: new Date().toISOString(),
+              filesProcessed: filesToProcess.length,
+              files: filesToProcess
+            };
+            fs.writeFileSync('translation-summary.json', JSON.stringify(summary, null, 2));
+            
+            console.log('\n✓ Translation complete!');
+          }
+
+          main().catch(console.error);
+          EOF
+
+      # 8. Übersetzung ausführen
+      - name: Run translation
+        if: steps.changes.outputs.files_changed == 'true' || steps.changes.outputs.is_initial_sync == 'true'
+        env:
+          DEEPSEEK_API_KEY: ${{ secrets.DEEPSEEK_API_KEY }}
+          IS_INITIAL_SYNC: ${{ steps.changes.outputs.is_initial_sync }}
+          CHANGED_FILES: ${{ steps.changes.outputs.changed_files }}
+        run: node translate.js
+
+      # 9. Änderungen committen
+      - name: Commit changes
+        if: steps.changes.outputs.files_changed == 'true' || steps.changes.outputs.is_initial_sync == 'true'
+        run: |
+          git add i18n/de/
+          git add translation-summary.json
+          git commit -m "Translation sync: $(date +%Y-%m-%d)
+          
+          Automated translation of changed documentation files.
+          Review required before creating upstream PR."
+
+      # 10. Branch pushen
+      - name: Push branch
+        if: steps.changes.outputs.files_changed == 'true' || steps.changes.outputs.is_initial_sync == 'true'
+        run: |
+          git checkout -b ${{ env.TRANSLATION_BRANCH }}-$(date +%Y%m%d)
+          git push origin ${{ env.TRANSLATION_BRANCH }}-$(date +%Y%m%d)
+
+      # 11. PR im Fork erstellen (für deinen Review)
+      - name: Create Review PR
+        if: steps.changes.outputs.files_changed == 'true' || steps.changes.outputs.is_initial_sync == 'true'
+        uses: peter-evans/create-pull-request@v5
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          branch: ${{ env.TRANSLATION_BRANCH }}-$(date +%Y%m%d)
+          base: main
+          title: "[REVIEW NEEDED] Daily Translation Sync - $(date +%Y-%m-%d)"
+          body: |
+            ## Übersetzungssync erstellt
+            
+            **Datum:** $(date +%Y-%m-%d)
+            **Quelle:** qubic/docs@${{ github.sha }}
+            
+            ### Änderungen:
+            $(cat changed_files.txt 2>/dev/null || echo "Initial sync - alle Dateien")
+            
+            ### Nächste Schritte:
+            1. [ ] Review der Übersetzungen durchführen
+            2. [ ] Korrekturen direkt in diesen Branch commiten
+            3. [ ] Nach Approval: Automatischer PR an qubic/docs wird erstellt
+            
+            **Wichtig:** Bitte innerhalb von 48h reviewn, damit die Übersetzungen aktuell bleiben.
+
+      # 12. Benachrichtigung senden (optional)
+      - name: Send notification
+        if: steps.changes.outputs.files_changed == 'true' || steps.changes.outputs.is_initial_sync == 'true'
+        run: |
+          echo "::notice title=Translation Ready::Review PR created. Please check the translations."
