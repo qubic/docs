@@ -14,44 +14,114 @@ jobs:
       pull-requests: write
 
     steps:
-      - name: Checkout
+      - name: Checkout upstream repository
         uses: actions/checkout@v4
         with:
+          repository: qubic/docs
+          token: ${{ secrets.UPSTREAM_PR_TOKEN }}
           fetch-depth: 0
 
-      - name: Create Upstream PR
-        env:
-          GITHUB_TOKEN: ${{ secrets.UPSTREAM_PR_TOKEN }}  # Personal Access Token mit Repo-Rechten
+      - name: Configure Git
         run: |
-          # PR an qubic/docs erstellen
+          git config user.name "Qubic Translation Bot"
+          git config user.email "translation-bot@qubic-network.de"
+
+      - name: Add fork remote and fetch translations
+        run: |
+          # Deinen Fork als remote hinzufügen
+          git remote add fork https://github.com/${{ github.actor }}/qubic-docs-de.git
+          git fetch fork
+          
+          # Zeige was im i18n Ordner ist
+          echo "Verfügbare Übersetzungen im Fork:"
+          git ls-tree -r fork/main --name-only | grep "^i18n/" | head -20
+
+      - name: Create clean branch with translations
+        run: |
+          # Neuen Branch erstellen
+          BRANCH_NAME="german-translations-$(date +%Y%m%d)"
+          git checkout -b $BRANCH_NAME
+          
+          # Nur i18n/de/ Ordner vom Fork holen
+          git checkout fork/main -- i18n/de/
+          
+          # Commit erstellen
+          git add i18n/de/
+          git commit -m "Add German translations
+          
+          - Translated via DeepSeek API with human review
+          - Covers latest documentation updates
+          - All technical terms preserved
+          
+          Co-authored-by: ${{ github.actor }}"
+          
+          # Branch pushen
+          git push origin $BRANCH_NAME
+          
+          echo "branch_name=$BRANCH_NAME" >> $GITHUB_ENV
+
+      - name: Create Pull Request
+        env:
+          GITHUB_TOKEN: ${{ secrets.UPSTREAM_PR_TOKEN }}
+        run: |
           gh pr create \
             --repo qubic/docs \
             --title "German Translation Update - $(date +%Y-%m-%d)" \
             --body "$(cat << 'PRBODY'
-          ## German Translation Update
+          ## 🇩🇪 German Translation Update
           
-          This PR contains the latest German translations for the Qubic documentation.
+          This PR adds German translations for the Qubic documentation.
           
           ### What's included:
-          - Synchronized with upstream changes from the last 24 hours
-          - AI-translated via DeepSeek API with human review
-          - All technical terms preserved accurately
+          - ✅ Latest translations synchronized with upstream
+          - ✅ AI-translated via DeepSeek API
+          - ✅ Reviewed by human translator
+          - ✅ All technical terms preserved
+          - ✅ Proper Docusaurus i18n structure (`i18n/de/`)
           
           ### Files changed:
-          - German translations in `i18n/de/`
+          - German translations in `i18n/de/docusaurus-plugin-content-docs/current/`
           
-          ### Review Notes:
-          - Translations have been reviewed by the German translation team
-          - Ready for merge
-          - Docusaurus i18n configuration handles the routing automatically
+          ### How to test:
+          1. Pull this branch
+          2. Add to `docusaurus.config.js`:
+             ```javascript
+             i18n: {
+               defaultLocale: 'en',
+               locales: ['en', 'de'],
+             }
+             ```
+          3. Run `npm run start`
+          4. Visit `http://localhost:3000/de/`
           
-          ### Testing:
-          - [ ] Verify Docusaurus builds successfully
-          - [ ] Check `/de/` paths are accessible
+          ### Requirements for merge:
+          - [ ] Add `de` to `locales` in `docusaurus.config.js`
+          - [ ] Verify build succeeds: `npm run build`
+          - [ ] Check German pages render correctly
+          
+          ### Maintenance:
+          - Translations are automatically synced daily
+          - New PRs will be created for future updates
+          - This is a one-time setup - future updates just need merge
           
           ---
-          *Automated translation workflow by @${{ github.actor }}*
+          *Automated translation workflow by @${{ github.actor }}*  
+          *For questions about translations, please contact the German translation team*
           PRBODY
           )" \
-            --head ${{ github.actor }}:${{ github.event.pull_request.head.ref }} \
+            --head ${{ env.branch_name }} \
             --base main
+
+      - name: Notify success
+        run: |
+          echo "========================================"
+          echo "✅ PR erfolgreich erstellt!"
+          echo ""
+          echo "Der Qubic-Maintainer bekommt jetzt:"
+          echo "- Nur den i18n/de/ Ordner"
+          echo "- Keine Workflow-Dateien"
+          echo "- Keine Scripts"
+          echo ""
+          echo "Link zum PR:"
+          echo "https://github.com/qubic/docs/pulls"
+          echo "========================================"

@@ -51,8 +51,8 @@ jobs:
             echo "changed_files=all" >> $GITHUB_OUTPUT
             echo "is_initial_sync=true" >> $GITHUB_OUTPUT
           else
-            # Änderungen seit letztem Sync
-            git diff --name-only $LAST_SYNC upstream/${{ env.UPSTREAM_BRANCH }} -- docs/ > changed_files.txt
+            # Änderungen seit letztem Sync (nur overview Ordner)
+            git diff --name-only $LAST_SYNC upstream/${{ env.UPSTREAM_BRANCH }} -- docs/overview/ > changed_files.txt
             
             if [ -s changed_files.txt ]; then
               echo "changed_files=changed_files.txt" >> $GITHUB_OUTPUT
@@ -77,7 +77,7 @@ jobs:
         if: steps.changes.outputs.files_changed == 'true' || steps.changes.outputs.is_initial_sync == 'true'
         run: |
           npm init -y
-          npm install axios front-matter glob
+          npm install axios glob
 
       # 7. Übersetzungsscript erstellen
       - name: Create translation script
@@ -87,7 +87,6 @@ jobs:
           const fs = require('fs');
           const path = require('path');
           const axios = require('axios');
-          const matter = require('front-matter');
           const glob = require('glob');
 
           const DEEPSEEK_API_URL = 'https://api.deepseek.com/v1/chat/completions';
@@ -125,7 +124,7 @@ jobs:
                       content: TRANSLATION_PROMPT + text
                     }
                   ],
-                  temperature: 0.3,  // Niedrige Temperatur für konsistente Übersetzungen
+                  temperature: 0.3,
                   max_tokens: 4000
                 },
                 {
@@ -143,46 +142,75 @@ jobs:
             }
           }
 
-          function splitContent(content) {
-            // Extrahiere Frontmatter
-            const parsed = matter(content);
+          // Eigene Frontmatter-Parsing Funktion
+          function parseFrontmatter(content) {
+            const match = content.match(/^---\n([\s\S]*?)\n---\n([\s\S]*)$/);
+            if (!match) return { frontmatter: {}, body: content };
             
-            return {
-              frontmatter: parsed.frontmatter,
-              body: parsed.body,
-              originalFrontmatter: content.split('---').slice(0, 2).join('---') + '---'
-            };
+            const frontmatterText = match[1];
+            const body = match[2].trim();
+            const frontmatter = {};
+            
+            frontmatterText.split('\n').forEach(line => {
+              const colonIndex = line.indexOf(':');
+              if (colonIndex > 0) {
+                const key = line.substring(0, colonIndex).trim();
+                let value = line.substring(colonIndex + 1).trim();
+                // Entferne Anführungszeichen
+                if ((value.startsWith('"') && value.endsWith('"')) || 
+                    (value.startsWith("'") && value.endsWith("'"))) {
+                  value = value.slice(1, -1);
+                }
+                // Parse numbers
+                if (!isNaN(value) && value !== '') {
+                  frontmatter[key] = parseInt(value);
+                } else {
+                  frontmatter[key] = value;
+                }
+              }
+            });
+            
+            return { frontmatter, body };
+          }
+
+          // Funktion um Frontmatter als sauberes YAML zu formatieren
+          function formatFrontmatter(obj) {
+            const lines = [];
+            for (const [key, value] of Object.entries(obj)) {
+              if (typeof value === 'string') {
+                // Immer einfache Anführungszeichen verwenden
+                lines.push(`${key}: '${value}'`);
+              } else {
+                lines.push(`${key}: ${value}`);
+              }
+            }
+            return lines.join('\n');
           }
 
           async function translateFile(inputPath, outputPath) {
             console.log(`Translating: ${inputPath}`);
             
             const content = fs.readFileSync(inputPath, 'utf-8');
-            const { frontmatter, body } = splitContent(content);
+            const { frontmatter, body } = parseFrontmatter(content);
 
             // Übersetze den Hauptinhalt
             const translatedBody = await translateText(body);
 
-            // Frontmatter: Übersetze nur bestimmte Felder
+            // Frontmatter übersetzen
             const translatedFrontmatter = { ...frontmatter };
             if (frontmatter.title) {
               translatedFrontmatter.title = await translateText(frontmatter.title);
+            }
+            if (frontmatter.sidebar_label) {
+              translatedFrontmatter.sidebar_label = await translateText(frontmatter.sidebar_label);
             }
             if (frontmatter.description) {
               translatedFrontmatter.description = await translateText(frontmatter.description);
             }
 
-            // Zusammenbauen
-            let output = '---\n';
-            for (const [key, value] of Object.entries(translatedFrontmatter)) {
-              if (typeof value === 'string' && value.includes(':')) {
-                output += `${key}: "${value}"\n`;
-              } else {
-                output += `${key}: ${value}\n`;
-              }
-            }
-            output += '---\n\n';
-            output += translatedBody;
+            // Zusammenbauen mit korrektem YAML-Format
+            const yamlFrontmatter = formatFrontmatter(translatedFrontmatter);
+            const output = `---\n${yamlFrontmatter}\n---\n\n${translatedBody}`;
 
             // Sicherstellen, dass das Ausgabeverzeichnis existiert
             fs.mkdirSync(path.dirname(outputPath), { recursive: true });
@@ -198,9 +226,9 @@ jobs:
             let filesToProcess = [];
 
             if (isInitialSync) {
-              // Alle Markdown-Dateien im docs-Verzeichnis
-              filesToProcess = glob.sync('docs/**/*.md');
-              console.log(`Initial sync: Found ${filesToProcess.length} files`);
+              // NUR overview Ordner für ersten Test
+              filesToProcess = glob.sync('docs/overview/**/*.md');
+              console.log(`Initial sync (overview only): Found ${filesToProcess.length} files`);
             } else if (changedFilesPath && fs.existsSync(changedFilesPath)) {
               // Nur geänderte Dateien
               const changedFiles = fs.readFileSync(changedFilesPath, 'utf-8')
