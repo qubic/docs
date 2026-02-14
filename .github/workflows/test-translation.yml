@@ -161,10 +161,12 @@ jobs:
             console.log(`\n✓ Übersetzung gespeichert: ${outputPath}`);
             console.log(`✓ Ausgabegröße: ${output.length} Zeichen`);
             
-            // Zeige ersten Teil der Übersetzung
-            console.log(`\n--- Vorschau der Übersetzung (erste 500 Zeichen) ---`);
-            console.log(output.substring(0, 500));
-            console.log(`... (${output.length - 500} weitere Zeichen)`);
+            // Zeige ersten Absatz als Vorschau
+            console.log(`\n--- Vorschau (erster Absatz) ---`);
+            const firstParagraph = translatedBody.split('\n\n')[0];
+            console.log(firstParagraph.substring(0, 300));
+            if (firstParagraph.length > 300) console.log('...');
+            console.log(`\n✓ Übersetzung komplett - siehe Datei im Repository`);
           }
 
           async function main() {
@@ -192,12 +194,37 @@ jobs:
           TEST_FILE: ${{ env.TEST_FILE }}
         run: node test-translate.js
 
-      # 7. Status anzeigen
-      - name: Show results
+      # 7. Änderungen committen und pushen
+      - name: Commit and push translation
         run: |
           echo "========================================"
-          echo "Übersetzte Datei:"
-          ls -la i18n/de/docusaurus-plugin-content-docs/current/overview/introduction.md || echo "Datei nicht gefunden"
+          echo "Übersetzte Datei wird committet..."
+          git add i18n/de/
+          git commit -m "Test translation: $(basename ${{ env.TEST_FILE }})
+          
+          Automated test translation of ${{ env.TEST_FILE }}"
+          git push origin main
+          echo "✓ Datei wurde in dein Repository gepusht!"
           echo ""
-          echo "Inhalt (erste 20 Zeilen):"
-          head -20 i18n/de/docusaurus-plugin-content-docs/current/overview/introduction.md || echo "Konnte Datei nicht lesen"
+          echo "Du kannst sie jetzt lokal pullen mit:"
+          echo "  git pull origin main"
+          echo ""
+          echo "Oder auf GitHub ansehen unter:"
+          echo "  https://github.com/${{ github.repository }}/blob/main/i18n/de/docusaurus-plugin-content-docs/current/${{ env.TEST_FILE }}"
+
+      # 8. Artifact erstellen (zum Download)
+      - name: Upload translation as artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: german-translation
+          path: i18n/de/docusaurus-plugin-content-docs/current/${{ env.TEST_FILE }}
+          retention-days: 7
+          
+      - name: Show download info
+        run: |
+          echo "========================================"
+          echo "✓ Artifact erstellt!"
+          echo ""
+          echo "Du kannst die Datei hier herunterladen:"
+          echo "  GitHub Actions → Dieser Workflow-Run → Artifacts"
+          echo "========================================"
