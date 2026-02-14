@@ -1,0 +1,203 @@
+name: Test Translation - Single File
+
+on:
+  workflow_dispatch:  # Nur manuelles Triggern
+
+env:
+  DEEPSEEK_API_KEY: ${{ secrets.DEEPSEEK_API_KEY }}
+  TEST_FILE: "docs/overview/introduction.md"  # Hier die Testdatei ändern
+
+jobs:
+  test-translation:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+
+    steps:
+      # 1. Checkout
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      # 2. Git-Konfiguration
+      - name: Configure Git
+        run: |
+          git config user.name "Qubic Translation Bot"
+          git config user.email "translation-bot@qubic-network.de"
+
+      # 3. Node.js Setup
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      # 4. Dependencies installieren
+      - name: Install dependencies
+        run: |
+          npm init -y
+          npm install axios front-matter
+
+      # 5. Test-Übersetzungsscript erstellen
+      - name: Create test translation script
+        run: |
+          cat > test-translate.js << 'EOF'
+          const fs = require('fs');
+          const path = require('path');
+          const axios = require('axios');
+          const matter = require('front-matter');
+
+          const DEEPSEEK_API_URL = 'https://api.deepseek.com/v1/chat/completions';
+          const DEEPSEEK_API_KEY = process.env.DEEPSEEK_API_KEY;
+          const TEST_FILE = process.env.TEST_FILE;
+
+          // Übersetzungsprompt für technische Dokumentation
+          const TRANSLATION_PROMPT = `Du bist ein professioneller Übersetzer für technische Blockchain-Dokumentation.
+          Übersetze den folgenden Text ins Deutsche:
+          
+          Regeln:
+          1. Behalte alle Markdown-Formatierungen bei (##, **, \`\`\`, etc.)
+          2. Übersetze Code-Kommentare, aber NICHT Code-Blöcke
+          3. Behalte technische Begriffe wie "quorum", "computor", "epoch" bei oder übersetze sie konsistent
+          4. Behalte URLs und Dateipfade unverändert
+          5. Behalte YAML-Frontmatter-Struktur bei
+          6. Verwende professionelle, klare Sprache
+          7. Achte auf korrekte deutsche Grammatik und Zeichensetzung
+          
+          Text zum Übersetzen:
+          `;
+
+          async function translateText(text) {
+            try {
+              const response = await axios.post(
+                DEEPSEEK_API_URL,
+                {
+                  model: 'deepseek-chat',
+                  messages: [
+                    {
+                      role: 'system',
+                      content: 'Du bist ein Experte für technische Übersetzungen im Blockchain-Bereich.'
+                    },
+                    {
+                      role: 'user',
+                      content: TRANSLATION_PROMPT + text
+                    }
+                  ],
+                  temperature: 0.3,
+                  max_tokens: 4000
+                },
+                {
+                  headers: {
+                    'Authorization': `Bearer ${DEEPSEEK_API_KEY}`,
+                    'Content-Type': 'application/json'
+                  }
+                }
+              );
+
+              return response.data.choices[0].message.content;
+            } catch (error) {
+              console.error('Translation error:', error.response?.data || error.message);
+              throw error;
+            }
+          }
+
+          async function translateFile(inputPath, outputPath) {
+            console.log(`\n========================================`);
+            console.log(`Testing translation of: ${inputPath}`);
+            console.log(`========================================\n`);
+            
+            // Prüfe ob Datei existiert
+            if (!fs.existsSync(inputPath)) {
+              console.error(`❌ Datei nicht gefunden: ${inputPath}`);
+              console.log(`\nVerfügbare Dateien im docs/ Ordner:`);
+              const { glob } = require('glob');
+              const allFiles = glob.sync('docs/**/*.md');
+              allFiles.slice(0, 10).forEach(f => console.log(`  - ${f}`));
+              if (allFiles.length > 10) console.log(`  ... und ${allFiles.length - 10} weitere`);
+              process.exit(1);
+            }
+            
+            const content = fs.readFileSync(inputPath, 'utf-8');
+            const parsed = matter(content);
+            
+            console.log(`✓ Datei geladen: ${inputPath}`);
+            console.log(`✓ Größe: ${content.length} Zeichen`);
+            console.log(`✓ Frontmatter gefunden: ${Object.keys(parsed.frontmatter).length} Felder\n`);
+
+            console.log('Starte Übersetzung...\n');
+
+            // Übersetze den Hauptinhalt
+            const translatedBody = await translateText(parsed.body);
+
+            // Frontmatter: Übersetze nur bestimmte Felder
+            const translatedFrontmatter = { ...parsed.frontmatter };
+            if (parsed.frontmatter.title) {
+              console.log('Übersetze Titel...');
+              translatedFrontmatter.title = await translateText(parsed.frontmatter.title);
+            }
+            if (parsed.frontmatter.description) {
+              console.log('Übersetze Beschreibung...');
+              translatedFrontmatter.description = await translateText(parsed.frontmatter.description);
+            }
+
+            // Zusammenbauen
+            let output = '---\n';
+            for (const [key, value] of Object.entries(translatedFrontmatter)) {
+              if (typeof value === 'string' && value.includes(':')) {
+                output += `${key}: "${value}"\n`;
+              } else {
+                output += `${key}: ${value}\n`;
+              }
+            }
+            output += '---\n\n';
+            output += translatedBody;
+
+            // Sicherstellen, dass das Ausgabeverzeichnis existiert
+            fs.mkdirSync(path.dirname(outputPath), { recursive: true });
+            fs.writeFileSync(outputPath, output);
+            
+            console.log(`\n✓ Übersetzung gespeichert: ${outputPath}`);
+            console.log(`✓ Ausgabegröße: ${output.length} Zeichen`);
+            
+            // Zeige ersten Teil der Übersetzung
+            console.log(`\n--- Vorschau der Übersetzung (erste 500 Zeichen) ---`);
+            console.log(output.substring(0, 500));
+            console.log(`... (${output.length - 500} weitere Zeichen)`);
+          }
+
+          async function main() {
+            const inputPath = TEST_FILE;
+            const outputPath = inputPath.replace('docs/', 'i18n/de/docusaurus-plugin-content-docs/current/');
+            
+            try {
+              await translateFile(inputPath, outputPath);
+              console.log('\n========================================');
+              console.log('✓ Test-Übersetzung erfolgreich!');
+              console.log('========================================\n');
+            } catch (error) {
+              console.error('\n❌ Fehler bei der Übersetzung:', error.message);
+              process.exit(1);
+            }
+          }
+
+          main().catch(console.error);
+          EOF
+
+      # 6. Test-Übersetzung ausführen
+      - name: Run test translation
+        env:
+          DEEPSEEK_API_KEY: ${{ secrets.DEEPSEEK_API_KEY }}
+          TEST_FILE: ${{ env.TEST_FILE }}
+        run: node test-translate.js
+
+      # 7. Status anzeigen
+      - name: Show results
+        run: |
+          echo "========================================"
+          echo "Übersetzte Datei:"
+          ls -la i18n/de/docusaurus-plugin-content-docs/current/overview/introduction.md || echo "Datei nicht gefunden"
+          echo ""
+          echo "Inhalt (erste 20 Zeilen):"
+          head -20 i18n/de/docusaurus-plugin-content-docs/current/overview/introduction.md || echo "Konnte Datei nicht lesen"
