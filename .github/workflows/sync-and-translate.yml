@@ -25,7 +25,7 @@ jobs:
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
-          token: ${{ secrets.GITHUB_TOKEN }}
+          persist-credentials: true
 
       # 2. Git-Konfiguration
       - name: Configure Git
@@ -273,48 +273,54 @@ jobs:
           CHANGED_FILES: ${{ steps.changes.outputs.changed_files }}
         run: node translate.js
 
-      # 9. Änderungen committen
-      - name: Commit changes
+      # 9. Änderungen committen und pushen
+      - name: Commit and push changes
         if: steps.changes.outputs.files_changed == 'true' || steps.changes.outputs.is_initial_sync == 'true'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
+          # Token für HTTPS Auth setzen
+          git remote set-url origin https://x-access-token:${GITHUB_TOKEN}@github.com/${{ github.repository }}.git
+          
+          # Änderungen committen
           git add i18n/de/
           git add translation-summary.json
           git commit -m "Translation sync: $(date +%Y-%m-%d)
           
           Automated translation of changed documentation files.
           Review required before creating upstream PR."
+          
+          # Branch erstellen und pushen
+          BRANCH_NAME="${{ env.TRANSLATION_BRANCH }}-$(date +%Y%m%d)"
+          git checkout -b $BRANCH_NAME
+          git push origin $BRANCH_NAME
+          
+          echo "branch_name=$BRANCH_NAME" >> $GITHUB_ENV
 
-      # 10. Branch pushen
-      - name: Push branch
-        if: steps.changes.outputs.files_changed == 'true' || steps.changes.outputs.is_initial_sync == 'true'
-        run: |
-          git checkout -b ${{ env.TRANSLATION_BRANCH }}-$(date +%Y%m%d)
-          git push origin ${{ env.TRANSLATION_BRANCH }}-$(date +%Y%m%d)
-
-      # 11. PR im Fork erstellen (für deinen Review)
+      # 10. PR im Fork erstellen (für deinen Review)
       - name: Create Review PR
         if: steps.changes.outputs.files_changed == 'true' || steps.changes.outputs.is_initial_sync == 'true'
-        uses: peter-evans/create-pull-request@v5
-        with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-          branch: ${{ env.TRANSLATION_BRANCH }}-$(date +%Y%m%d)
-          base: main
-          title: "[REVIEW NEEDED] Daily Translation Sync - $(date +%Y-%m-%d)"
-          body: |
-            ## Übersetzungssync erstellt
-            
-            **Datum:** $(date +%Y-%m-%d)
-            **Quelle:** qubic/docs@${{ github.sha }}
-            
-            ### Änderungen:
-            $(cat changed_files.txt 2>/dev/null || echo "Initial sync - alle Dateien")
-            
-            ### Nächste Schritte:
-            1. [ ] Review der Übersetzungen durchführen
-            2. [ ] Korrekturen direkt in diesen Branch commiten
-            3. [ ] Nach Approval: Automatischer PR an qubic/docs wird erstellt
-            
-            **Wichtig:** Bitte innerhalb von 48h reviewn, damit die Übersetzungen aktuell bleiben.
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh pr create \
+            --title "[REVIEW NEEDED] Translation Sync - $(date +%Y-%m-%d)" \
+            --body "## Übersetzungssync erstellt
+          
+          **Datum:** $(date +%Y-%m-%d)
+          **Quelle:** qubic/docs
+          
+          ### Änderungen:
+          Übersetzte Dateien im Overview-Ordner
+          
+          ### Nächste Schritte:
+          1. [ ] Review der Übersetzungen durchführen
+          2. [ ] Korrekturen direkt in diesen Branch commiten
+          3. [ ] Nach Approval: Automatischer PR an qubic/docs wird erstellt
+          
+          **Wichtig:** Bitte innerhalb von 48h reviewn." \
+            --head ${{ env.branch_name }} \
+            --base main
 
       # 12. Benachrichtigung senden (optional)
       - name: Send notification
