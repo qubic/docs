@@ -47,7 +47,6 @@ jobs:
           const fs = require('fs');
           const path = require('path');
           const axios = require('axios');
-          const matter = require('front-matter');
 
           const DEEPSEEK_API_URL = 'https://api.deepseek.com/v1/chat/completions';
           const DEEPSEEK_API_KEY = process.env.DEEPSEEK_API_KEY;
@@ -103,24 +102,44 @@ jobs:
             }
           }
 
-          // Hilfsfunktion um Frontmatter als YAML zu formatieren
+          // Simple Funktion um Frontmatter zu parsen
+          function parseFrontmatter(content) {
+            const match = content.match(/^---\n([\s\S]*?)\n---\n([\s\S]*)$/);
+            if (!match) return { frontmatter: {}, body: content };
+            
+            const frontmatterText = match[1];
+            const body = match[2].trim();
+            const frontmatter = {};
+            
+            frontmatterText.split('\n').forEach(line => {
+              const colonIndex = line.indexOf(':');
+              if (colonIndex > 0) {
+                const key = line.substring(0, colonIndex).trim();
+                let value = line.substring(colonIndex + 1).trim();
+                // Entferne Anführungszeichen
+                if ((value.startsWith('"') && value.endsWith('"')) || 
+                    (value.startsWith("'") && value.endsWith("'"))) {
+                  value = value.slice(1, -1);
+                }
+                // Parse numbers
+                if (!isNaN(value) && value !== '') {
+                  frontmatter[key] = parseInt(value);
+                } else {
+                  frontmatter[key] = value;
+                }
+              }
+            });
+            
+            return { frontmatter, body };
+          }
+
+          // Funktion um Frontmatter als sauberes YAML zu formatieren
           function formatFrontmatter(obj) {
             const lines = [];
             for (const [key, value] of Object.entries(obj)) {
-              if (value === null || value === undefined) {
-                lines.push(`${key}:`);
-              } else if (typeof value === 'string') {
-                // Strings mit Sonderzeichen in Anführungszeichen
-                if (value.includes(':') || value.includes('#') || value.includes('"') || value.includes("'") || value.includes('\n')) {
-                  lines.push(`${key}: "${value.replace(/"/g, '\\"')}"`);
-                } else {
-                  lines.push(`${key}: ${value}`);
-                }
-              } else if (typeof value === 'number' || typeof value === 'boolean') {
-                lines.push(`${key}: ${value}`);
-              } else if (Array.isArray(value)) {
-                lines.push(`${key}:`);
-                value.forEach(item => lines.push(`  - ${item}`));
+              if (typeof value === 'string') {
+                // Immer einfache Anführungszeichen verwenden
+                lines.push(`${key}: '${value}'`);
               } else {
                 lines.push(`${key}: ${value}`);
               }
@@ -133,59 +152,47 @@ jobs:
             console.log(`Testing translation of: ${inputPath}`);
             console.log(`========================================\n`);
             
-            // Prüfe ob Datei existiert
             if (!fs.existsSync(inputPath)) {
               console.error(`❌ Datei nicht gefunden: ${inputPath}`);
               process.exit(1);
             }
             
             const content = fs.readFileSync(inputPath, 'utf-8');
-            const parsed = matter(content);
+            const { frontmatter, body } = parseFrontmatter(content);
             
             console.log(`✓ Datei geladen: ${inputPath}`);
             console.log(`✓ Größe: ${content.length} Zeichen`);
-            console.log(`✓ Frontmatter gefunden: ${Object.keys(parsed.frontmatter).join(', ')}\n`);
+            console.log(`✓ Frontmatter gefunden: ${JSON.stringify(frontmatter)}\n`);
 
             console.log('Starte Übersetzung...\n');
 
-            // Übersetze den Hauptinhalt
-            const translatedBody = await translateText(parsed.body);
+            const translatedBody = await translateText(body);
 
-            // Frontmatter: Übersetze nur bestimmte Felder
-            const translatedFrontmatter = { ...parsed.frontmatter };
-            if (parsed.frontmatter.title) {
-              console.log('Übersetze Titel...');
-              translatedFrontmatter.title = await translateText(parsed.frontmatter.title);
+            // Frontmatter übersetzen
+            const translatedFrontmatter = { ...frontmatter };
+            if (frontmatter.title) {
+              console.log('Übersetze title...');
+              translatedFrontmatter.title = await translateText(frontmatter.title);
             }
-            if (parsed.frontmatter.description) {
-              console.log('Übersetze Beschreibung...');
-              translatedFrontmatter.description = await translateText(parsed.frontmatter.description);
-            }
-            // sidebar_label auch übersetzen falls vorhanden
-            if (parsed.frontmatter.sidebar_label) {
+            if (frontmatter.sidebar_label) {
               console.log('Übersetze sidebar_label...');
-              translatedFrontmatter.sidebar_label = await translateText(parsed.frontmatter.sidebar_label);
+              translatedFrontmatter.sidebar_label = await translateText(frontmatter.sidebar_label);
+            }
+            if (frontmatter.description) {
+              console.log('Übersetze description...');
+              translatedFrontmatter.description = await translateText(frontmatter.description);
             }
 
-            // Zusammenbauen mit korrektem YAML-Format
+            // Zusammenbauen
             const yamlFrontmatter = formatFrontmatter(translatedFrontmatter);
             const output = `---\n${yamlFrontmatter}\n---\n\n${translatedBody}`;
 
-            // Sicherstellen, dass das Ausgabeverzeichnis existiert
             fs.mkdirSync(path.dirname(outputPath), { recursive: true });
             fs.writeFileSync(outputPath, output);
             
             console.log(`\n✓ Übersetzung gespeichert: ${outputPath}`);
-            console.log(`✓ Ausgabegröße: ${output.length} Zeichen`);
-            
-            // Zeige ersten Absatz als Vorschau
-            console.log(`\n--- Vorschau Frontmatter ---`);
-            console.log(`---\n${yamlFrontmatter}\n---`);
-            console.log(`\n--- Vorschau Inhalt (erster Absatz) ---`);
-            const firstParagraph = translatedBody.split('\n\n')[0];
-            console.log(firstParagraph.substring(0, 300));
-            if (firstParagraph.length > 300) console.log('...');
-            console.log(`\n✓ Übersetzung komplett!`);
+            console.log(`\n--- Frontmatter ---`);
+            console.log(yamlFrontmatter);
           }
 
           async function main() {
@@ -194,12 +201,9 @@ jobs:
             
             try {
               await translateFile(inputPath, outputPath);
-              console.log('\n========================================');
-              console.log('✓ Test-Übersetzung erfolgreich!');
-              console.log('========================================\n');
+              console.log('\n✓ Test-Übersetzung erfolgreich!');
             } catch (error) {
-              console.error('\n❌ Fehler bei der Übersetzung:', error.message);
-              console.error(error.stack);
+              console.error('\n❌ Fehler:', error.message);
               process.exit(1);
             }
           }
