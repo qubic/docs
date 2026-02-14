@@ -273,41 +273,37 @@ jobs:
           CHANGED_FILES: ${{ steps.changes.outputs.changed_files }}
         run: node translate.js
 
-      # 9. Änderungen committen und pushen
-      - name: Commit and push changes
+      # 9. Auf main zurücksetzen und nur i18n Änderungen vorbereiten
+      - name: Prepare clean branch
         if: steps.changes.outputs.files_changed == 'true' || steps.changes.outputs.is_initial_sync == 'true'
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          # Token für HTTPS Auth setzen
-          git remote set-url origin https://x-access-token:${GITHUB_TOKEN}@github.com/${{ github.repository }}.git
+          # Sichere die übersetzten Dateien
+          mkdir -p /tmp/translations
+          cp -r i18n/de/ /tmp/translations/
           
-          # Änderungen committen
+          # Stash alle Änderungen
+          git stash push -m "translations"
+          
+          # Zurück zu main
+          git checkout main
+          git pull origin main
+          
+          # Nur die übersetzten Dateien zurückholen
+          cp -r /tmp/translations/de/ i18n/
+          
+          # Zeige was hinzugefügt wird
+          git status
           git add i18n/de/
-          git add translation-summary.json
-          git commit -m "Translation sync: $(date +%Y-%m-%d)
-          
-          Automated translation of changed documentation files.
-          Review required before creating upstream PR."
-          
-          # Branch erstellen und pushen (mit eindeutigem Namen)
-          BRANCH_NAME="${{ env.TRANSLATION_BRANCH }}-$(date +%Y%m%d)-${{ github.run_id }}"
-          
-          # Falls Branch schon existiert, löschen
-          git push origin --delete $BRANCH_NAME 2>/dev/null || true
-          
-          git checkout -b $BRANCH_NAME
-          git push origin $BRANCH_NAME
-          
-          echo "branch_name=$BRANCH_NAME" >> $GITHUB_ENV
+          git status
 
       # 10. PR im Fork erstellen (für deinen Review)
+      # Die Action committed und pusht die Änderungen automatisch
       - name: Create Review PR
         if: steps.changes.outputs.files_changed == 'true' || steps.changes.outputs.is_initial_sync == 'true'
         uses: peter-evans/create-pull-request@v7
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
-          branch: ${{ env.branch_name }}
+          branch: translation-sync-${{ github.run_id }}
           base: main
           title: "[REVIEW NEEDED] Translation Sync - $(date +%Y-%m-%d)"
           body: |
@@ -325,6 +321,14 @@ jobs:
             3. [ ] Nach Approval: Automatischer PR an qubic/docs wird erstellt
             
             **Wichtig:** Bitte innerhalb von 48h reviewn.
+          commit-message: | 
+            Translation sync: $(date +%Y-%m-%d)
+            
+            Automated translation of changed documentation files.
+            Review required before creating upstream PR.
+          delete-branch: false
+          add-paths: |
+            i18n/de/**
 
       # 12. Benachrichtigung senden (optional)
       - name: Send notification
