@@ -96,14 +96,25 @@ jobs:
           const TRANSLATION_PROMPT = `Du bist ein professioneller Übersetzer für technische Blockchain-Dokumentation.
           Übersetze den folgenden Text ins Deutsche:
           
-          Regeln:
+          WICHTIGE REGELN FÜR TECHNISCHE BEGRIFFE:
+          - "computor" → "Computor" (immer groß, nie übersetzen)
+          - "computors" → "Computoren" (Plural auf Deutsch)
+          - "epoch" → "Epoche" (übersetzen)
+          - "epochs" → "Epochen" (Plural auf Deutsch)
+          - "useful proof-of-work" → "Useful Proof-of-Work" (nie übersetzen)
+          - "Useful Proof-of-Work" → "Useful Proof-of-Work" (nie übersetzen)
+          - "ledger" → "Ledger" (nie übersetzen)
+          - "quorum" → "Quorum" (nie übersetzen)
+          - "smart contract" → "Smart Contract" (nie übersetzen)
+          - "wallet" → "Wallet" (nie übersetzen)
+          
+          ALLGEMEINE REGELN:
           1. Behalte alle Markdown-Formatierungen bei (##, **, \`\`\`, etc.)
           2. Übersetze Code-Kommentare, aber NICHT Code-Blöcke
-          3. Behalte technische Begriffe wie "quorum", "computor", "epoch" bei oder übersetze sie konsistent
-          4. Behalte URLs und Dateipfade unverändert
-          5. Behalte YAML-Frontmatter-Struktur bei
-          6. Verwende professionelle, klare Sprache
-          7. Achte auf korrekte deutsche Grammatik und Zeichensetzung
+          3. Behalte URLs und Dateipfade unverändert
+          4. Behalte YAML-Frontmatter-Struktur bei
+          5. Verwende professionelle, klare Sprache
+          6. Achte auf korrekte deutsche Grammatik und Zeichensetzung
           
           Text zum Übersetzen:
           `;
