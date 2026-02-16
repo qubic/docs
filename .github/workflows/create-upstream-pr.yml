@@ -15,10 +15,10 @@ jobs:
       pull-requests: write
 
     steps:
-      - name: Checkout upstream repository
+      - name: Checkout your fork
         uses: actions/checkout@v4
         with:
-          repository: qubic/docs
+          repository: ${{ github.actor }}/qubic-docs-de
           token: ${{ secrets.UPSTREAM_PR_TOKEN }}
           fetch-depth: 0
 
@@ -27,24 +27,22 @@ jobs:
           git config user.name "Qubic Translation Bot"
           git config user.email "translation-bot@qubic-network.de"
 
-      - name: Add fork remote and fetch translations
-        run: |
-          # Deinen Fork als remote hinzufügen
-          git remote add fork https://github.com/${{ github.actor }}/qubic-docs-de.git
-          git fetch fork
-          
-          # Zeige was im i18n Ordner ist
-          echo "Verfügbare Übersetzungen im Fork:"
-          git ls-tree -r fork/main --name-only | grep "^i18n/" | head -20
-
-      - name: Create clean branch with translations
+      - name: Create branch with only translations
         run: |
           # Neuen Branch erstellen
           BRANCH_NAME="german-translations-$(date +%Y%m%d)"
           git checkout -b $BRANCH_NAME
           
-          # Nur i18n/de/ Ordner vom Fork holen
-          git checkout fork/main -- i18n/de/
+          # Nur i18n/de/ behalten, Rest entfernen
+          mkdir -p /tmp/translations
+          cp -r i18n/de/ /tmp/translations/
+          
+          # Alles löschen außer .git
+          find . -mindepth 1 -maxdepth 1 ! -name '.git' -exec rm -rf {} +
+          
+          # i18n wiederherstellen
+          mkdir -p i18n
+          cp -r /tmp/translations/de/ i18n/
           
           # Commit erstellen
           git add i18n/de/
@@ -53,6 +51,7 @@ jobs:
           - Translated via DeepSeek API with human review
           - Covers latest documentation updates
           - All technical terms preserved
+          - Includes overview section
           
           Co-authored-by: ${{ github.actor }}"
           
@@ -60,11 +59,13 @@ jobs:
           git push origin $BRANCH_NAME
           
           echo "branch_name=$BRANCH_NAME" >> $GITHUB_ENV
+          echo "✓ Branch $BRANCH_NAME erstellt und gepusht"
 
-      - name: Create Pull Request
+      - name: Create Pull Request to qubic/docs
         env:
           GITHUB_TOKEN: ${{ secrets.UPSTREAM_PR_TOKEN }}
         run: |
+          # Cross-Repository PR erstellen
           gh pr create \
             --repo qubic/docs \
             --title "German Translation Update - $(date +%Y-%m-%d)" \
@@ -110,7 +111,7 @@ jobs:
           *For questions about translations, please contact the German translation team*
           PRBODY
           )" \
-            --head ${{ env.branch_name }} \
+            --head ${{ github.actor }}:${{ env.branch_name }} \
             --base main
 
       - name: Notify success
