@@ -30,17 +30,25 @@ jobs:
       - name: Find changed translation files
         id: changed-files
         run: |
-          # Finde den letzten Translation-Sync-Commit (von uns erstellt)
-          LAST_TRANSLATION_COMMIT=$(git log --grep="Translation sync" --format="%H" -n 1 || echo "")
+          # Bei manuellem Start: Alle aktuellen i18n Dateien verwenden
+          # Bei automatischem Start: Vergleiche mit letztem erfolgreichen Upstream-PR
           
-          if [ -z "$LAST_TRANSLATION_COMMIT" ]; then
-            # Kein vorheriger Translation-Commit gefunden, nimm alle i18n Dateien
-            echo "Kein vorheriger Translation-Commit gefunden, verwende alle Dateien"
+          if [ "${{ github.event_name }}" == "workflow_dispatch" ]; then
+            # Manueller Start - nimm alle aktuellen Dateien
+            echo "Manueller Start - verwende alle aktuellen Übersetzungsdateien"
             CHANGED_FILES=$(git ls-files i18n/de/)
           else
-            # Finde Dateien die sich seit dem letzten Translation-Commit geändert haben
-            echo "Letzter Translation-Commit: $LAST_TRANSLATION_COMMIT"
-            CHANGED_FILES=$(git diff --name-only $LAST_TRANSLATION_COMMIT HEAD -- i18n/de/)
+            # Automatischer Start nach Merge - finde letzten Upstream-PR-Commit
+            # Suche nach Commits die "Add/Update German translations" enthalten
+            LAST_UPSTREAM_COMMIT=$(git log --grep="Add/Update German translations" --format="%H" -n 1 || echo "")
+            
+            if [ -z "$LAST_UPSTREAM_COMMIT" ]; then
+              echo "Kein vorheriger Upstream-PR gefunden, verwende alle Dateien"
+              CHANGED_FILES=$(git ls-files i18n/de/)
+            else
+              echo "Letzter Upstream-PR Commit: $LAST_UPSTREAM_COMMIT"
+              CHANGED_FILES=$(git diff --name-only $LAST_UPSTREAM_COMMIT HEAD -- i18n/de/)
+            fi
           fi
           
           if [ -z "$CHANGED_FILES" ]; then
