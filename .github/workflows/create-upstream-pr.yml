@@ -44,8 +44,9 @@ jobs:
           mkdir -p i18n
           cp -r /tmp/translations/de/ i18n/
           
-          # Commit erstellen
-          git add i18n/de/
+          # Alles stage (inkl. Löschungen) und dann nur i18n commiten
+          git add -A
+          git reset HEAD .github/workflows/cleanup-branches.yml .github/workflows/create-upstream-pr.yml .github/workflows/sync-and-translate.yml 2>/dev/null || true
           git commit -m "Add German translations
           
           - Translated via DeepSeek API with human review
