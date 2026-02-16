@@ -1,10 +1,11 @@
 name: Sync and Translate Qubic Docs
 
 on:
-  schedule:
-    # Täglich um 02:00 UTC (außerhalb der Hauptnutzungszeiten)
-    - cron: '0 2 * * *'
-  workflow_dispatch:  # Manuelles Triggern möglich
+  # DEAKTIVIERT bis das Qubic-Team die Übersetzungen akzeptiert
+  # schedule:
+  #   # Täglich um 02:00 UTC (außerhalb der Hauptnutzungszeiten)
+  #   - cron: '0 2 * * *'
+  workflow_dispatch:  # Nur manuelles Triggern möglich
 
 env:
   UPSTREAM_REPO: qubic/docs
