@@ -64,23 +64,34 @@ jobs:
           echo "$CHANGED_FILES" > /tmp/changed_files.txt
           echo "has_changes=true" >> $GITHUB_OUTPUT
 
-      - name: Create branch with only translation changes
+      - name: Create clean branch with translations
         if: steps.changed-files.outputs.has_changes == 'true'
         run: |
           # Neuen Branch erstellen (von main aus)
           BRANCH_NAME="german-translations-$(date +%Y%m%d)"
           git checkout -b $BRANCH_NAME
           
-          # Nur die geänderten Dateien auswählen
+          # Sichere die gewünschten Dateien
+          mkdir -p /tmp/translations-backup
           while IFS= read -r file; do
             if [ -f "$file" ]; then
-              git add "$file"
-              echo "Added: $file"
+              mkdir -p "/tmp/translations-backup/$(dirname $file)"
+              cp "$file" "/tmp/translations-backup/$file"
+              echo "Backed up: $file"
             fi
           done < /tmp/changed_files.txt
           
+          # Alles löschen außer .git
+          find . -mindepth 1 -maxdepth 1 ! -name '.git' -exec rm -rf {} +
+          
+          # Dateien wiederherstellen
+          cp -r /tmp/translations-backup/* .
+          
+          # Alles stagen
+          git add -A
+          
           # Status anzeigen
-          echo "Git Status:"
+          echo "Git Status nach Wiederherstellung:"
           git status
           
           # Commit erstellen
@@ -89,7 +100,7 @@ jobs:
           - Translated via DeepSeek API with human review
           - Covers latest documentation updates
           - All technical terms preserved
-          - Only changed files included
+          - Only translation files included
           
           Co-authored-by: ${{ github.actor }}"
           
