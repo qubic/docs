@@ -1,17 +1,14 @@
-# WICHTIG: Dieser Workflow ist deaktiviert bis das Qubic-Team die Übersetzungen akzeptiert
-# Um zu aktivieren: Personal Access Token (PAT) mit repo-Rechten erstellen und als UPSTREAM_PR_TOKEN speichern
-
 name: Create Upstream PR
 
 on:
-  # pull_request:
-  #   types: [closed]
-  #   branches: [main]
-  workflow_dispatch:  # Nur manuelles Triggern möglich
+  pull_request:
+    types: [closed]
+    branches: [main]
+  workflow_dispatch:  # Manuelles Triggern möglich
 
 jobs:
   create-upstream-pr:
-    if: github.event.pull_request.merged == true && contains(github.event.pull_request.title, '[REVIEW NEEDED]')
+    if: github.event_name == 'workflow_dispatch' || (github.event.pull_request.merged == true && contains(github.event.pull_request.title, '[REVIEW NEEDED]'))
     runs-on: ubuntu-latest
     permissions:
       contents: write
