@@ -27,37 +27,72 @@ jobs:
           git config user.name "Qubic Translation Bot"
           git config user.email "translation-bot@qubic-network.de"
 
-      - name: Create branch with only translations
+      - name: Find changed translation files
+        id: changed-files
+        run: |
+          # Finde den letzten Translation-Sync-Commit (von uns erstellt)
+          LAST_TRANSLATION_COMMIT=$(git log --grep="Translation sync" --format="%H" -n 1 || echo "")
+          
+          if [ -z "$LAST_TRANSLATION_COMMIT" ]; then
+            # Kein vorheriger Translation-Commit gefunden, nimm alle i18n Dateien
+            echo "Kein vorheriger Translation-Commit gefunden, verwende alle Dateien"
+            CHANGED_FILES=$(git ls-files i18n/de/)
+          else
+            # Finde Dateien die sich seit dem letzten Translation-Commit geändert haben
+            echo "Letzter Translation-Commit: $LAST_TRANSLATION_COMMIT"
+            CHANGED_FILES=$(git diff --name-only $LAST_TRANSLATION_COMMIT HEAD -- i18n/de/)
+          fi
+          
+          if [ -z "$CHANGED_FILES" ]; then
+            echo "Keine neuen Übersetzungen gefunden"
+            echo "has_changes=false" >> $GITHUB_OUTPUT
+            exit 0
+          fi
+          
+          echo "Geänderte Dateien:"
+          echo "$CHANGED_FILES"
+          
+          # Speichere für später
+          echo "$CHANGED_FILES" > /tmp/changed_files.txt
+          echo "has_changes=true" >> $GITHUB_OUTPUT
+
+      - name: Create branch with only translation changes
+        if: steps.changed-files.outputs.has_changes == 'true'
         run: |
           # Neuen Branch erstellen (von main aus)
           BRANCH_NAME="german-translations-$(date +%Y%m%d)"
           git checkout -b $BRANCH_NAME
           
-          # NUR i18n/de/ zur Staging Area hinzufügen
-          # Das ignoriert alle anderen Änderungen (Workflows, etc.)
-          git add i18n/de/
+          # Nur die geänderten Dateien auswählen
+          while IFS= read -r file; do
+            if [ -f "$file" ]; then
+              git add "$file"
+              echo "Added: $file"
+            fi
+          done < /tmp/changed_files.txt
           
           # Status anzeigen
           echo "Git Status:"
           git status
           
-          # Commit erstellen (nur i18n/)
-          git commit -m "Add German translations
+          # Commit erstellen
+          git commit -m "Add/Update German translations
           
           - Translated via DeepSeek API with human review
           - Covers latest documentation updates
           - All technical terms preserved
-          - Includes overview section
+          - Only changed files included
           
           Co-authored-by: ${{ github.actor }}"
           
-          # Branch pushen
-          git push origin $BRANCH_NAME
+          # Branch pushen (force, falls er schon existiert)
+          git push -f origin $BRANCH_NAME
           
           echo "branch_name=$BRANCH_NAME" >> $GITHUB_ENV
           echo "✓ Branch $BRANCH_NAME erstellt und gepusht"
 
       - name: Create Pull Request to qubic/docs
+        if: steps.changed-files.outputs.has_changes == 'true'
         env:
           GITHUB_TOKEN: ${{ secrets.UPSTREAM_PR_TOKEN }}
         run: |
