@@ -29,24 +29,19 @@ jobs:
 
       - name: Create branch with only translations
         run: |
-          # Neuen Branch erstellen
+          # Neuen Branch erstellen (von main aus)
           BRANCH_NAME="german-translations-$(date +%Y%m%d)"
           git checkout -b $BRANCH_NAME
           
-          # Nur i18n/de/ behalten, Rest entfernen
-          mkdir -p /tmp/translations
-          cp -r i18n/de/ /tmp/translations/
+          # NUR i18n/de/ zur Staging Area hinzufügen
+          # Das ignoriert alle anderen Änderungen (Workflows, etc.)
+          git add i18n/de/
           
-          # Alles löschen außer .git
-          find . -mindepth 1 -maxdepth 1 ! -name '.git' -exec rm -rf {} +
+          # Status anzeigen
+          echo "Git Status:"
+          git status
           
-          # i18n wiederherstellen
-          mkdir -p i18n
-          cp -r /tmp/translations/de/ i18n/
-          
-          # Alles stage (inkl. Löschungen) und dann nur i18n commiten
-          git add -A
-          git reset HEAD .github/workflows/cleanup-branches.yml .github/workflows/create-upstream-pr.yml .github/workflows/sync-and-translate.yml 2>/dev/null || true
+          # Commit erstellen (nur i18n/)
           git commit -m "Add German translations
           
           - Translated via DeepSeek API with human review
