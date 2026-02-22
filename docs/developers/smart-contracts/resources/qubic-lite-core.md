@@ -4,4 +4,4 @@ Qubic Lite Core is a lightweight version of Qubic Core that runs directly on the
 
 # Instruction
 
-Tutorial can be found here: https://github.com/hackerby888/qubic-core-lite
+Tutorial can be found here: https://github.com/qubic/core-lite
