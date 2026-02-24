@@ -22,3 +22,7 @@ Each contract must be proposed through a voting process, where the computor allo
 **3. No Virtual Machine, No Gas Model**
 
 There is no EVM-like gas mechanism. Instead, compute resources are provisioned via IPO and scheduled execution, avoiding the need for micro-fees or instruction-based billing.
+
+## From Code to Mainnet
+
+Building a smart contract is only the first step. Before your contract runs on mainnet, it goes through testing, PR review, computor voting, and an IPO phase. See the complete [Smart Contract Lifecycle](lifecycle.md) for the end-to-end process from research to post-launch maintenance.

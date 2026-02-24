@@ -111,6 +111,7 @@ const sidebars = {
       label: "Smart Contracts", // Comprehensive SC section
       items: [
         "developers/smart-contracts/overview",
+        "developers/smart-contracts/lifecycle",
         {
           type: "category",
           label: "Getting Started",
