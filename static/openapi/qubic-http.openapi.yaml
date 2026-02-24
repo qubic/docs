@@ -3,747 +3,793 @@
 
 openapi: 3.0.3
 info:
-  title: Qubic Live API
-  description: Bridge service for Qubic network operations.
-  version: 1.0.0
+    title: Qubic Live API
+    description: Bridge service for Qubic network operations.
+    version: 1.0.0
 servers:
-  - url: https://rpc.qubic.org/live/v1
+    - url: https://rpc.qubic.org/live/v1
 paths:
-  /assets/issuances:
-    get:
-      tags:
-        - QubicLiveService
-        - Assets
-      summary: Search Asset Issuances
-      description: Returns a list of issued assets filtered by issuer identity and asset name.
-      operationId: QubicLiveService_GetIssuedAssetsByFilter
-      parameters:
-        - name: issuerIdentity
-          in: query
-          schema:
-            type: string
-        - name: assetName
-          in: query
-          schema:
-            type: string
-      responses:
-        "200":
-          description: OK
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/AssetIssuances'
-  /assets/issuances/{index}:
-    get:
-      tags:
-        - QubicLiveService
-        - Assets
-      summary: Get Asset Issuance By Index
-      description: Returns an asset issuance by universe index.
-      operationId: QubicLiveService_GetIssuedAssetByUniverseIndex
-      parameters:
-        - name: index
-          in: path
-          required: true
-          schema:
-            type: integer
-            format: uint32
-      responses:
-        "200":
-          description: OK
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/AssetIssuance'
-  /assets/ownerships:
-    get:
-      tags:
-        - QubicLiveService
-        - Assets
-      summary: Search Asset Ownerships
-      description: Returns a list of asset ownerships filtered by issuer, asset name, owner and managing contract.
-      operationId: QubicLiveService_GetOwnedAssetsByFilter
-      parameters:
-        - name: issuerIdentity
-          in: query
-          description: Identity of the issuer. Defaults to the zero address (smart contract shares).
-          schema:
-            type: string
-        - name: assetName
-          in: query
-          description: Name of the asset (required).
-          schema:
-            type: string
-        - name: ownerIdentity
-          in: query
-          description: Identity of the owner of the asset (optional).
-          schema:
-            type: string
-        - name: ownershipManagingContract
-          in: query
-          description: Index of the contract that manages the ownership (optional).
-          schema:
-            type: integer
-            format: uint32
-      responses:
-        "200":
-          description: OK
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/AssetOwnerships'
-  /assets/ownerships/{index}:
-    get:
-      tags:
-        - QubicLiveService
-        - Assets
-      summary: Get Asset Ownership By Index
-      description: Returns an asset ownership by universe index.
-      operationId: QubicLiveService_GetOwnedAssetByUniverseIndex
-      parameters:
-        - name: index
-          in: path
-          required: true
-          schema:
-            type: integer
-            format: uint32
-      responses:
-        "200":
-          description: OK
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/AssetOwnership'
-  /assets/possessions:
-    get:
-      tags:
-        - QubicLiveService
-        - Assets
-      summary: Search Asset Possessions
-      description: Returns a list of asset possessions filtered by issuer, asset name, owner, possessor and managing contracts.
-      operationId: QubicLiveService_GetPossessedAssetsByFilter
-      parameters:
-        - name: issuerIdentity
-          in: query
-          description: Identity of the issuer (required). Defaults to the zero address (smart contract shares).
-          schema:
-            type: string
-        - name: assetName
-          in: query
-          description: Name of the asset (required).
-          schema:
-            type: string
-        - name: ownerIdentity
-          in: query
-          description: Identity of the owner of the asset (optional).
-          schema:
-            type: string
-        - name: possessorIdentity
-          in: query
-          description: Identity of the possessor of the asset (optional).
-          schema:
-            type: string
-        - name: ownershipManagingContract
-          in: query
-          description: Index of the contract that manages the ownership (optional).
-          schema:
-            type: integer
-            format: uint32
-        - name: possessionManagingContract
-          in: query
-          description: Index of the contract that manages the possession (optional).
-          schema:
-            type: integer
-            format: uint32
-      responses:
-        "200":
-          description: OK
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/AssetPossessions'
-  /assets/possessions/{index}:
-    get:
-      tags:
-        - QubicLiveService
-        - Assets
-      summary: Get Asset Possession By Index
-      description: Returns an asset possession by universe index.
-      operationId: QubicLiveService_GetPossessedAssetByUniverseIndex
-      parameters:
-        - name: index
-          in: path
-          required: true
-          schema:
-            type: integer
-            format: uint32
-      responses:
-        "200":
-          description: OK
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/AssetPossession'
-  /assets/{identity}/issued:
-    get:
-      tags:
-        - QubicLiveService
-        - Assets
-      summary: List Issued Assets
-      description: Gets assets issued by the specified identity.
-      operationId: QubicLiveService_GetIssuedAssets
-      parameters:
-        - name: identity
-          in: path
-          required: true
-          schema:
-            type: string
-      responses:
-        "200":
-          description: OK
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/IssuedAssetsResponse'
-  /assets/{identity}/owned:
-    get:
-      tags:
-        - QubicLiveService
-        - Assets
-      summary: List Owned Assets
-      description: Gets assets that are owned by the specified identity.
-      operationId: QubicLiveService_GetOwnedAssets
-      parameters:
-        - name: identity
-          in: path
-          required: true
-          schema:
-            type: string
-      responses:
-        "200":
-          description: OK
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/OwnedAssetsResponse'
-  /assets/{identity}/possessed:
-    get:
-      tags:
-        - QubicLiveService
-        - Assets
-      summary: List Possessed Assets
-      description: Gets assets that are possessed by the specified identity.
-      operationId: QubicLiveService_GetPossessedAssets
-      parameters:
-        - name: identity
-          in: path
-          required: true
-          schema:
-            type: string
-      responses:
-        "200":
-          description: OK
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/PossessedAssetsResponse'
-  /balances/{id}:
-    get:
-      tags:
-        - QubicLiveService
-        - Accounts
-      summary: Get Balance
-      description: Gets the balance of the specified identity.
-      operationId: QubicLiveService_GetBalance
-      parameters:
-        - name: id
-          in: path
-          required: true
-          schema:
-            type: string
-      responses:
-        "200":
-          description: OK
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/GetBalanceResponse'
-  /block-height:
-    get:
-      tags:
-        - QubicLiveService
-        - Network
-      summary: Get Block Height
-      description: 'Deprecated: use /tick-info instead.'
-      operationId: QubicLiveService_GetBlockHeight
-      responses:
-        "200":
-          description: OK
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/GetBlockHeightResponse'
-      deprecated: true
-  /broadcast-transaction:
-    post:
-      tags:
-        - QubicLiveService
-        - Transactions
-      summary: Broadcast Transaction
-      description: Broadcasts a transaction to the network.
-      operationId: QubicLiveService_BroadcastTransaction
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/BroadcastTransactionRequest'
-        required: true
-      responses:
-        "200":
-          description: OK
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/BroadcastTransactionResponse'
-  /ipos/active:
-    get:
-      tags:
-        - QubicLiveService
-        - Smart Contracts
-      summary: Get Active IPOs
-      description: Returns a list of IPOs that are active in the current epoch.
-      operationId: QubicLiveService_GetActiveIpos
-      responses:
-        "200":
-          description: OK
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/GetActiveIposResponse'
-  /querySmartContract:
-    post:
-      tags:
-        - QubicLiveService
-        - Smart Contracts
-      summary: Query Smart Contract
-      description: Queries a smart contract function.
-      operationId: QubicLiveService_QuerySmartContract
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/QuerySmartContractRequest'
-        required: true
-      responses:
-        "200":
-          description: OK
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/QuerySmartContractResponse'
-  /tick-info:
-    get:
-      tags:
-        - QubicLiveService
-        - Network
-      summary: Get Tick Info
-      description: Gets the current tick information.
-      operationId: QubicLiveService_GetTickInfo
-      responses:
-        "200":
-          description: OK
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/GetTickInfoResponse'
+    /assets/issuances:
+        get:
+            tags:
+                - QubicLiveService
+                - Assets
+            summary: Search Asset Issuances
+            description: Returns a list of issued assets filtered by issuer identity and asset name.
+            operationId: QubicLiveService_GetIssuedAssetsByFilter
+            parameters:
+                - name: issuerIdentity
+                  in: query
+                  schema:
+                    type: string
+                - name: assetName
+                  in: query
+                  schema:
+                    type: string
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/AssetIssuances'
+    /assets/issuances/{index}:
+        get:
+            tags:
+                - QubicLiveService
+                - Assets
+            summary: Get Asset Issuance By Index
+            description: Returns an asset issuance by universe index.
+            operationId: QubicLiveService_GetIssuedAssetByUniverseIndex
+            parameters:
+                - name: index
+                  in: path
+                  required: true
+                  schema:
+                    type: integer
+                    format: uint32
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/AssetIssuance'
+    /assets/ownerships:
+        get:
+            tags:
+                - QubicLiveService
+                - Assets
+            summary: Search Asset Ownerships
+            description: Returns a list of asset ownerships filtered by issuer, asset name, owner and managing contract.
+            operationId: QubicLiveService_GetOwnedAssetsByFilter
+            parameters:
+                - name: issuerIdentity
+                  in: query
+                  description: Identity of the issuer. Defaults to the zero address (smart contract shares).
+                  schema:
+                    type: string
+                - name: assetName
+                  in: query
+                  description: Name of the asset (required).
+                  schema:
+                    type: string
+                - name: ownerIdentity
+                  in: query
+                  description: Identity of the owner of the asset (optional).
+                  schema:
+                    type: string
+                - name: ownershipManagingContract
+                  in: query
+                  description: Index of the contract that manages the ownership (optional).
+                  schema:
+                    type: integer
+                    format: uint32
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/AssetOwnerships'
+    /assets/ownerships/{index}:
+        get:
+            tags:
+                - QubicLiveService
+                - Assets
+            summary: Get Asset Ownership By Index
+            description: Returns an asset ownership by universe index.
+            operationId: QubicLiveService_GetOwnedAssetByUniverseIndex
+            parameters:
+                - name: index
+                  in: path
+                  required: true
+                  schema:
+                    type: integer
+                    format: uint32
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/AssetOwnership'
+    /assets/possessions:
+        get:
+            tags:
+                - QubicLiveService
+                - Assets
+            summary: Search Asset Possessions
+            description: Returns a list of asset possessions filtered by issuer, asset name, owner, possessor and managing contracts.
+            operationId: QubicLiveService_GetPossessedAssetsByFilter
+            parameters:
+                - name: issuerIdentity
+                  in: query
+                  description: Identity of the issuer (required). Defaults to the zero address (smart contract shares).
+                  schema:
+                    type: string
+                - name: assetName
+                  in: query
+                  description: Name of the asset (required).
+                  schema:
+                    type: string
+                - name: ownerIdentity
+                  in: query
+                  description: Identity of the owner of the asset (optional).
+                  schema:
+                    type: string
+                - name: possessorIdentity
+                  in: query
+                  description: Identity of the possessor of the asset (optional).
+                  schema:
+                    type: string
+                - name: ownershipManagingContract
+                  in: query
+                  description: Index of the contract that manages the ownership (optional).
+                  schema:
+                    type: integer
+                    format: uint32
+                - name: possessionManagingContract
+                  in: query
+                  description: Index of the contract that manages the possession (optional).
+                  schema:
+                    type: integer
+                    format: uint32
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/AssetPossessions'
+    /assets/possessions/{index}:
+        get:
+            tags:
+                - QubicLiveService
+                - Assets
+            summary: Get Asset Possession By Index
+            description: Returns an asset possession by universe index.
+            operationId: QubicLiveService_GetPossessedAssetByUniverseIndex
+            parameters:
+                - name: index
+                  in: path
+                  required: true
+                  schema:
+                    type: integer
+                    format: uint32
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/AssetPossession'
+    /assets/{identity}/issued:
+        get:
+            tags:
+                - QubicLiveService
+                - Assets
+            summary: List Issued Assets
+            description: Gets assets issued by the specified identity.
+            operationId: QubicLiveService_GetIssuedAssets
+            parameters:
+                - name: identity
+                  in: path
+                  required: true
+                  schema:
+                    type: string
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/IssuedAssetsResponse'
+    /assets/{identity}/owned:
+        get:
+            tags:
+                - QubicLiveService
+                - Assets
+            summary: List Owned Assets
+            description: Gets assets that are owned by the specified identity.
+            operationId: QubicLiveService_GetOwnedAssets
+            parameters:
+                - name: identity
+                  in: path
+                  required: true
+                  schema:
+                    type: string
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/OwnedAssetsResponse'
+    /assets/{identity}/possessed:
+        get:
+            tags:
+                - QubicLiveService
+                - Assets
+            summary: List Possessed Assets
+            description: Gets assets that are possessed by the specified identity.
+            operationId: QubicLiveService_GetPossessedAssets
+            parameters:
+                - name: identity
+                  in: path
+                  required: true
+                  schema:
+                    type: string
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/PossessedAssetsResponse'
+    /balances/{id}:
+        get:
+            tags:
+                - QubicLiveService
+                - Accounts
+            summary: Get Balance
+            description: Gets the balance of the specified identity.
+            operationId: QubicLiveService_GetBalance
+            parameters:
+                - name: id
+                  in: path
+                  required: true
+                  schema:
+                    type: string
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/GetBalanceResponse'
+    /block-height:
+        get:
+            tags:
+                - QubicLiveService
+                - Network
+            summary: Get Block Height
+            description: 'Deprecated: use /tick-info instead.'
+            operationId: QubicLiveService_GetBlockHeight
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/GetBlockHeightResponse'
+            deprecated: true
+    /broadcast-transaction:
+        post:
+            tags:
+                - QubicLiveService
+                - Transactions
+            summary: Broadcast Transaction
+            description: Broadcasts a transaction to the network.
+            operationId: QubicLiveService_BroadcastTransaction
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/BroadcastTransactionRequest'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/BroadcastTransactionResponse'
+    /ipos/active:
+        get:
+            tags:
+                - QubicLiveService
+                - Smart Contracts
+            summary: Get Active IPOs
+            description: Returns a list of IPOs that are active in the current epoch.
+            operationId: QubicLiveService_GetActiveIpos
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/GetActiveIposResponse'
+    /ipos/{contractIndex}/bids:
+        get:
+            tags:
+                - QubicLiveService
+                - Smart Contracts
+            summary: Get contract IPO bid information
+            description: Returns the bid information for a given IPO active in the current epoch.
+            operationId: QubicLiveService_GetContractIpoBids
+            parameters:
+                - name: contractIndex
+                  in: path
+                  required: true
+                  schema:
+                    type: integer
+                    format: uint32
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/GetContractIpoBidsResponse'
+    /querySmartContract:
+        post:
+            tags:
+                - QubicLiveService
+                - Smart Contracts
+            summary: Query Smart Contract
+            description: Queries a smart contract function.
+            operationId: QubicLiveService_QuerySmartContract
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/QuerySmartContractRequest'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/QuerySmartContractResponse'
+    /tick-info:
+        get:
+            tags:
+                - QubicLiveService
+                - Network
+            summary: Get Tick Info
+            description: Gets the current tick information.
+            operationId: QubicLiveService_GetTickInfo
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/GetTickInfoResponse'
 components:
-  schemas:
-    AssetInfo:
-      type: object
-      properties:
-        tick:
-          type: integer
-          format: uint32
-        universeIndex:
-          type: integer
-          format: uint32
-      description: AssetInfo
-    AssetIssuance:
-      type: object
-      properties:
-        data:
-          $ref: '#/components/schemas/AssetIssuanceData'
-        tick:
-          type: integer
-          format: uint32
-        universeIndex:
-          type: integer
-          format: uint32
-      description: AssetIssuance
-    AssetIssuanceData:
-      type: object
-      properties:
-        issuerIdentity:
-          type: string
-        type:
-          type: integer
-          format: uint32
-        name:
-          type: string
-        numberOfDecimalPlaces:
-          type: integer
-          format: int32
-        unitOfMeasurement:
-          type: array
-          items:
-            type: integer
-            format: int32
-      description: AssetIssuanceData
-    AssetIssuances:
-      type: object
-      properties:
-        assets:
-          type: array
-          items:
-            $ref: '#/components/schemas/AssetIssuance'
-      description: AssetIssuances
-    AssetOwnership:
-      type: object
-      properties:
-        data:
-          $ref: '#/components/schemas/AssetOwnershipData'
-        tick:
-          type: integer
-          format: uint32
-        universeIndex:
-          type: integer
-          format: uint32
-      description: AssetOwnership
-    AssetOwnershipData:
-      type: object
-      properties:
-        ownerIdentity:
-          type: string
-        type:
-          type: integer
-          format: uint32
-        managingContractIndex:
-          type: integer
-          format: uint32
-        issuanceIndex:
-          type: integer
-          format: uint32
-        numberOfUnits:
-          type: string
-      description: AssetOwnershipData
-    AssetOwnerships:
-      type: object
-      properties:
-        assets:
-          type: array
-          items:
-            $ref: '#/components/schemas/AssetOwnership'
-      description: AssetOwnerships
-    AssetPossession:
-      type: object
-      properties:
-        data:
-          $ref: '#/components/schemas/AssetPossessionData'
-        tick:
-          type: integer
-          format: uint32
-        universeIndex:
-          type: integer
-          format: uint32
-      description: AssetPossession
-    AssetPossessionData:
-      type: object
-      properties:
-        possessorIdentity:
-          type: string
-        type:
-          type: integer
-          format: uint32
-        managingContractIndex:
-          type: integer
-          format: uint32
-        ownershipIndex:
-          type: integer
-          format: uint32
-        numberOfUnits:
-          type: string
-      description: AssetPossessionData
-    AssetPossessions:
-      type: object
-      properties:
-        assets:
-          type: array
-          items:
-            $ref: '#/components/schemas/AssetPossession'
-      description: AssetPossessions
-    Balance:
-      type: object
-      properties:
-        id:
-          type: string
-          description: The identity relevant to this balance.
-        balance:
-          type: string
-          description: The amount of funds the identity holds.
-        validForTick:
-          type: integer
-          description: The tick that this balance is valid for.
-          format: uint32
-        latestIncomingTransferTick:
-          type: integer
-          description: The last tick when this identity received funds through a transfer.
-          format: uint32
-        latestOutgoingTransferTick:
-          type: integer
-          description: The last tick when this identity sent funds through a transfer.
-          format: uint32
-        incomingAmount:
-          type: string
-          description: The total sum of received funds over time.
-        outgoingAmount:
-          type: string
-          description: The total sum of sent funds over time.
-        numberOfIncomingTransfers:
-          type: integer
-          description: The number of incoming transfers.
-          format: uint32
-        numberOfOutgoingTransfers:
-          type: integer
-          description: The number of outgoing transfers.
-          format: uint32
-      description: Balance
-    BroadcastTransactionRequest:
-      type: object
-      properties:
-        encodedTransaction:
-          type: string
-          description: Base64 encoded binary transaction data.
-      description: BroadcastTransactionRequest
-    BroadcastTransactionResponse:
-      type: object
-      properties:
-        peersBroadcasted:
-          type: integer
-          description: The number of Qubic node peers this transactions has been broadcast to.
-          format: int32
-        encodedTransaction:
-          type: string
-          description: The Base 64 encoded binary transaction from the request.
-        transactionId:
-          type: string
-          description: The id / hash of the transaction.
-      description: BroadcastTransactionResponse
-    GetActiveIposResponse:
-      type: object
-      properties:
-        ipos:
-          type: array
-          items:
-            $ref: '#/components/schemas/Ipo'
-      description: GetActiveIposResponse
-    GetBalanceResponse:
-      type: object
-      properties:
-        balance:
-          $ref: '#/components/schemas/Balance'
-      description: GetBalanceResponse
-    GetBlockHeightResponse:
-      type: object
-      properties:
-        blockHeight:
-          $ref: '#/components/schemas/TickInfo'
-      description: GetBlockHeightResponse
-    GetTickInfoResponse:
-      type: object
-      properties:
-        tickInfo:
-          $ref: '#/components/schemas/TickInfo'
-      description: GetTickInfoResponse
-    Ipo:
-      type: object
-      properties:
-        contractIndex:
-          type: integer
-          description: The index of the related contract (contract address).
-          format: uint32
-        assetName:
-          type: string
-          description: The name of the related asset.
-      description: IPO
-    IssuedAsset:
-      type: object
-      properties:
-        data:
-          $ref: '#/components/schemas/IssuedAssetData'
-        info:
-          $ref: '#/components/schemas/AssetInfo'
-      description: IssuedAsset
-    IssuedAssetData:
-      type: object
-      properties:
-        issuerIdentity:
-          type: string
-        type:
-          type: integer
-          format: uint32
-        name:
-          type: string
-        numberOfDecimalPlaces:
-          type: integer
-          format: int32
-        unitOfMeasurement:
-          type: array
-          items:
-            type: integer
-            format: int32
-      description: IssuedAssetData
-    IssuedAssetsResponse:
-      type: object
-      properties:
-        issuedAssets:
-          type: array
-          items:
-            $ref: '#/components/schemas/IssuedAsset'
-      description: IssuedAssetsResponse
-    OwnedAsset:
-      type: object
-      properties:
-        data:
-          $ref: '#/components/schemas/OwnedAssetData'
-        info:
-          $ref: '#/components/schemas/AssetInfo'
-      description: OwnedAsset
-    OwnedAssetData:
-      type: object
-      properties:
-        ownerIdentity:
-          type: string
-        type:
-          type: integer
-          format: uint32
-        padding:
-          type: integer
-          format: int32
-        managingContractIndex:
-          type: integer
-          format: uint32
-        issuanceIndex:
-          type: integer
-          format: uint32
-        numberOfUnits:
-          type: string
-        issuedAsset:
-          $ref: '#/components/schemas/IssuedAssetData'
-      description: OwnedAssetData
-    OwnedAssetsResponse:
-      type: object
-      properties:
-        ownedAssets:
-          type: array
-          items:
-            $ref: '#/components/schemas/OwnedAsset'
-      description: OwnedAssetsResponse
-    PossessedAsset:
-      type: object
-      properties:
-        data:
-          $ref: '#/components/schemas/PossessedAssetData'
-        info:
-          $ref: '#/components/schemas/AssetInfo'
-      description: PossessedAsset
-    PossessedAssetData:
-      type: object
-      properties:
-        possessorIdentity:
-          type: string
-        type:
-          type: integer
-          format: uint32
-        padding:
-          type: integer
-          format: int32
-        managingContractIndex:
-          type: integer
-          format: uint32
-        issuanceIndex:
-          type: integer
-          format: uint32
-        numberOfUnits:
-          type: string
-        ownedAsset:
-          $ref: '#/components/schemas/OwnedAssetData'
-      description: PossessedAssetData
-    PossessedAssetsResponse:
-      type: object
-      properties:
-        possessedAssets:
-          type: array
-          items:
-            $ref: '#/components/schemas/PossessedAsset'
-      description: PossessedAssetsResponse
-    QuerySmartContractRequest:
-      type: object
-      properties:
-        contractIndex:
-          type: integer
-          description: identifies the smart contract
-          format: uint32
-        inputType:
-          type: integer
-          description: identifies the function to be queried
-          format: uint32
-        inputSize:
-          type: integer
-          description: the size of the input data (request data)
-          format: uint32
-        requestData:
-          type: string
-          description: base64 encoded input data
-      description: QuerySmartContractRequest
-    QuerySmartContractResponse:
-      type: object
-      properties:
-        responseData:
-          type: string
-          description: Binary data encoded as Base64. This data is returned directly from the called SC function.
-      description: QuerySmartContractResponse
-    TickInfo:
-      type: object
-      properties:
-        tick:
-          type: integer
-          description: current network tick
-          format: uint32
-        duration:
-          type: integer
-          format: uint32
-        epoch:
-          type: integer
-          description: current epoch
-          format: uint32
-        initialTick:
-          type: integer
-          description: initial tick of epoch
-          format: uint32
-      description: TickInfo
+    schemas:
+        AssetInfo:
+            type: object
+            properties:
+                tick:
+                    type: integer
+                    format: uint32
+                universeIndex:
+                    type: integer
+                    format: uint32
+            description: AssetInfo
+        AssetIssuance:
+            type: object
+            properties:
+                data:
+                    $ref: '#/components/schemas/AssetIssuanceData'
+                tick:
+                    type: integer
+                    format: uint32
+                universeIndex:
+                    type: integer
+                    format: uint32
+            description: AssetIssuance
+        AssetIssuanceData:
+            type: object
+            properties:
+                issuerIdentity:
+                    type: string
+                type:
+                    type: integer
+                    format: uint32
+                name:
+                    type: string
+                numberOfDecimalPlaces:
+                    type: integer
+                    format: int32
+                unitOfMeasurement:
+                    type: array
+                    items:
+                        type: integer
+                        format: int32
+            description: AssetIssuanceData
+        AssetIssuances:
+            type: object
+            properties:
+                assets:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/AssetIssuance'
+            description: AssetIssuances
+        AssetOwnership:
+            type: object
+            properties:
+                data:
+                    $ref: '#/components/schemas/AssetOwnershipData'
+                tick:
+                    type: integer
+                    format: uint32
+                universeIndex:
+                    type: integer
+                    format: uint32
+            description: AssetOwnership
+        AssetOwnershipData:
+            type: object
+            properties:
+                ownerIdentity:
+                    type: string
+                type:
+                    type: integer
+                    format: uint32
+                managingContractIndex:
+                    type: integer
+                    format: uint32
+                issuanceIndex:
+                    type: integer
+                    format: uint32
+                numberOfUnits:
+                    type: string
+            description: AssetOwnershipData
+        AssetOwnerships:
+            type: object
+            properties:
+                assets:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/AssetOwnership'
+            description: AssetOwnerships
+        AssetPossession:
+            type: object
+            properties:
+                data:
+                    $ref: '#/components/schemas/AssetPossessionData'
+                tick:
+                    type: integer
+                    format: uint32
+                universeIndex:
+                    type: integer
+                    format: uint32
+            description: AssetPossession
+        AssetPossessionData:
+            type: object
+            properties:
+                possessorIdentity:
+                    type: string
+                type:
+                    type: integer
+                    format: uint32
+                managingContractIndex:
+                    type: integer
+                    format: uint32
+                ownershipIndex:
+                    type: integer
+                    format: uint32
+                numberOfUnits:
+                    type: string
+            description: AssetPossessionData
+        AssetPossessions:
+            type: object
+            properties:
+                assets:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/AssetPossession'
+            description: AssetPossessions
+        Balance:
+            type: object
+            properties:
+                id:
+                    type: string
+                    description: The identity relevant to this balance.
+                balance:
+                    type: string
+                    description: The amount of funds the identity holds.
+                validForTick:
+                    type: integer
+                    description: The tick that this balance is valid for.
+                    format: uint32
+                latestIncomingTransferTick:
+                    type: integer
+                    description: The last tick when this identity received funds through a transfer.
+                    format: uint32
+                latestOutgoingTransferTick:
+                    type: integer
+                    description: The last tick when this identity sent funds through a transfer.
+                    format: uint32
+                incomingAmount:
+                    type: string
+                    description: The total sum of received funds over time.
+                outgoingAmount:
+                    type: string
+                    description: The total sum of sent funds over time.
+                numberOfIncomingTransfers:
+                    type: integer
+                    description: The number of incoming transfers.
+                    format: uint32
+                numberOfOutgoingTransfers:
+                    type: integer
+                    description: The number of outgoing transfers.
+                    format: uint32
+            description: Balance
+        BroadcastTransactionRequest:
+            type: object
+            properties:
+                encodedTransaction:
+                    type: string
+                    description: Base64 encoded binary transaction data.
+            description: BroadcastTransactionRequest
+        BroadcastTransactionResponse:
+            type: object
+            properties:
+                peersBroadcasted:
+                    type: integer
+                    description: The number of Qubic node peers this transactions has been broadcast to.
+                    format: int32
+                encodedTransaction:
+                    type: string
+                    description: The Base 64 encoded binary transaction from the request.
+                transactionId:
+                    type: string
+                    description: The id / hash of the transaction.
+            description: BroadcastTransactionResponse
+        GetActiveIposResponse:
+            type: object
+            properties:
+                ipos:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/Ipo'
+            description: GetActiveIposResponse
+        GetBalanceResponse:
+            type: object
+            properties:
+                balance:
+                    $ref: '#/components/schemas/Balance'
+            description: GetBalanceResponse
+        GetBlockHeightResponse:
+            type: object
+            properties:
+                blockHeight:
+                    $ref: '#/components/schemas/TickInfo'
+            description: GetBlockHeightResponse
+        GetContractIpoBidsResponse:
+            type: object
+            properties:
+                bidData:
+                    $ref: '#/components/schemas/IpoBidData'
+        GetTickInfoResponse:
+            type: object
+            properties:
+                tickInfo:
+                    $ref: '#/components/schemas/TickInfo'
+            description: GetTickInfoResponse
+        Ipo:
+            type: object
+            properties:
+                contractIndex:
+                    type: integer
+                    description: The index of the related contract (contract address).
+                    format: uint32
+                assetName:
+                    type: string
+                    description: The name of the related asset.
+            description: IPO
+        IpoBid:
+            type: object
+            properties:
+                identity:
+                    type: string
+                amount:
+                    type: string
+        IpoBidData:
+            type: object
+            properties:
+                contractIndex:
+                    type: integer
+                    format: uint32
+                tickNumber:
+                    type: integer
+                    format: uint32
+                bids:
+                    type: object
+                    additionalProperties:
+                        $ref: '#/components/schemas/IpoBid'
+        IssuedAsset:
+            type: object
+            properties:
+                data:
+                    $ref: '#/components/schemas/IssuedAssetData'
+                info:
+                    $ref: '#/components/schemas/AssetInfo'
+            description: IssuedAsset
+        IssuedAssetData:
+            type: object
+            properties:
+                issuerIdentity:
+                    type: string
+                type:
+                    type: integer
+                    format: uint32
+                name:
+                    type: string
+                numberOfDecimalPlaces:
+                    type: integer
+                    format: int32
+                unitOfMeasurement:
+                    type: array
+                    items:
+                        type: integer
+                        format: int32
+            description: IssuedAssetData
+        IssuedAssetsResponse:
+            type: object
+            properties:
+                issuedAssets:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/IssuedAsset'
+            description: IssuedAssetsResponse
+        OwnedAsset:
+            type: object
+            properties:
+                data:
+                    $ref: '#/components/schemas/OwnedAssetData'
+                info:
+                    $ref: '#/components/schemas/AssetInfo'
+            description: OwnedAsset
+        OwnedAssetData:
+            type: object
+            properties:
+                ownerIdentity:
+                    type: string
+                type:
+                    type: integer
+                    format: uint32
+                padding:
+                    type: integer
+                    format: int32
+                managingContractIndex:
+                    type: integer
+                    format: uint32
+                issuanceIndex:
+                    type: integer
+                    format: uint32
+                numberOfUnits:
+                    type: string
+                issuedAsset:
+                    $ref: '#/components/schemas/IssuedAssetData'
+            description: OwnedAssetData
+        OwnedAssetsResponse:
+            type: object
+            properties:
+                ownedAssets:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/OwnedAsset'
+            description: OwnedAssetsResponse
+        PossessedAsset:
+            type: object
+            properties:
+                data:
+                    $ref: '#/components/schemas/PossessedAssetData'
+                info:
+                    $ref: '#/components/schemas/AssetInfo'
+            description: PossessedAsset
+        PossessedAssetData:
+            type: object
+            properties:
+                possessorIdentity:
+                    type: string
+                type:
+                    type: integer
+                    format: uint32
+                padding:
+                    type: integer
+                    format: int32
+                managingContractIndex:
+                    type: integer
+                    format: uint32
+                issuanceIndex:
+                    type: integer
+                    format: uint32
+                numberOfUnits:
+                    type: string
+                ownedAsset:
+                    $ref: '#/components/schemas/OwnedAssetData'
+            description: PossessedAssetData
+        PossessedAssetsResponse:
+            type: object
+            properties:
+                possessedAssets:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/PossessedAsset'
+            description: PossessedAssetsResponse
+        QuerySmartContractRequest:
+            type: object
+            properties:
+                contractIndex:
+                    type: integer
+                    description: identifies the smart contract
+                    format: uint32
+                inputType:
+                    type: integer
+                    description: identifies the function to be queried
+                    format: uint32
+                inputSize:
+                    type: integer
+                    description: the size of the input data (request data)
+                    format: uint32
+                requestData:
+                    type: string
+                    description: base64 encoded input data
+            description: QuerySmartContractRequest
+        QuerySmartContractResponse:
+            type: object
+            properties:
+                responseData:
+                    type: string
+                    description: Binary data encoded as Base64. This data is returned directly from the called SC function.
+            description: QuerySmartContractResponse
+        TickInfo:
+            type: object
+            properties:
+                tick:
+                    type: integer
+                    description: current network tick
+                    format: uint32
+                duration:
+                    type: integer
+                    format: uint32
+                epoch:
+                    type: integer
+                    description: current epoch
+                    format: uint32
+                initialTick:
+                    type: integer
+                    description: initial tick of epoch
+                    format: uint32
+            description: TickInfo
 tags:
-  - name: Accounts
-    description: Check account balances and transfer history.
-  - name: Assets
-    description: Query and manage assets including issuances, ownerships, and possessions.
-  - name: Network
-    description: Network status and tick information.
-  - name: QubicLiveService
-    x-scalar-ignore: true
-  - name: Smart Contracts
-    description: Query smart contracts and view active IPOs.
-  - name: Transactions
-    description: Broadcast transactions to the network.
+    - name: Accounts
+      description: Check account balances and transfer history.
+    - name: Assets
+      description: Query and manage assets including issuances, ownerships, and possessions.
+    - name: Network
+      description: Network status and tick information.
+    - name: QubicLiveService
+    - name: Smart Contracts
+      description: Query smart contracts and view active IPOs.
+    - name: Transactions
+      description: Broadcast transactions to the network.
 externalDocs:
-  description: GitHub
-  url: https://github.com/qubic/qubic-http
+    description: GitHub
+    url: https://github.com/qubic/qubic-http
