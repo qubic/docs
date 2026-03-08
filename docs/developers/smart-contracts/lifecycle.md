@@ -82,6 +82,7 @@ Before diving into code, here are some practical tips:
 
 Before writing any code, understand the landscape.
 
+- Read the official [Smart Contract Development Guide](https://github.com/qubic/core/blob/main/doc/contracts.md) in the core repository — this is the canonical reference for requirements, PR expectations, and deployment rules
 - Browse [existing contracts on GitHub](https://github.com/qubic/core/tree/main/src/contracts) — study QX, Quottery, QEARN, QVault, and others
 - Understand the [execution fee model](/learn/contract-execution-fees) — every contract needs a positive execution fee reserve to keep running. The IPO is primarily the instrument that generates this initial execution pool
 - Learn how execution pool replenishment works: IPO proceeds, burning fees collected from users (`qpi.burn()`), or donations via QUtil's `BurnQubicForContract`
