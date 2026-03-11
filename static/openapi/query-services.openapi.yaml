@@ -1,6 +1,3 @@
-# Generated with protoc-gen-openapi
-# https://github.com/google/gnostic/tree/master/cmd/protoc-gen-openapi
-
 openapi: 3.0.3
 info:
   title: Qubic Query API
@@ -14,10 +11,10 @@ paths:
       tags:
         - Network
       summary: Get Epoch Computors
-      description: |-
-        Get the list(s) of computors for one epoch. These are the computors (IDs signed by the arbitrator) that
-         are allowed to make quorum decisions. It is possible that this list changes within the epoch in case of
-         arbitrator intervention.
+      description: "Get the list(s) of computors for one epoch. These are the computors\
+        \ (IDs signed by the arbitrator) that\n are allowed to make quorum decisions.\
+        \ It is possible that this list changes within the epoch in case of\n arbitrator\
+        \ intervention."
       operationId: ArchiveQueryService_GetComputorsListsForEpoch
       requestBody:
         content:
@@ -26,26 +23,115 @@ paths:
               $ref: '#/components/schemas/GetComputorListsForEpochRequest'
         required: true
       responses:
-        "200":
+        '200':
           description: OK
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/GetComputorListsForEpochResponse'
+  /getEvents:
+    post:
+      tags:
+        - Events (Beta)
+      summary: Get Event Logs
+      description: "Query event logs with optional filters.\n\n Please note: beta\
+        \ version – may be subject to incompatible changes.\n\n ###  Request structure\n\
+        \n | Name       | Type               | Necessity | Description           \
+        \                                         |\n |------------|--------------------|-----------|----------------------------------------------------------------|\n\
+        \ | filters    | map<string,string> | optional  | The filter value must appear\
+        \ in the matching documents.        |\n | exclude    | map<string,string>\
+        \ | optional  | The filter value must not appear in the matching documents.\
+        \    |\n | should     | repeated ShouldFilter | optional  | At least one of\
+        \ the filter values must match. Needs multiple terms/ranges. |\n | ranges\
+        \     | map<string,Range>  | optional  | Filters that restrict results to\
+        \ a value range.                |\n | pagination | Pagination         | optional\
+        \  | Allows to specify the first record and number of records.      |\n\n\
+        \ ### Filters\n\n A filter property must only be used in one filter, if not\
+        \ explicitly stated otherwise.\n If multiple values are used they need to\
+        \ be comma separated. See below for allowed properties.\n Many fields are\
+        \ conditional per log type. Some fields are universal and present for all\
+        \ logs.\n\n #### Include filter properties\n\n | Name            |  Type \
+        \  | Format   | Description                                             |\n\
+        \ |-----------------|--------|-----------|---------------------------------------------------------|\n\
+        \ | source          | string | 60 character identity, up to 5 | The source\
+        \ identity. (conditional) |\n | destination     | string | 60 character identity,\
+        \ up to 5 | The destination identity. (conditional) |\n | transactionHash\
+        \ | string | Hash     | Hash of the related transaction. (conditional)   \
+        \        |\n | tickNumber      | string | Numeric  | The tick the log belongs\
+        \ to. (universal)                 |\n | logId           | string | Numeric\
+        \  | Index of the log within the tick. Should be unique per epoch. (universal)\
+        \ |\n | logType         | string | Numeric, up to 5 | The type of the log.\
+        \ (universal)                 |\n | categories      | string | Numeric, up\
+        \ to 5 | Log category. (conditional)                      |\n\n The following\
+        \ categories are theoretically supported at the moment. Not all are available\
+        \ in the archive.\n See log data consumer code for more details:\n\n | Name\
+        \          | Category |\n |---------------|----------|\n | \"SC_INITIALIZE_TX\"\
+        \   | 1 |\n | \"SC_BEGIN_EPOCH_TX\"  | 2 |\n | \"SC_BEGIN_TICK_TX\"   | 3\
+        \ |\n | \"SC_END_TICK_TX\"     | 4 |\n | \"SC_END_EPOCH_TX\"    | 5 |\n |\
+        \ \"SC_NOTIFICATION_TX\" | 6 |\n\n #### Exclude filter properties\n\n It is\
+        \ allowed to use exclude filters together with should filters.\n\n | Name\
+        \            |  Type   | Format   | Description                          \
+        \                   |\n |-----------------|---------|----------|---------------------------------------------------------|\n\
+        \ | source      | string | 60 character identity, up to 5, comma separated.\
+        \ | Only find logs with another source. |\n | destination | string | 60 character\
+        \ identity, up to 5, comma separated.  | Only find logs with another destination.\
+        \   |\n\n #### Should filter term properties\n\n | Name            |  Type\
+        \   | Format   | Description                                             |\n\
+        \ |-----------------|---------|----------|---------------------------------------------------------|\n\
+        \ | source      | string | 60 character identity, up to 5, comma separated.\
+        \ | Find logs with this source. |\n | destination | string | 60 character\
+        \ identity, up to 5, comma separated.  | Find logs with this source.  |\n\
+        \ | amount      | string | Numeric | Find logs with this amount. |\n | numberOfShares\
+        \ | string | Numeric  | Find logs with these number of shares.  |\n\n ####\
+        \ Should filter range properties\n\n | Name            |  Type   | Format\
+        \   | Description                                             |\n |-----------------|---------|----------|---------------------------------------------------------|\n\
+        \ | amount      | string | Numeric | Find logs in the amount range. |\n |\
+        \ numberOfShares | string | Numeric  | Find logs in the number of shares range.\
+        \  |\n\n #### Range filter properties\n\n Ranges restrict the results to a\
+        \ range of values by defining a maximum and/or minimum value.\n\n | Name \
+        \      | Type   | Format                                   | Description \
+        \                                |\n |------------|--------|------------------------------------------|---------------------------------------------|\n\
+        \ | amount     | string | Numeric                                  | Only\
+        \ find logs in the amount range.     |\n | numberOfShares | string | Numeric\
+        \                              | Only find logs withing the number of shares\
+        \ range. |\n | tickNumber | string | Numeric                             \
+        \     | Only find logs in the tick range.       |\n | timestamp  | string\
+        \ | Numeric (Unix Timestamp in milliseconds) | Only find logs in the time\
+        \ range.       |\n\n ### Pagination\n\n | Name   | Type   | Necessity | Description\
+        \                                                                        \
+        \                 |\n |--------|--------|-----------|-----------------------------------------------------------------------------------------------------|\n\
+        \ | offset | uint32 | optional  | The offset of the first record to return.\
+        \ Defaults to zero (first record). Maximum offset is 10000. |\n | size   |\
+        \ uint32 | optional  | Defaults to 10. Maximum size is 1000. Zero value is\
+        \ ignored (uses default). |"
+      operationId: ArchiveQueryService_GetEvents
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/GetEventsRequest'
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetEventsResponse'
   /getLastProcessedTick:
     get:
       tags:
         - Archive
       summary: Get Last Processed Tick
-      description: |-
-        Get the last processed tick and other processing information from the archive.
-         All data queried from the archive is only fully processed up to this tick.
-         Before calling the service you should check the last processed tick to be sure to get
-         valid data and do not request data for future ticks that are not processed yet. You can use
-         the epoch and initial tick information in the response to switch to a new interval.
+      description: "Get the last processed tick and other processing information from\
+        \ the archive.\n All data queried from the archive is only fully processed\
+        \ up to this tick.\n Before calling the service you should check the last\
+        \ processed tick to be sure to get\n valid data and do not request data for\
+        \ future ticks that are not processed yet. You can use\n the epoch and initial\
+        \ tick information in the response to switch to a new interval."
       operationId: ArchiveQueryService_GetLastProcessedTick
       responses:
-        "200":
+        '200':
           description: OK
           content:
             application/json:
@@ -56,15 +142,15 @@ paths:
       tags:
         - Archive
       summary: Get Processed Tick Intervals
-      description: |-
-        Get the tick intervals that are available in the archive. A new tick interval is typically
-         created on epoch change or network restart within the epoch. Use this endpoint to skip the
-         tick numbers that are not part of the intervals. This endpoint is only necessary for users
-         that need to process all available ticks. For most users it is enough to switch to a new
-         interval by using the `get last processed tick` endpoint.
+      description: "Get the tick intervals that are available in the archive. A new\
+        \ tick interval is typically\n created on epoch change or network restart\
+        \ within the epoch. Use this endpoint to skip the\n tick numbers that are\
+        \ not part of the intervals. This endpoint is only necessary for users\n that\
+        \ need to process all available ticks. For most users it is enough to switch\
+        \ to a new\n interval by using the `get last processed tick` endpoint."
       operationId: ArchiveQueryService_GetProcessedTickIntervals
       responses:
-        "200":
+        '200':
           description: OK
           content:
             application/json:
@@ -84,7 +170,7 @@ paths:
               $ref: '#/components/schemas/GetTickDataRequest'
         required: true
       responses:
-        "200":
+        '200':
           description: OK
           content:
             application/json:
@@ -104,7 +190,7 @@ paths:
               $ref: '#/components/schemas/GetTransactionByHashRequest'
         required: true
       responses:
-        "200":
+        '200':
           description: OK
           content:
             application/json:
@@ -115,90 +201,55 @@ paths:
       tags:
         - Transactions
       summary: Get Transactions For Identity
-      description: |-
-        Get the transactions for one identity sorted by tick number descending.
-
-         ###  Request structure
-
-         | Name       | Type               | Necessity | Description                                                                    |
-         |------------|--------------------|-----------|--------------------------------------------------------------------------------|
-         | identity   | string             | required  | 60 characters uppercase identity.                                              |
-         | filters    | map<string,string> | optional  | Filters that restrict results to single value.                                 |
-         | ranges     | map<string,Range>  | optional  | Filters that restrict results to a value range.                                |
-         | pagination | Pagination         | optional  | Allows to specify the first record and the number of records to be retrieved.  |
-
-         Without filters and ranges all transactions from and to that identity ordered by tick number descending are returned.
-
-         ### Filters
-
-         Filters restrict the results by single values.
-
-         #### Allowed properties
-
-         | Name        |  Type   | Format                 | Description                                                        |
-         |-------------|---------|------------------------|--------------------------------------------------------------------|
-         | source      | string | 60 character identity, up to 5, comma separated. | Only find transactions that were sent from the specified identities. |
-         | source-exclude | string | 60 character identity, up to 5, comma separated.  | Only find transactions that were not sent from the specified identities. |
-         | destination | string | 60 character identity, up to 5, comma separated.  | Only find transactions that were sent to the specified identities.   |
-         | destination-exclude | string | 60 character identity, up to 5, comma separated.  | Only find transactions that were not sent to the specified identities.   |
-         | amount      | string | Numeric                | Only find transactions with the specified amount.                  |
-         | inputType   | string | Numeric                | Only find transactions with the specified input type.              |
-         | tickNumber  | string | Numeric                | Only find transactions with the specified tick number.             |
-
-         source` and `source-exclude` are mutually exclusive.
-         destination` and `destination-exclude` are mutually exclusive.
-
-         #### Examples
-
-         ```
-         "source": "IIJHZSNPDRYYXCQBWNGKBSWYYDCARTYPOBXGOXZEVEZMMWYHPBVXZLJARRCB",
-         "destination": "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAFXIB"
-         "amount": "1000000"
-         "inputType": "0"
-         ```
-
-         ### Ranges
-
-         Ranges restrict the results by a range of values. On range per property is supported.
-
-         #### Allowed properties
-
-         | Name       | Type   | Format                                   | Description                                 |
-         |------------|--------|------------------------------------------|---------------------------------------------|
-         | amount     | string | Numeric                                  | Only find transactions in amount range.     |
-         | tickNumber | string | Numeric                                  | Only find transactions in tick range.       |
-         | inputType  | string | Numeric                                  | Only find transactions in input type range. |
-         | timestamp  | string | Numeric (Unix Timestamp in milliseconds) | Only find transactions in time range.       |
-
-         #### Range definition
-
-         A range with size of 0 or 1 is not allowed.
-
-         | Name      | Type   | Necessity | Description                               |
-         |-----------|--------|-----------|-------------------------------------------|
-         | field | string | required  | Name of the field you wish to search for. |
-         | gt        | string | optional  | Greater than.                             |
-         | gte       | string | optional  | Greater than or equal to.                 |
-         | lt        | string | optional  | Less than.                                |
-         | lte       | string | optional  | Less than or equal to.                    |
-
-         Only one lower bound and one upper bound can be specified.
-
-         #### Examples
-
-         ```
-         "amount": { "gt": "1000000" }
-         "tickNumber": { "gte": "25563000", "lte": "28300000" }
-         "inputType": { "gt": "0" }
-         "timestamp": { "lt": "1757376000000" }
-         ```
-
-         ### Pagination
-
-         | Name   | Type   | Necessity | Description                                                                                         |
-         |--------|--------|-----------|-----------------------------------------------------------------------------------------------------|
-         | offset | uint32 | optional  | The offset of the first record to return. Defaults to zero (first record). Maximum offset is 10000. |
-         | size   | uint32 | optional  | Defaults to 10. Maximum size is 1000. Zero value is ignored (uses default). |
+      description: "Get the transactions for one identity sorted by tick number descending.\n\
+        \n ###  Request structure\n\n | Name       | Type               | Necessity\
+        \ | Description                                                          \
+        \          |\n |------------|--------------------|-----------|--------------------------------------------------------------------------------|\n\
+        \ | identity   | string             | required  | 60 characters uppercase\
+        \ identity.                                              |\n | filters   \
+        \ | map<string,string> | optional  | The filter value must appear in the matching\
+        \ documents.                        |\n | exclude    | map<string,string>\
+        \ | optional  | The filter value must not appear in the matching documents.\
+        \                    |\n | ranges     | map<string,Range>  | optional  | Filters\
+        \ that restrict results to a value range.                                |\n\
+        \ | pagination | Pagination         | optional  | Allows to specify the first\
+        \ record and the number of records to be retrieved.  |\n\n Without filters\
+        \ and ranges all transactions from and to that identity ordered by tick number\
+        \ descending are returned.\n\n ### Filters\n\n A property must only be used\
+        \ in one filter. See below for allowed properties.\n\n #### Include filter\
+        \ properties\n\n | Name        |  Type   | Format                 | Description\
+        \                                                        |\n |-------------|---------|------------------------|--------------------------------------------------------------------|\n\
+        \ | source      | string | 60 character identity, up to 5, comma separated.\
+        \ | Only find transactions with the specified source. |\n | destination |\
+        \ string | 60 character identity, up to 5, comma separated.  | Only find transactions\
+        \ with the specified destination. |\n | amount      | string | Numeric   \
+        \             | Only find transactions with the specified amount.        \
+        \          |\n | inputType   | string | Numeric                | Only find\
+        \ transactions with the specified input type.              |\n | tickNumber\
+        \  | string | Numeric                | Only find transactions with the specified\
+        \ tick number.             |\n\n #### Exclude filter properties\n\n | Name\
+        \            |  Type   | Format   | Description                          \
+        \                   |\n |-----------------|---------|----------|---------------------------------------------------------|\n\
+        \ | source      | string | 60 character identity, up to 5, comma separated.\
+        \ | Only find transactions with another source. |\n | destination | string\
+        \ | 60 character identity, up to 5, comma separated.  | Only find transactions\
+        \ with another destination.   |\n\n #### Range filter properties\n\n Ranges\
+        \ restrict the results by a range of values. One range per property is supported.\n\
+        \n | Name       | Type   | Format                                   | Description\
+        \                                 |\n |------------|--------|------------------------------------------|---------------------------------------------|\n\
+        \ | amount     | string | Numeric                                  | Only\
+        \ find transactions in amount range.     |\n | tickNumber | string | Numeric\
+        \                                  | Only find transactions in tick range.\
+        \       |\n | inputType  | string | Numeric                              \
+        \    | Only find transactions in input type range. |\n | timestamp  | string\
+        \ | Numeric (Unix Timestamp in milliseconds) | Only find transactions in time\
+        \ range.       |\n\n ### Pagination\n\n | Name   | Type   | Necessity | Description\
+        \                                                                        \
+        \                 |\n |--------|--------|-----------|-----------------------------------------------------------------------------------------------------|\n\
+        \ | offset | uint32 | optional  | The offset of the first record to return.\
+        \ Defaults to zero (first record). Maximum offset is 10000. |\n | size   |\
+        \ uint32 | optional  | Defaults to 10. Maximum size is 1000. Zero value is\
+        \ ignored (uses default). |"
       operationId: ArchiveQueryService_GetTransactionsForIdentity
       requestBody:
         content:
@@ -207,7 +258,7 @@ paths:
               $ref: '#/components/schemas/GetTransactionsForIdentityRequest'
         required: true
       responses:
-        "200":
+        '200':
           description: OK
           content:
             application/json:
@@ -218,56 +269,41 @@ paths:
       tags:
         - Transactions
       summary: Get Transactions For Tick
-      description: |-
-        Get the transactions that are in included in one tick.
-
-         ###  Request structure
-
-         | Name       | Type               | Necessity | Description                                     |
-         |------------|--------------------|-----------|-------------------------------------------------|
-         | identity   | string             | required  | 60 characters uppercase identity.               |
-         | filters    | map<string,string> | optional  | Filters that restrict results to single value.  |
-         | ranges     | map<string,Range>  | optional  | Filters that restrict results to a value range. |
-
-         ### Filters
-
-         Filters restrict the results by single values.
-
-         #### Allowed properties
-
-         | Name        |  Type   | Format                 | Description                                                        |
-         |-------------|---------|------------------------|--------------------------------------------------------------------|
-         | source      | string  | 60 character identity  | Only find transactions that were sent from the specified identities. |
-         | destination | string  | 60 character identity  | Only find transactions that were sent to the specified identities.   |
-         | amount      | string  | Numeric                | Only find transactions with the specified amount.                  |
-         | inputType   | string  | Numeric                | Only find transactions with the specified input type.              |
-
-         ### Ranges
-
-         Ranges restrict the results by a range of values. On range per property is supported.
-
-         #### Allowed properties
-
-         | Name       | Type   | Format                                   | Description                                 |
-         |------------|--------|------------------------------------------|---------------------------------------------|
-         | amount     | string | Numeric                                  | Only find transactions in amount range.     |
-         | inputType  | string | Numeric                                  | Only find transactions in input type range. |
-
-         #### Range definition
-
-         A range with size of 0 or 1 is not allowed.
-
-         | Name      | Type   | Necessity | Description                               |
-         |-----------|--------|-----------|-------------------------------------------|
-         | field | string | required  | Name of the field you wish to search for. |
-         | gt        | string | optional  | Greater than.                             |
-         | gte       | string | optional  | Greater than or equal to.                 |
-         | lt        | string | optional  | Less than.                                |
-         | lte       | string | optional  | Less than or equal to.                    |
-
-         Only one lower bound and one upper bound can be specified.
-
-         For examples how to use filters and ranges see the GetTransactionsForIdentity endpoint documentation.
+      description: "Get the transactions that are in included in one tick.\n\n ###\
+        \  Request structure\n\n | Name       | Type               | Necessity | Description\
+        \                                     |\n |------------|--------------------|-----------|-------------------------------------------------|\n\
+        \ | identity   | string             | required  | 60 characters uppercase\
+        \ identity.               |\n | filters    | map<string,string> | optional\
+        \  | Filters that restrict results to single value.  |\n | ranges     | map<string,Range>\
+        \  | optional  | Filters that restrict results to a value range. |\n\n ###\
+        \ Filters\n\n Filters restrict the results by single values.\n\n #### Allowed\
+        \ properties\n\n | Name        |  Type   | Format                 | Description\
+        \                                                        |\n |-------------|---------|------------------------|--------------------------------------------------------------------|\n\
+        \ | source      | string  | 60 character identity  | Only find transactions\
+        \ that were sent from the specified identities. |\n | destination | string\
+        \  | 60 character identity  | Only find transactions that were sent to the\
+        \ specified identities.   |\n | amount      | string  | Numeric          \
+        \      | Only find transactions with the specified amount.               \
+        \   |\n | inputType   | string  | Numeric                | Only find transactions\
+        \ with the specified input type.              |\n\n ### Ranges\n\n Ranges\
+        \ restrict the results by a range of values. On range per property is supported.\n\
+        \n #### Allowed properties\n\n | Name       | Type   | Format            \
+        \                       | Description                                 |\n\
+        \ |------------|--------|------------------------------------------|---------------------------------------------|\n\
+        \ | amount     | string | Numeric                                  | Only\
+        \ find transactions in amount range.     |\n | inputType  | string | Numeric\
+        \                                  | Only find transactions in input type\
+        \ range. |\n\n #### Range definition\n\n A range with size of 0 or 1 is not\
+        \ allowed.\n\n | Name      | Type   | Necessity | Description            \
+        \                   |\n |-----------|--------|-----------|-------------------------------------------|\n\
+        \ | field | string | required  | Name of the field you wish to search for.\
+        \ |\n | gt        | string | optional  | Greater than.                   \
+        \          |\n | gte       | string | optional  | Greater than or equal to.\
+        \                 |\n | lt        | string | optional  | Less than.      \
+        \                          |\n | lte       | string | optional  | Less than\
+        \ or equal to.                    |\n\n Only one lower bound and one upper\
+        \ bound can be specified.\n\n For examples how to use filters and ranges see\
+        \ the GetTransactionsForIdentity endpoint documentation."
       operationId: ArchiveQueryService_GetTransactionsForTick
       requestBody:
         content:
@@ -276,7 +312,7 @@ paths:
               $ref: '#/components/schemas/GetTransactionsForTickRequest'
         required: true
       responses:
-        "200":
+        '200':
           description: OK
           content:
             application/json:
@@ -284,6 +320,64 @@ paths:
                 $ref: '#/components/schemas/GetTransactionsForTickResponse'
 components:
   schemas:
+    AssetIssuanceData:
+      type: object
+      properties:
+        assetIssuer:
+          type: string
+        numberOfShares:
+          type: string
+        managingContractIndex:
+          type: string
+        assetName:
+          type: string
+        numberOfDecimalPlaces:
+          type: integer
+          format: uint32
+        unitOfMeasurement:
+          type: string
+      description: AssetIssuanceData contains fields specific to asset issuance events
+        (type 1).
+    AssetOwnershipChangeData:
+      type: object
+      properties:
+        source:
+          type: string
+        destination:
+          type: string
+        assetIssuer:
+          type: string
+        assetName:
+          type: string
+        numberOfShares:
+          type: string
+      description: AssetOwnershipChangeData contains fields specific to asset ownership
+        change events (type 2).
+    AssetPossessionChangeData:
+      type: object
+      properties:
+        source:
+          type: string
+        destination:
+          type: string
+        assetIssuer:
+          type: string
+        assetName:
+          type: string
+        numberOfShares:
+          type: string
+      description: AssetPossessionChangeData contains fields specific to asset possession
+        change events (type 3).
+    BurningData:
+      type: object
+      properties:
+        source:
+          type: string
+        amount:
+          type: string
+        contractIndexBurnedFor:
+          type: string
+      description: BurningData contains fields specific to burning events (type 8).
     ComputorList:
       type: object
       properties:
@@ -293,7 +387,8 @@ components:
           format: uint32
         tickNumber:
           type: integer
-          description: Tick number when the list was received by the archive after it was published.
+          description: Tick number when the list was received by the archive after
+            it was published.
           format: uint32
         identities:
           type: array
@@ -304,6 +399,67 @@ components:
           type: string
           description: Signature of the arbitrator.
       description: ComputorList
+    ContractReserveDeductionData:
+      type: object
+      properties:
+        deductedAmount:
+          type: string
+        remainingAmount:
+          type: string
+        contractIndex:
+          type: string
+      description: ContractReserveDeductionData contains fields specific to contract
+        reserve deduction events (type 13).
+    CustomMessageData:
+      type: object
+      properties:
+        value:
+          type: string
+    Event:
+      type: object
+      properties:
+        epoch:
+          type: integer
+          format: uint32
+        tickNumber:
+          type: integer
+          format: uint32
+        timestamp:
+          type: string
+        transactionHash:
+          type: string
+        logType:
+          type: integer
+          format: uint32
+        logId:
+          type: string
+        logDigest:
+          type: string
+        categories:
+          type: array
+          items:
+            type: integer
+            format: int32
+        rawPayload:
+          type: string
+          format: bytes
+        quTransfer:
+          $ref: '#/components/schemas/QuTransferData'
+        assetIssuance:
+          $ref: '#/components/schemas/AssetIssuanceData'
+        assetOwnershipChange:
+          $ref: '#/components/schemas/AssetOwnershipChangeData'
+        assetPossessionChange:
+          $ref: '#/components/schemas/AssetPossessionChangeData'
+        burning:
+          $ref: '#/components/schemas/BurningData'
+        contractReserveDeduction:
+          $ref: '#/components/schemas/ContractReserveDeductionData'
+        smartContractMessage:
+          $ref: '#/components/schemas/SmartContractMessageData'
+        customMessage:
+          $ref: '#/components/schemas/CustomMessageData'
+      description: Event
     GetComputorListsForEpochRequest:
       type: object
       properties:
@@ -321,6 +477,49 @@ components:
             $ref: '#/components/schemas/ComputorList'
           description: The lists of computors that voted in this epoch.
       description: GetComputorListsForEpochResponse
+    GetEventsRequest:
+      example:
+        filters:
+          transactionHash: zvqvtjzvgwgpegmalkkjedhbdrnckqcfthpzfqzxbcljttljzidmvaxalxyz
+        pagination:
+          offset: 0
+          size: 10
+      type: object
+      properties:
+        filters:
+          type: object
+          additionalProperties:
+            type: string
+          description: 'Include filters: all the values must match.'
+        exclude:
+          type: object
+          additionalProperties:
+            type: string
+          description: 'Exclude filters: all the values must must not match.'
+        should:
+          type: array
+          items:
+            $ref: '#/components/schemas/ShouldFilter'
+          description: 'Should filters: one or more of the values must match.'
+        ranges:
+          type: object
+          additionalProperties:
+            $ref: '#/components/schemas/Range'
+          description: Ranges restrict the results by a maximum and/or minimum value.
+        pagination:
+          $ref: '#/components/schemas/Pagination'
+      description: GetEventsRequest
+    GetEventsResponse:
+      type: object
+      properties:
+        hits:
+          $ref: '#/components/schemas/Hits'
+        events:
+          type: array
+          items:
+            $ref: '#/components/schemas/Event'
+          description: List of events that matched the search criteria.
+      description: GetEventsResponse
     GetLastProcessedTickResponse:
       type: object
       properties:
@@ -378,10 +577,10 @@ components:
         identity: AFZPUAIYVPNUYGJRQVLUKOPPVLHAZQTGLYAAUUNBXFTVTAMSBKQBLEIEPCVJ
         filters:
           destination: AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAFXIB
-          inputType: "0"
+          inputType: '0'
         ranges:
           amount:
-            gte: "1000000000"
+            gte: '1000000000'
         pagination:
           offset: 0
           size: 10
@@ -389,17 +588,24 @@ components:
       properties:
         identity:
           type: string
-          description: The identity to get the transactions for. Incoming and outgoing transactions are queried by default.
+          description: The identity to get the transactions for. Incoming and outgoing
+            transactions are queried by default.
         filters:
           type: object
           additionalProperties:
             type: string
-          description: Filters restrict the results by single values.
+          description: 'Include filters: the value must appear in the matching documents.'
+        exclude:
+          type: object
+          additionalProperties:
+            type: string
+          description: 'Exclude filters: the value must not appear in the matching
+            documents.'
         ranges:
           type: object
           additionalProperties:
             $ref: '#/components/schemas/Range'
-          description: Ranges restrict the results by a maximum and minimum value.
+          description: Ranges restrict the results by a maximum and/or minimum value.
         pagination:
           $ref: '#/components/schemas/Pagination'
       description: GetTransactionsForIdentityRequest
@@ -425,7 +631,7 @@ components:
           destination: AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAFXIB
         ranges:
           amount:
-            gte: "1"
+            gte: '1'
       type: object
       properties:
         tickNumber:
@@ -436,12 +642,14 @@ components:
           type: object
           additionalProperties:
             type: string
-          description: 'Filters restrict the results by single values. Allowed: source, destination, amount, inputType'
+          description: 'Include filters: the value must appear in the matching documents.
+            Allowed: source, destination, amount, inputType'
         ranges:
           type: object
           additionalProperties:
             $ref: '#/components/schemas/Range'
-          description: 'Ranges restrict the results by a maximum and minimum value. Allowed: amount, inputType'
+          description: 'Ranges restrict the results by a maximum and minimum value.
+            Allowed: amount, inputType'
       description: GetTransactionsForTickRequest
     GetTransactionsForTickResponse:
       type: object
@@ -464,7 +672,8 @@ components:
       properties:
         total:
           type: integer
-          description: The total number of hits available in the archive. Capped at 10000.
+          description: The total number of hits available in the archive. Capped at
+            10000.
           format: uint32
         from:
           type: integer
@@ -480,11 +689,13 @@ components:
       properties:
         offset:
           type: integer
-          description: The offset specifies the starting point of the returned data. Defaults to zero.
+          description: The offset specifies the starting point of the returned data.
+            Defaults to zero.
           format: uint32
         size:
           type: integer
-          description: The size specifies how many results should be returned. Defaults to 10.
+          description: The size specifies how many results should be returned. Defaults
+            to 10.
           format: uint32
       description: The number of maximum results (offset + size) is limited to 10000.
     ProcessedTickInterval:
@@ -503,6 +714,17 @@ components:
           description: The last processed tick of the interval.
           format: uint32
       description: ProcessedTickInterval
+    QuTransferData:
+      type: object
+      properties:
+        source:
+          type: string
+        destination:
+          type: string
+        amount:
+          type: string
+      description: QuTransferData contains fields specific to QU transfer events (type
+        0).
     Range:
       type: object
       properties:
@@ -518,7 +740,43 @@ components:
         lte:
           type: string
           description: Less than or equal.
-      description: Range
+      description: "Range filter\n\n | Name      | Type   | Necessity | Description\
+        \                               |\n |-----------|--------|-----------|-------------------------------------------|\n\
+        \ | gt        | string | optional  | Greater than.                       \
+        \      |\n | gte       | string | optional  | Greater than or equal to.  \
+        \               |\n | lt        | string | optional  | Less than.        \
+        \                        |\n | lte       | string | optional  | Less than\
+        \ or equal to.                    |\n\n One lower bound and one upper bound\
+        \ can be specified. One bound is needed. A range with size of 0 or 1 is not\
+        \ allowed.\n\n Examples\n\n ```\n \"amount\": { \"gt\": \"1000000\" }\n \"\
+        tickNumber\": { \"gte\": \"25563000\", \"lte\": \"28300000\" }\n ```"
+    ShouldFilter:
+      type: object
+      properties:
+        terms:
+          type: object
+          additionalProperties:
+            type: string
+          description: 'Or filters: One or more of the values must match.'
+        ranges:
+          type: object
+          additionalProperties:
+            $ref: '#/components/schemas/Range'
+          description: Ranges restrict the results by a maximum and/or minimum value.
+      description: "Should Filters\n\n One should filter can contain multiple terms\
+        \ and ranges. It needs at least two query clauses.\n At least one of them\
+        \ has to match by default. See term and range filter documentation for examples.\n\
+        \n Example\n\n ```\n \"should\": [\n   {\n     \"terms\": {\n       \"source\"\
+        : \"BAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAARMID\",\n    \
+        \   \"destination\": \"BAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAARMID\"\
+        \n     }\n   }\n ]\n ```"
+    SmartContractMessageData:
+      type: object
+      properties:
+        emittingContractIndex:
+          type: string
+        contractMessageType:
+          type: string
     TickData:
       type: object
       properties:
@@ -566,7 +824,8 @@ components:
           type: string
         inputType:
           type: integer
-          description: Smart contract procedure index. (The smart contract procedure this transaction is supposed to trigger)
+          description: Smart contract procedure index. (The smart contract procedure
+            this transaction is supposed to trigger)
           format: uint32
         inputSize:
           type: integer
@@ -580,7 +839,8 @@ components:
           description: Base64 encoded byte array representing the transactions's signature.
         moneyFlew:
           type: boolean
-          description: Money flew is an additional information provided by some nodes with the tx status addon patch.
+          description: Money flew is an additional information provided by some nodes
+            with the tx status addon patch.
       description: Transaction
 tags:
   - name: Archive
@@ -588,6 +848,8 @@ tags:
   - name: ArchiveQueryService
     description: Qubic Query API
     x-scalar-ignore: true
+  - name: Events (Beta)
+    description: Query event logs from the Qubic blockchain. Beta endpoint.
   - name: Network
     description: Network status and computor information.
   - name: Ticks
