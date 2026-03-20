@@ -214,9 +214,14 @@ The Qubic core developers will review your PR for code quality, security, and co
 With your PR approved and merged, it's time to propose your contract to the network.
 
 - A computor operator submits a proposal via the **GQMPROP** contract
-- The proposal must include a URL with detailed proposal information (use an immutable platform)
 - Each proposer can maintain only one active proposal per epoch
 - For general proposal mechanics, see [Proposals](/learn/proposals)
+
+**Create a written proposal:**
+
+1. Submit a PR to the [qubic/proposals](https://github.com/qubic/proposals) repository, placing your proposal in the `SmartContracts` folder — use existing proposals as templates and include the link to your [core repository](https://github.com/qubic/core) PR
+2. A repository maintainer reviews and merges your proposal
+3. A computor operator can then reference your merged proposal when submitting the GQMPROP on-chain proposal
 
 :::info
 Proposals are valid only for the current epoch (~7 days). If the vote doesn't conclude in time, you'll need to submit a new proposal in the next epoch.
