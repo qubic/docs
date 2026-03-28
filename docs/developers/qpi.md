@@ -38,6 +38,21 @@ QPI exposes a minimal but powerful set of features, including:
 `qpi.h` is the Qubic Programming Interface for implementing the smart contracts. It is available automatically in the smart contract implementation header files. This page outlines the guidelines for developing secure and efficient Qubic contracts.
 Adherence to these guidelines is crucial for ensuring the proper functionality and security of your contracts within the Qubic environment.
 
+## Editor Support
+
+A community-built [VS Code extension](https://marketplace.visualstudio.com/items?itemName=AndyQus.qubic-org-qpi) is available for QPI development. Search **Qubic QPI Language Support** in the Extensions panel (`Ctrl+Shift+X`) to install.
+
+It provides:
+- **Syntax highlighting** for QPI keywords, types, and API calls
+- **IntelliSense** with autocomplete for all `qpi.*` methods (signatures, return types, tab-stop snippets)
+- **Hover documentation** for QPI keywords and API calls
+- **Code snippets** for contracts, procedures, functions, and lifecycle blocks
+- **Linter** catching common QPI mistakes (e.g. raw `/` instead of `div()`, forbidden `#include`)
+- **Contract validator** for unmatched `BEGIN_EPOCH`/`END_EPOCH` and `BEGIN_TICK`/`END_TICK` blocks
+- **New Contract command** (`Ctrl+Shift+P` → *Qubic: New Smart Contract*) to scaffold a `.h` file
+
+Source: [github.com/AndyQus/qubic-qpi-vscode](https://github.com/AndyQus/qubic-qpi-vscode)
+
 ## Concepts
 
 The state is the persistent memory of the contract that is kept aligned in all nodes. A contract can have member functions and procedures.
