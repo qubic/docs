@@ -13,9 +13,12 @@ Qubic offers various wallet options to suit different user needs and preferences
 All official wallets are open source.
 
 - 🌐 [Web Wallet](https://wallet.qubic.org) ([source code](https://github.com/qubic/wallet))
+- 🧩 Browser Extension (Beta) ([source code](https://github.com/qubic/wallet-extension))
+  - [Chrome / Chromium](https://github.com/qubic/wallet-extension/releases) — manual install via Developer Mode
 - 📱 Mobile ([source code](https://github.com/qubic/wallet-app))
   - [iOS - App Store](https://apps.apple.com/us/app/qubic-wallet/id6502265811)
   - [Android - Google Play](https://play.google.com/store/apps/details?id=org.qubic.wallet)
+
 
 ## Community-Developed Wallets
 
