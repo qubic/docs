@@ -35,7 +35,7 @@ paths:
     /getEventLogs:
         post:
             tags:
-                - Event (Beta)
+                - Events (Beta)
             summary: Get Event Logs
             description: |-
                 Query event logs with optional filters.
