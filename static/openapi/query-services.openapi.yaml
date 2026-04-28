@@ -78,6 +78,12 @@ paths:
                  | deductedAmount        | string | Numeric (uint64)               | Deducted amount. (conditional)                                            |
                  | remainingAmount       | string | Numeric (int64)                | Remaining amount. (conditional)                                           |
                  | customMessage         | string | Numeric (uint64)               | Custom message. (conditional)                                             |
+                 | queryingEntity        | string | 60 character identity          | Querying entity identity. (conditional)                                   |
+                 | queryId               | string | Numeric (uint64)               | Oracle query id. (conditional)                                            |
+                 | queryType             | string | Numeric (uint64)               | Oracle query type. (conditional)                                          |
+                 | queryStatus           | string | Numeric (uint64)               | Oracle query status. (conditional)                                        |
+                 | subscriptionId        | string | Numeric (uint64)               | Oracle subscription id. (conditional)                                     |
+                 | interfaceIndex        | string | Numeric (uint64)               | Oracle interface index. (conditional)                                     |
 
                  The following categories are theoretically supported at the moment. Not all are available in the archive.
                  See log data consumer code for more details:
@@ -543,6 +549,10 @@ components:
                     $ref: '#/components/schemas/AssetOwnershipManagingContractChangeData'
                 assetPossessionManagingContractChange:
                     $ref: '#/components/schemas/AssetPossessionManagingContractChangeData'
+                oracleQueryStatusChange:
+                    $ref: '#/components/schemas/OracleQueryStatusChangeData'
+                oracleSubscriberLogMessage:
+                    $ref: '#/components/schemas/OracleSubscriberLogMessageData'
             description: Event
         GetComputorListsForEpochRequest:
             type: object
@@ -623,7 +633,7 @@ components:
                     type: integer
                     description: The initial tick of the current tick interval.
                     format: uint32
-                lastProcessedLogTick:
+                logTickNumber:
                     type: integer
                     description: The last processed tick for event logs.
                     format: uint32
@@ -771,6 +781,34 @@ components:
                     description: Number of returned hits.
                     format: uint32
             description: Provides information about the number of results.
+        OracleQueryStatusChangeData:
+            type: object
+            properties:
+                queryingEntity:
+                    type: string
+                queryId:
+                    type: string
+                interfaceIndex:
+                    type: string
+                queryType:
+                    type: string
+                queryStatus:
+                    type: string
+            description: OracleQueryStatusChangeData contains fields specific to the oracle query status change events (type 14)
+        OracleSubscriberLogMessageData:
+            type: object
+            properties:
+                subscriptionId:
+                    type: string
+                interfaceIndex:
+                    type: string
+                contractIndex:
+                    type: string
+                periodMillis:
+                    type: string
+                firstQueryTimestamp:
+                    type: string
+            description: OracleSubscriberLogMessageData contains field specific to the oracle subscriber log message events (type 15)
         Pagination:
             type: object
             properties:
