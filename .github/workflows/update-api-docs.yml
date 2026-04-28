@@ -129,3 +129,5 @@ jobs:
           branch: docs/update-query-api-spec
           delete-branch: true
           labels: automated
+          add-paths: |
+            static/openapi/query-services.openapi.yaml
