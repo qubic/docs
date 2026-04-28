@@ -72,9 +72,39 @@ jobs:
       - name: Checkout docs repo
         uses: actions/checkout@v4
 
-      - name: Decode Query API OpenAPI spec from payload
+      - name: Checkout archive-query-service
+        uses: actions/checkout@v4
+        with:
+          repository: qubic/archive-query-service
+          ref: ${{ github.event.client_payload.ref || 'main' }}
+          path: archive-query-service
+
+      - name: Set up Go
+        uses: actions/setup-go@v4
+        with:
+          go-version: 1.26.x
+
+      - name: Install protoc
+        uses: arduino/setup-protoc@v3
+
+      - name: Install protoc-gen-openapi
+        run: go install github.com/google/gnostic/cmd/protoc-gen-openapi@latest
+
+      - name: Generate OpenAPI spec
+        working-directory: archive-query-service/v2
         run: |
-          echo "${{ github.event.client_payload.openapi_spec_base64 }}" | base64 -d > static/openapi/query-services.openapi.yaml
+          export PATH="$(go env GOPATH)/bin:$PATH"
+          make openapi-v3-gen
+
+      - name: Apply OpenAPI adjustments
+        run: |
+          cd archive-query-service/v2/api/archive-query-service/v2
+          yq -i --indent 4 'del(.paths."/health")' query_services.openapi.yaml
+          yq -i --indent 4 '(.tags[] | select(.name == "ArchiveQueryService")).x-scalar-ignore = true' query_services.openapi.yaml
+          yq -i --indent 4 '(.paths[][].tags) -= ["ArchiveQueryService"]' query_services.openapi.yaml
+
+      - name: Copy spec into place
+        run: cp archive-query-service/v2/api/archive-query-service/v2/query_services.openapi.yaml static/openapi/query-services.openapi.yaml
 
       - name: Check for changes
         id: changes
