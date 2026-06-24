@@ -4,7 +4,19 @@
 openapi: 3.0.3
 info:
     title: Qubic Query API
-    description: API for querying historical Qubic ledger data.
+    description: |-
+        API for querying historical Qubic ledger data.
+
+        ## Data availability and pruning
+
+        ### Ephemeral transactions
+
+        **Certain transactions are marked as ephemeral and kept for at least 21 days**, so results from transaction endpoints may be incomplete. A transaction is ephemeral when **all** of the following are true:
+        - Transaction input type = 6
+        - Destination is the zero address ("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAFXIB")
+        - Amount = 0
+
+        Affects: *Get Transaction By Hash*, *Get Transactions For Tick*, *Get Transactions For Identity*.
     version: 1.0.0
 servers:
     - url: https://rpc.qubic.org/query/v1
@@ -136,6 +148,15 @@ paths:
                  | deductedAmount  | string | Numeric (uint64)                         | Only find logs in the deducted amount range.       |
                  | remainingAmount | string | Numeric (int64)                          | Only find logs in the remaining amount range.      |
                  | logId           | string | Numeric (uint64)                         | Only find logs in the logId range. Combine with a tickNumber filter to paginate beyond 10K events in a tick. |
+
+                 ### Log events not stored
+
+                 There are certain events which the underlying infrastructure does not currently store or provide:
+                 | Log type |          Event         |       Condition       |
+                 |----------|------------------------|-----------------------|
+                 |     0    |       qu_transfer      | Skipped if amount = 0 |
+                 |     7    | contract_debug_message |       Not stored      |
+                 |     8    |         burning        | Skipped if amount = 0 |
             operationId: ArchiveQueryService_GetEventLogs
             requestBody:
                 content:
@@ -213,7 +234,11 @@ paths:
             tags:
                 - Transactions
             summary: Get Transaction By Hash
-            description: Get a single transaction by its hash.
+            description: |-
+                Get a single transaction by its hash / transaction id.
+
+                 **Note:** results may be incomplete — certain transactions are marked as ephemeral and pruned after a certain amount of time.
+                 See the "Data availability and pruning" section in the API description for the full rule.
             operationId: ArchiveQueryService_GetTransactionByHash
             requestBody:
                 content:
@@ -235,6 +260,9 @@ paths:
             summary: Get Transactions For Identity
             description: |-
                 Get the transactions for one identity sorted by tick number descending.
+
+                 **Note:** results may be incomplete — certain transactions are marked as ephemeral and pruned after a certain amount of time.
+                 See the "Data availability and pruning" section in the API description for the full rule.
 
                  ###  Request structure
 
@@ -300,6 +328,9 @@ paths:
             summary: Get Transactions For Tick
             description: |-
                 Get the transactions that are in included in one tick.
+
+                 **Note:** results may be incomplete — certain transactions are marked as ephemeral and pruned after a certain amount of time.
+                 See the "Data availability and pruning" section in the API description for the full rule.
 
                  ###  Request structure
 
