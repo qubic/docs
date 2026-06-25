@@ -56,6 +56,14 @@ jobs:
           export PATH="$(go env GOPATH)/bin:$PATH"
           make openapi-v3
 
+      - name: Apply OpenAPI adjustments
+        working-directory: qubic-http/protobuff
+        run: |
+          # Remove the internal-only /health endpoint (upstream marks it
+          # "for internal use only ... Do not rely on this endpoint").
+          # --indent 4 matches the generator output so yq doesn't reflow the file.
+          yq -i --indent 4 'del(.paths."/health")' qubic.openapi.yaml
+
       - name: Copy spec into place
         run: cp qubic-http/protobuff/qubic.openapi.yaml static/openapi/qubic-http.openapi.yaml
 
