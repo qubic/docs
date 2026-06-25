@@ -4,34 +4,34 @@ sidebar_label: 'Joining a Pool'
 
 # Joining a Pool
 
-Embarking on a journey to mine Qubic might seem like a monumental task if you're doing it alone. Pool mining is akin to collaborating with a team to conquer the task more efficiently and collectively reap the rewards.
+Mining Qubic on your own is impractical for most people — the network is highly competitive and rewards concentrate among the top performers. Pool mining lets you combine your computing power with others and earn steadier, proportional rewards.
 
-## The Treasure Hunt Analogy
-In Qubic mining, the "treasure" represents the reward received in QUs, the native token of the Qubic ecosystem. To earn this reward, Computors compete to achieve a high enough score on Artificial Intelligence (AI) training tasks.
+> New to mining? See [Useful Proof of Work](upow.md), [Mining Software](sw.md), and [Mining Hardware](hw.md) first. This page covers only joining a pool.
 
-## The Challenge of Solo Mining
-In the early days of blockchain technology, individuals mined on their own, using their computers' computational power. As the network expanded, the difficulty of mining increased, making solo efforts akin to searching for treasure in an ocean. The competitive landscape became quite fierce.
+## What a Mining Pool Does
 
-## Banding Together in a Mining Pool
-To improve their odds, miners began forming mining pools. A mining pool is a collective of miners working together. When one miner in the pool achieves a high score on their AI task, the reward is shared among all pool members based on their respective contributions.
+A mining pool is a collective of miners that share work and rewards. Each epoch, miners compete to find solutions; in a pool, the rewards earned are split among members in proportion to the solutions each contributed — so even with modest hardware you receive regular, predictable payouts instead of waiting for a rare solo win.
 
-## How Pool Mining Works in Qubic
-Miners interested in joining a pool sign up on [qubic.li](https://app.qubic.li/) and connect their mining devices to the pool's network.
+## Why Pool Instead of Solo
 
-Mining as a Team: Now, the pool's members work as a team. Each miner is assigned an AI training task — less complex than the tasks in solo mining — resembling the search for treasure in a pond rather than an ocean. Different pools have different types of payouts such as PPS vs. FPPS vs. PPLNS, refer to specific pools for the rewards distribution.  Remember that each pool is soley operated and not directly under any control of the Qubic core Team, this increases competitiveness for the pool with the most computing power.
+- **Improved odds** — the collective power of many miners completes AI tasks more efficiently than going it alone.
+- **Consistent payouts** — more regular and predictable rewards than solo mining, which can go long stretches without a win.
+- **Inclusivity** — miners with less powerful hardware can still participate effectively.
 
-Achieving High Scores: Once a miner in the pool finds a solution on their assigned AI task, they inform the pool's server.
-Distributing the Rewards: The pool's server distributes the rewards, or QUs, among all the miners in the pool, proportionate to the solutions each miner contributed. The payout is once every epoch (i.e. weekly).
+The trade-off is some dependency on the pool operator, so choosing a reputable pool matters.
 
-## Benefits of Pool Mining
-Improved Odds: Pool mining enhances the chances of earning Qus, as the collective power of many miners can complete AI tasks more efficiently.
+## How Pools Differ
 
-Consistent Payouts: Compared to solo miners who might face long periods without rewards, pool miners receive more regular and predictable payouts.
+- **Independently operated.** Each pool is run by its own operator and is *not* controlled by the Qubic core team.
+- **Payout models and schedules vary.** Pools use different reward schemes (such as PPS, FPPS, or PPLNS), charge different fees, and pay out on their own schedule — some per epoch, others on a fixed interval or once a minimum balance is reached. Always check the pool's own terms.
 
-Inclusivity: Pool mining enables miners with less powerful hardware to participate effectively and earn rewards.
+## Finding and Choosing a Pool
 
-However, it's crucial to be aware of the potential risks associated with pool mining. While the collective effort can lead to more consistent rewards, it can also create a level of dependency on the pool operators. It's essential to ensure you're joining a trustworthy and reputable mining pool to avoid any potential issues.
+The active pools, their fees, and their payout models may change over time. For the most current information, refer to:
 
-## Conclusion
+- **[Mining overview](https://qubic.org/mining)** — on the Qubic website.
+- **[Qubic Discord](https://discord.gg/2vDMR8m)** — the up‑to‑date list of pools, fees, and community support.
 
-Pool mining within the Qubic ecosystem allows for collective effort, boosting the chances of earning rewards while making mining more accessible to a wider audience. Always ensure you choose a reliable and reputable mining pool, and here's to your successful mining journey!
+:::tip Choose carefully
+Each pool is operated independently, so you take on some dependency on its operator. Pick a reputable, well‑established pool and make sure you understand its fee and payout model before committing your hardware.
+:::
