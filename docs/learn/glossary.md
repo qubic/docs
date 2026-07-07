@@ -46,10 +46,10 @@ A quorum is the minimum number of computors necessary to conduct any sort of bus
 Self-executing contracts with the terms of the agreement directly written into code. Qubic's first [smart contract](/learn/smart-contracts) was an Initial Public Offering ([IPO](/learn/ipo)) of 676 shares for a decentralized exchange (DEX) named [Qx](/learn/qx).
 
 ## Spectrum
-Qubic's equivalent of a ledger. In the [Spectrum](/learn/spectrum) the energy (i.e. QUs) per Identity is stored. Qubic itself does not not keep track of transactions.
+Qubic's equivalent of a ledger. In the [Spectrum](/learn/spectrum) the energy (i.e. QUs) per Identity is stored. Qubic itself does not keep track of transactions.
 
 ## Ticks
-In the Qubic ecosystem, the tick is the interval within which the Quorum commes to an agreement on transactions and the outcome computed smart contracts. A single tick can last a very short interval of time (below 1 second).
+In the Qubic ecosystem, the tick is the interval within which the Quorum comes to an agreement on transactions and the outcome computed smart contracts. A single tick can last a very short interval of time (below 1 second).
 
 ## Useful Proof of Work (UPoW)
 A novel consensus mechanism that optimizes the energy expended in mining processes by directing computational power towards valuable, real-world tasks, such as training artificial intelligence models. Unlike traditional Proof of Work systems that "waste" energy by solving abstract puzzles, [UPoW](/learn/upow) contributes to meaningful applications.
