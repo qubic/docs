@@ -15,7 +15,7 @@ uint64 b = 10000000000;
 
 ## Booleans
 
-Booleans is resperent by `bit` data type
+Booleans are represented by the `bit` data type
 
 ```cpp
 bit isRight = true;

@@ -136,3 +136,20 @@ struct acquireShares_output {
 - Both contracts update their states
 
 - MYTEST's `PRE_RELEASE_SHARES` is invoked
+
+## NFTs and Unique Assets
+
+The same asset system can represent **non-fungible tokens (NFTs)**. By issuing assets with `numberOfShares = 1` and a unique `assetName` per token, each share becomes a distinct, non-fungible item:
+
+```
+// Issue a unique NFT asset (1 share only)
+qpi.issueAsset(
+    uniqueAssetName,  // Unique per token (e.g., "NFT0001")
+    issuerId,
+    0,                // No decimal places for NFTs
+    1,                // Single share = unique item
+    0                 // Unit of measurement (unused for NFTs)
+);
+```
+
+Each NFT's `assetName` acts as the token ID. Ownership and possession follow the same `transferShareOwnershipAndPossession()` pattern, and metadata (image, attributes) can be stored off-chain (IPFS) with the hash referenced in the contract state or emitted via a function.
