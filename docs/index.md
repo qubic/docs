@@ -77,7 +77,7 @@ Qubic is an open-source project that thrives on community involvement. If you’
 
 Keep up with the latest news, updates, and development milestones:
 
-- [Qubic Blog](https://blog.qubic.org)
+- [Qubic Blog](https://qubic.org/blog-grid)
 
 - [Join our Discord](https://discord.gg/qubic)
 
