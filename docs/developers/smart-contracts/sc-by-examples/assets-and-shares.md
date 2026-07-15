@@ -135,7 +135,7 @@ struct acquireShares_output {
 
 - Both contracts update their states
 
-- MYTEST's `PRE_RELEASE_SHARES` is invoked
+- MYTEST's `POST_RELEASE_SHARES` is invoked
 
 ## NFTs and Unique Assets
 
