@@ -180,7 +180,7 @@ const config = {
               },
               {
                 label: 'Twitter',
-                href: 'https://twitter.com/qubic_network',
+                href: 'https://x.com/_qubic_',
               },
               {
                 label: 'Telegram',
