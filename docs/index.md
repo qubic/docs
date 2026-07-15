@@ -54,7 +54,7 @@ Everything you need to start developing on Qubic:
 - [Qubic RPC](api/rpc.md): Remote Procedure Call interface for Qubic.
 
 ## Integration
-- [Wallet Integration](api/wallet-integrations.md): Guides and resources for integrating Qubic wallets into your applications.
+- [Frontend Integration](developers/frontend-integration.md): Guide to building Qubic dApps — wallet integration, RPC communication, and smart contract interaction.
 
 ## Libraries
 - [Java Libraries](developers/library-java.md): Libraries for Java development.

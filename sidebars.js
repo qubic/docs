@@ -188,8 +188,7 @@ const sidebars = {
       label: "Frontend & Interaction", // Path 2 & 3 combined
       items: [
         "api/rpc", // Connecting (Included directly)
-        "api/wallet-integrations", // Wallets (Moved from apiSidebar)
-        "developers/frontend-integration", // Guide for interaction
+        "developers/frontend-integration", // Guide for interaction (wallets + dApp integration)
         {
           type: "category",
           label: "RPC Integration", // Enhanced RPC section

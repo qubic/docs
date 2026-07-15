@@ -1,10 +1,11 @@
 ---
 title: Frontend Integration
+description: "Guide to building Qubic dApps: wallet integration, RPC communication, and smart contract interaction, with links to reference implementations."
 ---
 
 # Building Frontend Applications for Qubic
 
-This guide provides an overview of how to build frontend applications that interact with Qubic smart contracts, with links to complete reference implementations.
+This guide provides an overview of how to build frontend applications (dApps) for Qubic — covering wallet integration, RPC communication, and smart contract interaction — with links to complete reference implementations.
 
 ## Key Components of a Qubic dApp
 
@@ -27,12 +28,15 @@ We highly recommend exploring this codebase as a starting point for your applica
 
 ## Wallet Integration
 
-Qubic supports multiple wallet integration options, all demonstrated in the [HM25 Frontend Example](https://github.com/icyblob/hm25-frontend):
+Qubic supports multiple wallet integration options:
 
-- **MetaMask Snap integration** - For users who already use MetaMask
-- **WalletConnect support** - For interoperability with compatible wallets
+- **Qubic Wallet Extension** - Native dApp integration via the `window.qubic` provider API, exposed by the [Qubic Wallet browser extension](https://github.com/qubic/wallet-extension). See the [wallet-extension-dapp sample](https://github.com/qubic/wallet-extension-dapp) for a working integration.
+- **WalletConnect support** - For connecting a dApp to the official [Qubic mobile wallet](https://github.com/qubic/wallet-app) (iOS/Android) via WalletConnect. See the [official WalletConnect integration guide](https://github.com/qubic/wallet-app/blob/main/walletconnect.md) and the [wallet-app-dapp sample](https://github.com/qubic/wallet-app-dapp) for a working integration.
+- **MetaMask Snap integration** - For users who already use MetaMask. See the [Qubic MetaMask Snap](https://github.com/qubic/qubic-mm-snap), also available in the [MetaMask Snaps directory](https://snaps.metamask.io/snap/npm/qubic-lib/qubic-mm-snap/).
 - **Seed phrase login** - For direct access with a seed phrase (not recommended)
 - **Vault file authentication** - For secure stored identities (not recommended)
+
+The MetaMask Snap, seed phrase, and Vault file options are all demonstrated in the [HM25 Frontend Example](https://github.com/icyblob/hm25-frontend).
 
 ## Connecting to Nodes
 
