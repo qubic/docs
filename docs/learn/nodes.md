@@ -60,3 +60,13 @@ Working as a miner is easier than working as a Computor and there are public [po
 
 
 It's essential for any participant or observer in the Qubic network to understand this fundamental distinction between miners and Computors. As we progress into this new era of Qubic, the roles and responsibilities of both will undoubtedly become increasingly important.
+
+## Node Implementations
+
+Alongside the Computor/miner roles above, Qubic has several node implementations, each built for a different purpose. See each repository for full requirements and setup.
+
+| Implementation | What it's for | Computor? | Repository |
+| -------------- | ------------- | --------- | ---------- |
+| **Core (Full node)** | The full node, run on bare metal with UEFI. This is the software you run to operate a [Computor](#computors) and take part in mainnet consensus. | ✅ Yes | [qubic/core](https://github.com/qubic/core) |
+| **Core Lite** | The lite version of Core that runs on a normal OS without UEFI. Supports a self-contained local testnet and mainnet (beta), and ships with a built-in RPC API and block explorer — handy for developing and testing smart contracts or running a lightweight node. | ❌ No | [qubic/core-lite](https://github.com/qubic/core-lite) |
+| **Bob** | An indexer/full node that syncs and verifies the network — reconstructing the Spectrum and Universe from logging events each tick — and serves it over a JSON-RPC 2.0 and REST API. Run it to power dApps, exchanges, explorers, and other products that read from or interact with the network without being a Computor. | ❌ No | [qubic/core-bob](https://github.com/qubic/core-bob) |
