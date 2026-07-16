@@ -176,7 +176,7 @@ const config = {
             items: [
               {
                 label: 'Discord',
-                href: 'https://discord.gg/2vDMR8m',
+                href: 'https://join.qubic.org/discord',
               },
               {
                 label: 'Twitter',

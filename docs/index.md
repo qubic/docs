@@ -79,6 +79,6 @@ Keep up with the latest news, updates, and development milestones:
 
 - [Qubic Blog](https://qubic.org/blog-grid)
 
-- [Join our Discord](https://discord.gg/qubic)
+- [Join our Discord](https://join.qubic.org/discord)
 
 - [GitHub Repository](https://github.com/qubic)

@@ -72,5 +72,5 @@ To interact with existing smart contracts:
 
 ## Getting Help
 
-- Join the [Qubic Discord](https://discord.gg/qubic) community for support and collaboration
+- Join the [Qubic Discord](https://join.qubic.org/discord) community for support and collaboration
 - Check for available [Qubic Grants](grants.md) to fund your project

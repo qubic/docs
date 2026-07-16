@@ -30,7 +30,7 @@ The trade-off is some dependency on the pool operator, so choosing a reputable p
 The active pools, their fees, and their payout models may change over time. For the most current information, refer to:
 
 - **[Mining overview](https://qubic.org/mining)** — on the Qubic website.
-- **[Qubic Discord](https://discord.gg/2vDMR8m)** — the up‑to‑date list of pools, fees, and community support.
+- **[Qubic Discord](https://join.qubic.org/discord)** — the up‑to‑date list of pools, fees, and community support.
 
 :::tip Choose carefully
 Each pool is operated independently, so you take on some dependency on its operator. Pick a reputable, well‑established pool and make sure you understand its fee and payout model before committing your hardware.

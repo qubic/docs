@@ -60,7 +60,7 @@ Before diving into code, here are some practical tips:
 - **Have a solid business model** — Your contract may not generate direct developer fees. Think about how your contract creates value
 - **Design shareholder dividends** — Good dividend/fee distribution for shareholders incentivizes higher IPO bids, which means a bigger execution pool for your contract
 - **Consider a Qubic Grant** — The [grant program](/developers/grants) can support your development costs
-- **Join the community** — The core developers on [Discord](https://discord.gg/qubic) are available to help. Don't hesitate to ask questions
+- **Join the community** — The core developers on [Discord](https://join.qubic.org/discord) are available to help. Don't hesitate to ask questions
 - **Plan your timeline** — The minimum time from start to go-live is roughly **3 weeks**, though most contracts take longer
 
 ---

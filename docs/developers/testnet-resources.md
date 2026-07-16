@@ -10,7 +10,7 @@ This page provides information about resources available for testing and develop
 
 Need test funds for development? You can access the Qubic faucet:
 
-1. Join the [Qubic Discord](https://discord.gg/qubic)
+1. Join the [Qubic Discord](https://join.qubic.org/discord)
 2. Navigate to the `#bot-commands` channel
 3. Use the faucet command to receive:
    - 1000 Qubics on mainnet

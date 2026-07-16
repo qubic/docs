@@ -8,7 +8,7 @@ title: 'What is Qubic?'
 
 :::info
 
-The Qubic documentation is currently in public preview and may change significantly as feedback is captured from readers like you. Join the Qubic [Discord](https://discord.gg/2vDMR8m) to share your feedback in the #docs channel.
+The Qubic documentation is currently in public preview and may change significantly as feedback is captured from readers like you. Join the Qubic [Discord](https://join.qubic.org/discord) to share your feedback in the #docs channel.
 
 :::
 
