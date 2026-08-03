@@ -206,7 +206,7 @@ const sidebars = {
             "developers/library-java",
             "developers/library-go",
             "developers/library-http",
-            "developers/library-csharp",
+            "developers/library-dotnet",
             "developers/library-rust",
           ],
         },

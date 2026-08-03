@@ -61,7 +61,7 @@ Everything you need to start developing on Qubic:
 - [Typescript Libraries](developers/library-typescript): Libraries for Typescript development.
 - [Go Libraries](developers/library-go.md): Libraries for Go development.
 - [Http Libraries](developers/library-http.md): Libraries for HTTP-based development.
-- [C# Libraries](developers/library-csharp.md): Libraries for C# development.
+- [.NET Libraries](developers/library-dotnet.md): Libraries for .NET development.
 
 ## Development Programs
 - [Grants Program](developers/grants.md): Foster development of high-quality smart contracts and solutions.
