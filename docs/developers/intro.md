@@ -65,7 +65,7 @@ To interact with existing smart contracts:
 
 ## Quick Reference Links
 
-- **Set up development environment**: [Qubic Dev Kit](https://github.com/qubic/qubic-dev-kit)
+- **Set up development environment**: [AIO Qubic Dev Kit](https://github.com/qubic/aio-qubic-dev-kit)
 - **Core implementation**: [Qubic Core](https://github.com/qubic/core)
 - **Command line interaction**: [Qubic CLI](https://github.com/qubic/qubic-cli)
 - **TypeScript development**: [qubic-typescript SDK](https://github.com/qubic/qubic-typescript) or [Qubic TypeScript Library](https://github.com/qubic/ts-library)
