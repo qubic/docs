@@ -5,6 +5,10 @@ sidebar_position: 1
 
 # QUBIC Smart Contract
 
+:::tip Ready to build?
+The fastest way to start developing a Qubic smart contract is the **[AIO Qubic Dev Kit](getting-started/setup-environment.md#aio-qubic-dev-kit-linux--recommended)** — one repo, Docker-based, includes Core + Faucet + Wallet + RPC. Continue with [Add Your Contract](getting-started/add-your-contract.md) once your environment is up.
+:::
+
 QUBIC smart contracts are decentralized `C++` programs that execute directly on baremetal hardware, eliminating the need for traditional operating systems or virtual machines. This low-level execution model provides high performance, low latency, and fine-grained control over computation. Unlike conventional blockchain platforms, QUBIC offers a unique architecture where contracts run closer to the hardware, ensuring deterministic and efficient execution across the network.
 
 Each smart contract can be launched through an IPO (Initial Public Offering), a mechanism that gathers community support and allocates computing resources to the contract. This system ensures that only valuable and trusted computations receive execution time, making QUBIC smart contracts efficient, scalable, and suitable for advanced decentralized applications.

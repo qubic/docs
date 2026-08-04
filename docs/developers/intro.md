@@ -17,8 +17,9 @@ If you want to create and deploy smart contracts on Qubic:
    - Learn about IPO-based deployment and the advantages of running contracts without VMs or gas fees
 
 2. **Set Up Your Environment**
-   - Follow our [Development Environment Setup](dev-kit.md) guide for Visual Studio and Qubic Core
-   - Complete the [Getting Started Tutorial](smart-contracts/getting-started/setup-environment.md) for hands-on experience
+   - **Recommended:** [AIO Qubic Dev Kit](smart-contracts/getting-started/setup-environment.md#aio-qubic-dev-kit-linux--recommended) — Linux, Docker-based, one repo with Core + Faucet + Wallet + RPC bundled. Fastest path to a working local environment.
+   - Alternate (Windows/IDE): [Visual Studio + Qubic Core](smart-contracts/getting-started/setup-environment.md#visual-studio-windows--alternate).
+   - Then walk through the full [Getting Started tutorial](smart-contracts/getting-started/setup-environment.md).
 
 3. **Learn Contract Development**
    - Master the [Qubic Programming Interface (QPI)](qpi.md) - your complete guide to contract APIs
