@@ -45,8 +45,9 @@ If you want to build applications that interact with the Qubic network:
    - For complete wallet integration examples (MetaMask Snap, WalletConnect, Seed phrases, Vault files), check out the [HM25 Frontend Example](https://github.com/icyblob/hm25-frontend)
    - This repository demonstrates all key wallet connection methods
 
-3. **Use the TypeScript Library**
-   - The [Qubic TypeScript Library](https://github.com/qubic/ts-library) provides tools for creating transactions and interacting with the network
+3. **Use a TypeScript Library**
+   - [qubic-typescript](https://github.com/qubic/qubic-typescript) is the SDK to start with — transactions, RPC, live node subscriptions, typed contracts, and `@qubic.org/react` hooks, split into packages you install as needed (public beta)
+   - [ts-library](https://github.com/qubic/ts-library) is the older single-package library. Use it if you're maintaining a project built on it, or need the raw node protocol from a browser
    - See our [TypeScript Library docs](library-typescript.md) for installation instructions
 
 ### 3. Smart Contract Interaction
@@ -66,7 +67,8 @@ To interact with existing smart contracts:
 - **Set up development environment**: [Qubic Dev Kit](https://github.com/qubic/qubic-dev-kit)
 - **Core implementation**: [Qubic Core](https://github.com/qubic/core)
 - **Command line interaction**: [Qubic CLI](https://github.com/qubic/qubic-cli)
-- **TypeScript development**: [Qubic TypeScript Library](https://github.com/qubic/ts-library)
+- **TypeScript development**: [qubic-typescript SDK](https://github.com/qubic/qubic-typescript) or [Qubic TypeScript Library](https://github.com/qubic/ts-library)
+- **.NET development**: [Qubic.NET](https://github.com/qubic/Qubic.NET)
 - **Wallet management**: [Qubic Vault TypeScript Library](https://github.com/qubic/ts-vault-library)
 - **Frontend example**: [HM25 Frontend](https://github.com/icyblob/hm25-frontend)
 
