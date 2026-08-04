@@ -139,9 +139,9 @@ Every contract must be thoroughly tested using the GoogleTest (GTest) framework.
 
 Test your contract in a realistic network environment.
 
-- **Recommended**: Use [Qubic Core Lite](resources/qubic-lite-core.md) to run a local testnet directly on your OS — no VM needed
-- Alternatively, set up a [full testnet with VirtualBox](testing/testnet.md)
-- The [Qubic Dev Kit](https://github.com/qubic/qubic-dev-kit) can streamline the process
+- **Recommended**: Use the [AIO Qubic Dev Kit](../dev-kit.md) — Docker-based Linux environment with Core + Faucet + Wallet + RPC bundled
+- Alternate: [Qubic Core Lite](resources/qubic-lite-core.md) for running a local testnet directly on your OS without a VM
+- Or a [full testnet with VirtualBox](testing/testnet.md) for the traditional path
 - Monitor contract execution across multiple ticks
 - Test multi-node behavior to verify determinism
 

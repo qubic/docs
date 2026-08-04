@@ -73,4 +73,4 @@ https://github.com/KavataK/QubicNetworkDeploymentGuide
 
 https://github.com/KavataK/qubic-node-setup
 
-https://github.com/qubic/qubic-dev-kit
+https://github.com/qubic/aio-qubic-dev-kit

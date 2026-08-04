@@ -1,70 +1,56 @@
 ---
-title: Qubic Dev Kit
+title: AIO Qubic Dev Kit
 ---
 
-# Qubic Dev Kit
+# AIO Qubic Dev Kit
 
-The [Qubic Dev Kit](https://github.com/qubic/qubic-dev-kit) is your go-to tool for setting up a Qubic testnet node and running the HM25 Smart Contract demo for Hackathon Madrid 2025. It streamlines the process for developers looking to create and test their own smart contracts.
+The [**AIO Qubic Dev Kit**](https://github.com/qubic/aio-qubic-dev-kit) is the recommended tool for setting up a local Qubic development environment. Clone one repo, run `docker compose up`, and you get Core + Faucet + Wallet + RPC on localhost.
 
-## Important Notes
-
-- **Dev Kit Requirements**: Essential for developing and testing smart contracts, simulating the entire Qubic blockchain in a single environment. If you only need to interact with existing contracts, consider using the RPC API and wallet solutions instead.
-
-- **Support and Resources**: For any questions or if you need a server setup, please reach out in the #dev channel on our Discord. We may be able to provide server resources and assistance.
-
-## Overview
-
-The Dev Kit manages:
-- Complete Qubic development environment setup
-- EFI file building
-- Testnet node deployment with your smart contract
-- RPC access for testing
-
-## Development Environment Setup
-
-To set up the environment for developing QUBIC smart contracts, you need two main components: `Visual Studio` and the [`Qubic Core`](https://github.com/qubic/core) repository.
-
-:::info
-We recommend using [Qubic Core Lite](smart-contracts/resources/qubic-lite-core.md) repo instead of the official Qubic Core so you can build and run the local testnet with your smart contract **directly in OS** without using a VM.
+:::info Replaces the older Qubic Dev Kit
+The earlier [`qubic/qubic-dev-kit`](https://github.com/qubic/qubic-dev-kit) — built for Hackathon Madrid 2025 — was **archived by the maintainers on 2026-07-22**. Its README now redirects to AIO. If you're following an older guide that pointed at it, use AIO instead.
 :::
 
-### 1. Install Visual Studio
+## What's in the box
 
-1. Go to [https://visualstudio.microsoft.com/](https://visualstudio.microsoft.com/) and download Visual Studio
-2. Open the Visual Studio Installer and select the `Desktop development with C++` workload
-3. Complete the installation process
+- **Core** — local Qubic node
+- **Faucet** — funds test identities on demand
+- **Wallet** — user-side interactions with your contract
+- **RPC** — the same API surface your contract will hit in production
 
-### 2. Clone and Setup the Repository
+Everything you need to build, deploy, and iterate on a smart contract locally — without touching mainnet.
 
-1. Choose `Clone a repository` in Visual Studio
-2. Paste the URL: `https://github.com/qubic/core.git`
-3. Once cloned, open `Qubic.sln` from the solution explorer
-4. Test your setup by right-clicking the `test` project and selecting `Build`
+## Requirements
 
-If you see successful build logs, congratulations! Your development environment is ready.
+This is a real dev environment, not a laptop toy:
 
-## Getting Started with Dev Kit
+- **Linux x86-64 with AVX2** — Ubuntu 24.04 recommended
+- **≥24 GB RAM** — ≥32 GB for the full stack with the explorer
+- **8+ CPU cores** for the full stack
+- **~25–50 GB/day disk writes** at the default 1 s tick rate — provision generous disk headroom
+- **Tools:** `docker.io`, `docker-compose-v2`, `git`, `python3`, `make`, `g++`, `unzip`
 
-For complete documentation and setup instructions, check out the Dev Kit on GitHub: [Qubic Dev Kit](https://github.com/qubic/qubic-dev-kit)
+Not on Linux? Spin up a dev VPS (Hetzner / Contabo / Vultr / etc.) meeting the specs above. macOS and Windows are not supported for the AIO path — see the [Visual Studio alternate](smart-contracts/getting-started/setup-environment.md#visual-studio-windows--alternate) for the IDE workflow.
 
-The Dev Kit provides a streamlined workflow for:
-- Setting up a complete development environment
-- Building and testing smart contracts locally
-- Deploying to testnet for integration testing
+## Get started
 
-## Key Features
+```bash
+sudo apt install -y docker.io docker-compose-v2 git python3 make g++ unzip
+git clone https://github.com/qubic/aio-qubic-dev-kit
+cd aio-qubic-dev-kit
+# then follow the repo README for the current start command
+```
 
-- **Optimized for Demo Branch**: The Dev Kit works with the `madrid-2025` branch of the Qubic core repository
-- **Built-in Smart Contract Template**: Includes the HM25 template smart contract with Echo and Burn functions
-- **One-Command Deployment**: Deploy a complete node with your smart contract using a single command
-- **Local Testing Environment**: Run a complete Qubic testnet locally for development and testing
+Full step-by-step: **[Getting Started → Setup Environment](smart-contracts/getting-started/setup-environment.md#aio-qubic-dev-kit-linux--recommended)**.
 
-## Next Steps
+## Support
 
-After setting up your environment:
+Questions or setup issues? Reach out in the `#dev` channel on our Discord — the QCT team can help.
 
-1. **Learn Smart Contract Structure**: Check out our [Smart Contract Overview](smart-contracts/overview.md)
-2. **Follow the Getting Started Guide**: Complete the [Getting Started Tutorial](smart-contracts/getting-started/setup-environment.md)
-3. **Understand QPI**: Read about the [Qubic Programming Interface](qpi.md)
-4. **Explore Examples**: Look at [Smart Contract Examples](smart-contracts/sc-by-examples/assets-and-shares.md)
+## Next steps
 
+Once your environment is up:
+
+1. **Learn contract structure** — [Smart Contract Overview](smart-contracts/overview.md)
+2. **Walk through a full example** — [Getting Started Tutorial](smart-contracts/getting-started/setup-environment.md)
+3. **Understand the QPI** — [Qubic Programming Interface](qpi.md)
+4. **Study working contracts** — [Smart Contract Examples](smart-contracts/sc-by-examples/assets-and-shares.md)

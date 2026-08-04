@@ -42,7 +42,7 @@ Expand your knowledge of the Qubic platform:
 Everything you need to start developing on Qubic:
 
 - [Become a Developer](developers/intro.md): Your starting guide to navigate Qubic development resources.
-- [Qubic Dev Kit](developers/dev-kit.md): Set up your local testnet and deploy smart contracts.
+- [AIO Qubic Dev Kit](developers/dev-kit.md): Set up your local Qubic environment (Core + Faucet + Wallet + RPC) and deploy smart contracts.
 - [Testnet Resources](developers/testnet-resources.md): Access faucets and test seeds for development.
 
 ## Tutorials
