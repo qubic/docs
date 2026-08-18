@@ -36,7 +36,12 @@ const sidebars = {
     {
       type: "category",
       label: "Basics",
-      items: ["learn/nodes", "learn/spectrum", "learn/tokenomics"],
+      items: [
+        "learn/nodes",
+        "learn/spectrum",
+        "learn/tokenomics",
+        "learn/inspect-network-state",
+      ],
     },
     {
       type: "category",
