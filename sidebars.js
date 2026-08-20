@@ -40,6 +40,7 @@ const sidebars = {
         "learn/nodes",
         "learn/spectrum",
         "learn/tokenomics",
+        "learn/emission-mechanism",
         "learn/inspect-network-state",
       ],
     },
