@@ -1,5 +1,8 @@
 # How the emission mechanism works
 
+import ThemedImage from '@theme/ThemedImage';
+import useBaseUrl from '@docusaurus/useBaseUrl';
+
 Qubic's monetary policy is not a single knob. It's a chain of protocol steps that runs at every epoch boundary. This page walks through the mechanism end-to-end, from gross emission down to the smart contract that actually removes QU from circulating supply.
 
 If you've heard someone say "the halving" and wanted to know exactly what changes and where, this is the doc.
@@ -35,6 +38,14 @@ Emission does not go straight into circulating supply. It's paid out per epoch, 
 
 Points 2 and 3 happen inside `endEpoch()` in `qubic/core/src/qubic.cpp`. Point 5 is the boundary transition — see [Upgrading](../computors/upgrading.md) for the tick-continuity mechanics.
 
+<ThemedImage
+  alt="Election, work, and revenue span two epochs"
+  sources={{
+    light: useBaseUrl('/img/emission-multi-epoch-light.png'),
+    dark:  useBaseUrl('/img/emission-multi-epoch-dark.png'),
+  }}
+/>
+
 ## The routing table
 
 The **revenue-donation table** lives in the `GQMPROP` contract's on-chain state. Each entry is:
@@ -63,6 +74,14 @@ for each entry in table:
 ```
 
 This means fractions don't add — they compound. If the table has one entry at 55% and another at 8%, the second doesn't take 8% of gross, it takes 8% of the 45% that remains.
+
+<ThemedImage
+  alt="Sequential deduction — the routing table applied per computor"
+  sources={{
+    light: useBaseUrl('/img/emission-sequential-deduction-light.png'),
+    dark:  useBaseUrl('/img/emission-sequential-deduction-dark.png'),
+  }}
+/>
 
 ### Auto-cleanup at BEGIN_EPOCH
 
@@ -107,6 +126,14 @@ Fee-reserve top-ups and the remainder's `qpi.burn()` call have the **same effect
 
 The reason SWATCH does both is efficiency: the same balance-inspection pass that decides how much to route to reserves also decides what's left over for the remainder burn. One BEGIN_EPOCH hook does both jobs.
 
+<ThemedImage
+  alt="SWATCH — what runs at every BEGIN_EPOCH"
+  sources={{
+    light: useBaseUrl('/img/emission-swatch-begin-epoch-light.png'),
+    dark:  useBaseUrl('/img/emission-swatch-begin-epoch-dark.png'),
+  }}
+/>
+
 ## Phase 2 — Supply Watch
 
 The Phase 2 behavior from the same 2024 proposal is where the name literally applies:
@@ -116,6 +143,14 @@ The Phase 2 behavior from the same 2024 proposal is where the name literally app
 The intent is adaptive burn control. Ecosystem-level burns already happen outside SWATCH — SC-IPO Dutch auction bids are burned during `finishIPOs()` each epoch; the dust-threshold rules in `qubic/core/src/spectrum/spectrum.h` burn small balances when the spectrum fills past 75%; time-limited programs (like the 2025 XMR-driven program that burned ~672B QU) contribute periodically. In Phase 2, SWATCH would read those contributions and **shrink its own burn accordingly** so the network's total burn per epoch stays on the emission schedule.
 
 Same emission-schedule target. Adaptive per-epoch contribution.
+
+<ThemedImage
+  alt="Phase 2 Supply Watch — adaptive burn contribution"
+  sources={{
+    light: useBaseUrl('/img/emission-supply-watch-phase2-light.png'),
+    dark:  useBaseUrl('/img/emission-supply-watch-phase2-dark.png'),
+  }}
+/>
 
 ## How to verify the current state
 
