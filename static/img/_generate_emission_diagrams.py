@@ -99,7 +99,7 @@ def multi_epoch_flow(mode):
            "The result of epoch N's work is what seats and pays computors in epoch N+1.",
            font=f(15, "reg"), fill=c["text_sub"])
 
-    # Two-epoch bar with 4 stops (same visual language as upgrading-tick-continuity)
+    # Epoch boundary dashed line
     def dashed_vline(x, y0, y1, color, dash=8, width=3):
         y = y0
         while y < y1:
@@ -111,29 +111,32 @@ def multi_epoch_flow(mode):
     d.text((epoch_x - 60, 350), "Epoch boundary",
            font=f(15, "bld"), fill=GOLD)
 
-    # Left half (Epoch N) — computors work
-    d.text((80, 160), "Epoch N", font=f(19, "bld"), fill=c["text"])
-    d.text((80, 190), "the current 676 computors mine + validate ticks",
-           font=f(14, "reg"), fill=c["text_sub"])
+    # Epoch column headers — offset from the boundary so text doesn't touch it
+    d.text((110, 145), "Epoch N", font=f(19, "bld"), fill=c["text"])
+    d.text((110, 173), "the current 676 computors work",
+           font=f(13, "reg"), fill=c["text_sub"])
+    d.text((epoch_x + 70, 145), "Epoch N+1", font=f(19, "bld"), fill=c["text"])
+    d.text((epoch_x + 70, 173),
+           "top 676 UPoW scorers of epoch N are seated",
+           font=f(13, "reg"), fill=c["text_sub"])
 
-    # Right half (Epoch N+1) — election result seats new computors
-    d.text((epoch_x + 40, 160), "Epoch N+1", font=f(19, "bld"), fill=c["text"])
-    d.text((epoch_x + 40, 190),
-           "top 676 UPoW scorers from epoch N are seated",
-           font=f(14, "reg"), fill=c["text_sub"])
-
-    # 4 numbered steps along the timeline
+    # 4 numbered steps — evenly spaced, text stacked vertically below each badge.
+    # Step 2 sits just left of boundary (end of epoch N), step 3 just right (start
+    # of epoch N+1). Each step gets ~250 px of horizontal room, so no text collides.
     step_data = [
-        (200, 230, "1", "Work",     "computors mine + tick",      BLUE),
-        (epoch_x - 60, 230, "2", "Elect",  "top 676 seat next epoch",    GREEN),
-        (epoch_x + 100, 230, "3", "Work",  "elected computors validate", BLUE),
-        (W - 190, 230, "4", "Distribute", "revenue paid, cuts applied", GOLD),
+        (200,  "1", "Work",       "computors mine + tick",       BLUE),
+        (450,  "2", "Elect",      "top 676 seated for next epoch", GREEN),
+        (750,  "3", "Work",       "elected computors validate",   BLUE),
+        (1000, "4", "Distribute", "revenue paid, cuts applied",   GOLD),
     ]
-    for x, y, num, label, sub, color in step_data:
-        d.ellipse([x - 18, y - 18, x + 18, y + 18], fill=color)
-        text_center(d, x, y, num, f(17, "bld"), WHITE)
-        d.text((x + 34, y - 12), label, font=f(17, "bld"), fill=c["text"])
-        d.text((x + 34, y + 10), sub, font=f(13, "reg"), fill=c["text_sub"])
+    badge_y = 240
+    for x, num, label, sub, color in step_data:
+        # Badge
+        d.ellipse([x - 20, badge_y - 20, x + 20, badge_y + 20], fill=color)
+        text_center(d, x, badge_y, num, f(18, "bld"), WHITE)
+        # Label + sub, centered below the badge
+        text_center(d, x, badge_y + 45, label, f(17, "bld"), c["text"])
+        text_center(d, x, badge_y + 70, sub, f(13, "reg"), c["text_sub"])
 
     # Bottom explanatory line
     d.text((60, 400),
