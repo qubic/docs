@@ -26,9 +26,23 @@ This is the **gross** emission. What actually enters circulating user hands is s
 
 The chain has several burn paths (SC-IPO Dutch auction bids, dust-threshold burns, XMR-driven programs, and more) — the one we're documenting here is the largest and the one the "halving" adjusts.
 
+## Mining, election, and revenue span two epochs
+
+Before we walk through what happens inside one epoch, note that a computor's life spans two epoch boundaries. Mining is continuous — anyone can produce UPoW proofs and accumulate scores against their public key. At the end of an epoch, the top 676 pubkeys by score are seated as computors for the *next* epoch, and *those* computors are the ones who receive revenue at the end of that next epoch.
+
+<ThemedImage
+  alt="Mining, election, and revenue span two epochs"
+  sources={{
+    light: useBaseUrl('/img/emission-multi-epoch-light.png'),
+    dark:  useBaseUrl('/img/emission-multi-epoch-dark.png'),
+  }}
+/>
+
+The rest of this page zooms into *one* epoch — specifically, the end-of-epoch cascade that computes revenue, applies the routing table, and pays computors. Election happens as part of that same boundary transition; see [Upgrading](../computors/upgrading.md) for the tick-continuity mechanics.
+
 ## From gross emission to computor revenue
 
-Emission does not go straight into circulating supply. It's paid out per epoch, based on per-computor performance, through this sequence:
+Inside one epoch, emission is paid out per computor through this sequence:
 
 1. **Epoch N: work.** The 676 computors seated for epoch N produce ticks, sign votes, and process transactions. Their per-tick contribution is tracked.
 2. **End of epoch N: revenue calculation.** The core computes each computor's revenue for the epoch based on their performance.
@@ -36,15 +50,7 @@ Emission does not go straight into circulating supply. It's paid out per epoch, 
 4. **End of epoch N: distribute.** Whatever is left after the donation-table pass is paid to the computor; the residual of the epoch's ISSUANCE_RATE that wasn't consumed by computors goes to the arbitrator identity.
 5. **Epoch N+1 begins.** The next epoch's computor set is seated (elected from the highest UPoW-scoring identities of epoch N), and the loop repeats.
 
-Points 2 through 4 all happen inside `endEpoch()` in `qubic/core/src/qubic.cpp` — the per-computor revenue loop, the donation-table application, and the actual balance updates to the computor and arbitrator identities are one function call. Point 5 is the boundary transition — see [Upgrading](../computors/upgrading.md) for the tick-continuity mechanics.
-
-<ThemedImage
-  alt="Election, work, and revenue span two epochs"
-  sources={{
-    light: useBaseUrl('/img/emission-multi-epoch-light.png'),
-    dark:  useBaseUrl('/img/emission-multi-epoch-dark.png'),
-  }}
-/>
+Points 2 through 4 all happen inside `endEpoch()` in `qubic/core/src/qubic.cpp` — the per-computor revenue loop, the donation-table application, and the actual balance updates to the computor and arbitrator identities are one function call.
 
 ## The routing table
 

@@ -88,105 +88,62 @@ def arrow(d, x1, y1, x2, y2, color, width=3, head=12):
 # ─── 1. Multi-epoch flow ─────────────────────────────────────────────────────
 
 def multi_epoch_flow(mode):
-    """Illustrates the numbered list in the doc:
-       1. Epoch N: computors work
-       2. End of Epoch N: revenue calc      ┐
-       3. End of Epoch N: routing table pass │ all inside endEpoch()
-       4. End of Epoch N: distribute         ┘
-       5. Epoch N+1 begins (new set seated)
+    """Multi-epoch view: mining → election → work → payment.
+
+    Restored from an earlier version — it's the compact big-picture story
+    of how computor life spans two epochs. Used in the doc as a
+    stage-setter, not as an illustration of the per-epoch endEpoch() flow.
     """
     c = theme_colors(mode)
-    W, H = 1200, 480
+    W, H = 1200, 460
     img = Image.new("RGB", (W, H), c["bg"])
     d = ImageDraw.Draw(img)
 
-    d.text((60, 30), "The per-epoch revenue flow",
+    d.text((60, 30), "Mining, election, and revenue span two epochs",
            font=f(28, "bld"), fill=c["text"])
     d.text((60, 68),
-           "Work happens during the epoch. Revenue is calculated, cut, and paid at the boundary.",
+           "UPoW scores accumulated in one epoch decide who is seated as a computor in the next.",
            font=f(15, "reg"), fill=c["text_sub"])
 
-    # ── Timeline strip
-    strip_x0 = 60
-    strip_x1 = 720
-    strip_y  = 160
-    strip_h  = 90
-    rounded_box(d, (strip_x0, strip_y, strip_x1, strip_y + strip_h),
-                radius=12, fill=BLUE)
-    text_center(d, (strip_x0 + strip_x1) // 2, strip_y + strip_h // 2 - 12,
-                "Epoch N (~1 week)", f(19, "bld"), WHITE)
-    text_center(d, (strip_x0 + strip_x1) // 2, strip_y + strip_h // 2 + 14,
-                "676 seated computors mine + validate ticks", f(14, "reg"), WHITE)
-
-    # Numbered step 1 badge, above the strip
-    d.ellipse([strip_x0 + 30 - 18, strip_y - 40, strip_x0 + 30 + 18, strip_y - 4],
-              fill=BLUE)
-    text_center(d, strip_x0 + 30, strip_y - 22, "1", f(17, "bld"), WHITE)
-
-    # ── Boundary label
+    # Epoch boundary dashed line
     def dashed_vline(x, y0, y1, color, dash=8, width=3):
         y = y0
         while y < y1:
             d.line([(x, y), (x, min(y + dash, y1))], fill=color, width=width)
             y += dash * 2
 
-    dashed_vline(strip_x1, strip_y - 40, strip_y + strip_h + 30, GOLD, dash=8)
-    # Small "Boundary" label aligned LEFT of the boundary line so it doesn't
-    # overlap with the endEpoch cascade to the right.
-    label_font = f(13, "bld")
-    label_text = "Boundary"
-    bbox = d.textbbox((0, 0), label_text, font=label_font)
-    d.text((strip_x1 - (bbox[2] - bbox[0]) - 8, strip_y + strip_h + 40),
-           label_text, font=label_font, fill=GOLD)
+    epoch_x = W // 2
+    dashed_vline(epoch_x, 140, 340, GOLD, dash=8)
+    d.text((epoch_x - 60, 350), "Epoch boundary",
+           font=f(15, "bld"), fill=GOLD)
 
-    # ── endEpoch() cascade — three boxes on the right stacked vertically
-    endep_x0 = strip_x1 + 40
-    endep_x1 = W - 40
-    box_h    = 62
-    box_gap  = 8
-    cascade_y0 = strip_y - 20  # slightly lower to leave room for header
+    # Epoch column headers — offset from the boundary so text doesn't touch it
+    d.text((110, 145), "Epoch N", font=f(19, "bld"), fill=c["text"])
+    d.text((110, 173), "UPoW mining accumulates scores per pubkey",
+           font=f(13, "reg"), fill=c["text_sub"])
+    d.text((epoch_x + 70, 145), "Epoch N+1", font=f(19, "bld"), fill=c["text"])
+    d.text((epoch_x + 70, 173),
+           "top 676 UPoW scorers from epoch N are seated as computors",
+           font=f(13, "reg"), fill=c["text_sub"])
 
-    # Header above the cascade — makes clear these 3 are one function
-    d.text((endep_x0, cascade_y0 - 26),
-           "endEpoch() — three sequential steps at the boundary",
-           font=f(14, "bld"), fill=c["text_sub"])
-
-    endep_steps = [
-        ("2", "Compute revenue per computor",
-              "performance-weighted share of ISSUANCE_RATE", GREEN),
-        ("3", "Apply routing table",
-              "sequential cuts to burn destinations (GQMPROP.revenueDonation)", GOLD),
-        ("4", "Distribute what's left",
-              "credit computor + arbitrator identities", RED),
+    # 4 numbered steps — evenly spaced, text stacked vertically below each badge.
+    step_data = [
+        (200,  "1", "Mine",       "UPoW scores accumulate per pubkey",    BLUE),
+        (450,  "2", "Elect",      "top 676 seated for next epoch",         GREEN),
+        (750,  "3", "Validate",   "seated computors mine + validate ticks", BLUE),
+        (1000, "4", "Distribute", "revenue paid, cuts applied",             GOLD),
     ]
-    y = cascade_y0
-    for num, label, sub, color in endep_steps:
-        rounded_box(d, (endep_x0, y, endep_x1, y + box_h),
-                    radius=10, fill=color)
-        # Number badge inside the box, left side
-        d.ellipse([endep_x0 + 12, y + 12, endep_x0 + 42, y + 42], fill=WHITE)
-        text_center(d, endep_x0 + 27, y + 27, num, f(15, "bld"), color)
-        # Label + sub
-        d.text((endep_x0 + 56, y + 10), label,
-               font=f(16, "bld"), fill=WHITE)
-        d.text((endep_x0 + 56, y + 34), sub,
-               font=f(12, "reg"), fill=WHITE)
-        y += box_h + box_gap
+    badge_y = 240
+    for x, num, label, sub, color in step_data:
+        d.ellipse([x - 20, badge_y - 20, x + 20, badge_y + 20], fill=color)
+        text_center(d, x, badge_y, num, f(18, "bld"), WHITE)
+        text_center(d, x, badge_y + 45, label, f(17, "bld"), c["text"])
+        text_center(d, x, badge_y + 70, sub, f(13, "reg"), c["text_sub"])
 
-    # ── Point 5: Epoch N+1 begins — small pill BELOW the cascade
-    p5_y = 380
-    d.text((60, p5_y - 26),
-           "Then, immediately after step 4:",
-           font=f(14, "reg"), fill=c["text_sub"])
-    rounded_box(d, (60, p5_y, 60 + 660, p5_y + 60),
-                radius=10, fill=c["card"], outline=c["border"], width=2)
-    d.ellipse([60 + 12, p5_y + 15, 60 + 42, p5_y + 45], fill=GREEN)
-    text_center(d, 60 + 27, p5_y + 30, "5", f(15, "bld"), WHITE)
-    d.text((60 + 56, p5_y + 8), "Epoch N+1 begins",
-           font=f(16, "bld"), fill=c["text"])
-    d.text((60 + 56, p5_y + 32),
-           "the next 676 UPoW-highest identities are seated; loop repeats",
-           font=f(12, "reg"), fill=c["text_sub"])
+    # Bottom explanatory line
+    d.text((60, 400),
+           "Steps 3 and 4 happen inside every epoch. The per-epoch details are unpacked in the next section.",
+           font=f(13, "itl"), fill=c["text_sub"])
 
     img.save(f"emission-multi-epoch-{mode}.png", "PNG")
     print(f"wrote emission-multi-epoch-{mode}.png")
