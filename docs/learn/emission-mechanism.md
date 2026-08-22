@@ -36,7 +36,7 @@ Emission does not go straight into circulating supply. It's paid out per epoch, 
 4. **End of epoch N: distribute.** Whatever is left after the donation-table pass is paid to the computor; the residual of the epoch's ISSUANCE_RATE that wasn't consumed by computors goes to the arbitrator identity.
 5. **Epoch N+1 begins.** The next epoch's computor set is seated (elected from the highest UPoW-scoring identities of epoch N), and the loop repeats.
 
-Points 2 and 3 happen inside `endEpoch()` in `qubic/core/src/qubic.cpp`. Point 5 is the boundary transition — see [Upgrading](../computors/upgrading.md) for the tick-continuity mechanics.
+Points 2 through 4 all happen inside `endEpoch()` in `qubic/core/src/qubic.cpp` — the per-computor revenue loop, the donation-table application, and the actual balance updates to the computor and arbitrator identities are one function call. Point 5 is the boundary transition — see [Upgrading](../computors/upgrading.md) for the tick-continuity mechanics.
 
 <ThemedImage
   alt="Election, work, and revenue span two epochs"
