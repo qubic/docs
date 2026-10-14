@@ -8,7 +8,7 @@ In Qubic, smart contracts are implemented in a restricted variant of **C++** and
 
 To isolate contracts, access to other contracts and Core internals is only allowed via the `QPI` (Qubic Programming Interface), the sole external dependency permitted. Using libraries is forbidden. Contracts also cannot use insecure **C++** features like pointers, low-level arrays (no bounds checking), or preprocessor directives. All memory is zero-initialized, so contracts never access uninitialized memory.
 
-A contract has a state struct, containing all its data as member variables. The memory available to the contract is allocated statically, but extending the state will be possible between epochs through special `EXPAND` events.
+A contract has a state struct, containing all its persistent data as member variables of the nested `struct StateData`, accessed via `state.get()` (read) and `state.mut()` (write). The memory available to the contract is allocated statically, but extending the state will be possible between epochs through special `EXPAND` events.
 
 **Important considerations for contract developers:**
 

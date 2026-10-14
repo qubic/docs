@@ -56,12 +56,12 @@ struct setStateNumber_output
 
 PUBLIC_PROCEDURE(setStateNumber)
 {
-    if (input.stateNumber < state.stateNumber)
+    if (input.stateNumber < state.get().stateNumber)
     {
         output.result = 1;
         return;
     }
-    state.stateNumber = input.stateNumber;
+    state.mut().stateNumber = input.stateNumber;
     output.result = 0;
 }
 ```

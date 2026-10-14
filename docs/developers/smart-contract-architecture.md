@@ -57,9 +57,9 @@ struct Fees_output {
 };
 
 PUBLIC_FUNCTION(Fees) {
-    output.assetIssuanceFee = state._assetIssuanceFee;
-    output.transferFee = state._transferFee;
-    output.tradeFee = state._tradeFee;
+    output.assetIssuanceFee = state.get()._assetIssuanceFee;
+    output.transferFee = state.get()._transferFee;
+    output.tradeFee = state.get()._tradeFee;
 }
 ```
 
@@ -87,8 +87,8 @@ PUBLIC_PROCEDURE(AddToBidOrder) {
     }
 
     // State modification
-    state._assetOrders.add(/* ... */);
-    state._entityOrders.add(/* ... */);
+    state.mut()._assetOrders.add(/* ... */);
+    state.mut()._entityOrders.add(/* ... */);
 }
 ```
 

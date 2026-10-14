@@ -9,12 +9,12 @@ As mentioned earlier, Qubic smart contracts run directly on bare metal—no virt
 
 ## How It Works
 
-In Qubic, a smart contract is simply a C++ class with methods. The state of your contract is stored in the members of the smart contract class instance.
+In Qubic, a smart contract is simply a C++ class with methods. The state of your contract is stored in the members of its nested `StateData` struct, accessed via `state.get()` (read) and `state.mut()` (write).
 
 ## Functions and Procedures
 
-- **Procedure:** If a method modifies the members of the smart contract instance, it’s called a **Procedure**.
-- **Function:** If a method only reads member variables without modifying them, it’s called a **Function**.
+- **Procedure:** If a method modifies the state (via `state.mut()`), it’s called a **Procedure**.
+- **Function:** If a method only reads the state (via `state.get()`) without modifying it, it’s called a **Function**.
 
 ## Interacting with Smart Contracts in Qubic
 

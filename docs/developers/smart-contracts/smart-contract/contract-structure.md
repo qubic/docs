@@ -61,6 +61,18 @@ struct MYTEST : public ContractBase
 };
 ```
 
+Persistent data goes into the nested `StateData` struct. Our `add` example doesn't need state, so it is omitted there (see [States](./states.md)):
+
+```cpp
+struct MYTEST : public ContractBase
+{
+    struct StateData
+    {
+        sint64 myNumber;
+    };
+};
+```
+
 This is a simple example of how to write a contract function that takes two numbers and returns their sum. Further details will be explained in a later section.
 
 ```cpp

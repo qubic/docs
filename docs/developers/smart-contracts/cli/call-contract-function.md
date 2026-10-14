@@ -21,7 +21,7 @@ struct getStateNumber_output
 
 PUBLIC_FUNCTION(getStateNumber)
 {
-    output.stateNumber = state.stateNumber;
+    output.stateNumber = state.get().stateNumber;
 }
 ```
 

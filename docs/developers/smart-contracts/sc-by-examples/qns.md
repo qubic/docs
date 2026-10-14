@@ -121,16 +121,19 @@ Stores resolution data for domains:
 - **resolveData**: Nested hash map storing resolution data (supports subdomains)
 
 ```cpp
-// Supported TLDs
-UEFIString<QNS_MAX_TLD_LENGTH> QUBIC_TLD;  // ".qubic"
-UEFIString<QNS_MAX_TLD_LENGTH> QNS_TLD;    // ".qns"
-Array<UEFIString<QNS_MAX_TLD_LENGTH>, 2> TLDs;
+struct StateData
+{
+    // Supported TLDs
+    UEFIString<QNS_MAX_TLD_LENGTH> QUBIC_TLD;  // ".qubic"
+    UEFIString<QNS_MAX_TLD_LENGTH> QNS_TLD;    // ".qns"
+    Array<UEFIString<QNS_MAX_TLD_LENGTH>, 2> TLDs;
 
-// Domain registry
-HashMap<uint64, RegistryRecord, QNS_MAX_NUMBER_OF_DOMAINS> registry;
+    // Domain registry
+    HashMap<uint64, RegistryRecord, QNS_MAX_NUMBER_OF_DOMAINS> registry;
 
-// Resolution data
-HashMap<uint64, HashMap<uint64, ResolveData, QNS_MAX_NUMBER_OF_SUBDOMAINS>, QNS_MAX_NUMBER_OF_DOMAINS> resolveData;
+    // Resolution data
+    HashMap<uint64, HashMap<uint64, ResolveData, QNS_MAX_NUMBER_OF_SUBDOMAINS>, QNS_MAX_NUMBER_OF_DOMAINS> resolveData;
+};
 ```
 
 ## Core Functions

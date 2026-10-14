@@ -19,6 +19,8 @@ Contracts can refill their execution fee reserves in the following ways:
 The execution fee system follows a key principle: **"The Contract Initiating Execution Pays"**. When a user initiates a transaction, the user's destination contract must have a positive executionFeeReserve. When a contract initiates an operation (including any callbacks it triggers), that contract must have positive executionFeeReserve.
 
 The execution time of each contract is measured and fees proportional to that execution time are deducted from the reserve.
+Next to executing a procedure, every tick that has a change of the contract's state (via `state.mut()`) costs fees due to the need to recompute the digest of the state.
+Depending on the size of the state, the digest computation may be significantly more expensive than the run-time of the procedures.
 If the fee reserve of a contract goes to or below 0, the contract becomes dormant.
 This means, it will mostly be unusable until the reserve is refilled (for exceptions see next section).
 
@@ -45,10 +47,12 @@ After all transactions are sent, the received execution fee values are sorted in
 ### For Contract Developers
 
 1. **Plan for sustainability**: Charge invocation rewards for running user procedures.
-2. **Burn collected invocation rewards**: Regularly burn QUs to replenish the execution fee reserve.
-3. **Monitor reserve**: Implement a function to expose current reserve level.
-4. **Graceful degradation**: Consider what happens when reserve runs low.
-5. **Handle inter-contract call errors**: After calling procedures of another contract, verify that the call succeeded. Handle errors gracefully (e.g., skip operations, use fallback logic). You can also proactively verify the called contract has positive fee reserve using the query function provided in QPI before calling.
+2. **Validate before writing state**: Check inputs before calling `state.mut()`, it triggers the state digest recomputation. Use `state.get()` for reads.
+3. **Keep state small**: Digest cost grows with state size, so size arrays and containers reasonably.
+4. **Burn collected invocation rewards**: Regularly burn QUs to replenish the execution fee reserve.
+5. **Monitor reserve**: Implement a function to expose current reserve level.
+6. **Graceful degradation**: Consider what happens when reserve runs low.
+7. **Handle inter-contract call errors**: After calling procedures of another contract, verify that the call succeeded. Handle errors gracefully (e.g., skip operations, use fallback logic). You can also proactively verify the called contract has positive fee reserve using the query function provided in QPI before calling.
 
 ### For Contract Users
 

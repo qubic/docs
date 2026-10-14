@@ -125,7 +125,10 @@ We have learned how to call contract function above, pretty simple right? Now le
 Assumming we have the below procedure in our contract :
 
 ```cpp
-sint64 myNumber;
+struct StateData
+{
+  sint64 myNumber;
+};
 
 struct setMyNumber_input
 {
@@ -138,7 +141,7 @@ struct setMyNumber_output
 
 PUBLIC_PROCEDURE(setMyNumber)
 {
-  state.myNumber = input.myNumber;
+  state.mut().myNumber = input.myNumber;
 }
 
 REGISTER_USER_FUNCTIONS_AND_PROCEDURES()
@@ -216,7 +219,7 @@ struct getMyNumber_output
 
 PUBLIC_FUNCTION(getMyNumber)
 {
-  output.myNumber = state.myNumber;
+  output.myNumber = state.get().myNumber;
 }
 
 
@@ -268,9 +271,9 @@ TEST(MyTest, SetAndGetMyNumber)
 
 ### 2. Use Contract Instance To Query State
 
-As shown, the state is members of the contract struct. This means that once we have an instance of the contract, we can directly access its state.
+As shown, the state is the `StateData` struct nested in the contract struct. This means that once we have a pointer to the contract state, we can directly access it.
 
-A pointer to the contract instance is stored in the `contractStates` array. To retrieve our contract's pointer, we simply access it using the contract index `contractStates[NAME_CONTRACT_INDEX]`:
+A pointer to the contract state (the `MYTEST::StateData` bytes) is stored in the `contractStates` array. To retrieve our contract's pointer, we simply access it using the contract index `contractStates[NAME_CONTRACT_INDEX]`:
 
 ```cpp
 TEST(MyTest, SetMyNumber)
@@ -287,10 +290,10 @@ TEST(MyTest, SetMyNumber)
 
 Now you can query the state without creating a contract function. However, this approach still feels a bit messy since it involves handling pointers.
 
-A cleaner solution is to create a struct that inherits from the state struct and implement a function to retrieve `myNumber`:
+A cleaner solution is to create a struct that inherits from the contract struct and its `StateData` and implement a function to retrieve `myNumber`:
 
 ```cpp
-struct MYTESTGetter : public MYTEST
+struct MYTESTGetter : public MYTEST, public MYTEST::StateData
 {
     sint64 getMyNumber()
     {

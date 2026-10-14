@@ -90,9 +90,9 @@ Below is a test case to generate the binary contract state file. Insert this in 
 
 ```cpp
 TEST(Contract, GenerateContractState) {
-    // Change QNS to your contract struct
-    QNS* s = new QNS();
-    memset(s, 0, sizeof(QNS));
+    // Change QNS to your contract struct, the state file only holds StateData
+    QNS::StateData* s = new QNS::StateData();
+    memset(s, 0, sizeof(QNS::StateData));
 
     FILE* f;
     auto error = fopen_s(&f, "contract0013.170", "wb"); // Remember to replace with correct contract index and epoch
@@ -102,7 +102,7 @@ TEST(Contract, GenerateContractState) {
         return;
     }
 
-    size_t written = fwrite(s, sizeof(QNS), 1, f);
+    size_t written = fwrite(s, sizeof(QNS::StateData), 1, f);
     if (written != 1) {
         std::cerr << "Error writing to file" << std::endl;
         fclose(f);

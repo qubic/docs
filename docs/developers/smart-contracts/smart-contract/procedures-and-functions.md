@@ -8,7 +8,7 @@ In Qubic, contract logic is divided into functions and procedures, each serving 
 
 ## Functions
 
-User functions **cannot** modify the contract's state, but they are useful to query information from the state, either with the network message `RequestContractFunction`, or by a function or procedure of the same or another contract.
+User functions **cannot** modify the contract's state (only `state.get()` is available), but they are useful to query information from the state, either with the network message `RequestContractFunction`, or by a function or procedure of the same or another contract.
 
 - **Example:**
 
@@ -34,7 +34,7 @@ Functions can be called by procedures, but procedures cannot be called by functi
 
 ## Procedures
 
-User procedures **can** modify the state. They are invoked either by transactions with the ID (public key) of the contract being the destination address, or from another procedure of the same contract or a different contract.
+User procedures **can** modify the state (via `state.mut()`, reads via `state.get()`). They are invoked either by transactions with the ID (public key) of the contract being the destination address, or from another procedure of the same contract or a different contract.
 
 - **Example**
 
@@ -43,7 +43,7 @@ User procedures **can** modify the state. They are invoked either by transaction
 // contract index (contracts deployed after).
 PUBLIC_PROCEDURE(updateBalance)
 {
-  state.balance += input.amount;
+  state.mut().balance += input.amount;
 }
 ```
 
@@ -51,7 +51,7 @@ PUBLIC_PROCEDURE(updateBalance)
 // A PRIVATE procedure cannot be called by other contracts.
 PRIVATE_PROCEDURE(updateBalance)
 {
-  state.balance += input.amount;
+  state.mut().balance += input.amount;
 }
 ```
 
@@ -93,7 +93,7 @@ struct setPrice_output
 
 PUBLIC_PROCEDURE(setPrice)
 {
-  state.price = input.price;
+  state.mut().price = input.price;
 }
 ```
 
@@ -103,7 +103,7 @@ Procedures's ouput is returned if the procedure is invoked from another procedur
 
 ## System Procedure
 
-System procedures can modify the state and are invoked by the Qubic Core (the system) as event callbacks.
+System procedures can modify the state (via `state.mut()`) and are invoked by the Qubic Core (the system) as event callbacks.
 
 They are defined with the following macros:
 
@@ -126,7 +126,7 @@ They are defined with the following macros:
 // Increase number every epoch
 BEGIN_EPOCH()
 {
-  state.number++;
+  state.mut().number++;
 }
 ```
 

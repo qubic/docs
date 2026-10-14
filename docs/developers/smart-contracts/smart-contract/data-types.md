@@ -32,6 +32,10 @@ id user1 = id(1,2,3,4);
 id user2 = id(2,3,4,5);
 ```
 
+:::tip
+The container examples below use plain variables for brevity. In a contract, persistent containers are declared in `StateData` and accessed via `state.get()` / `state.mut()`, e.g. `state.mut().arr.set(0, 1);` (see [States](./states.md)).
+:::
+
 ## Array
 
 Array of L elements of type T (L must be 2^N)

@@ -8,4 +8,4 @@ Qubic Node Source Code - this repository contains the source code of a full qubi
 
 
 # Smart Contracts
-The `src/contracts` directory contains the smart contract implementations and the Qubic Programming Interface (QPI). These contracts are the core of the Qubic system, enabling decentralized operations and interactions.
+The `src/contracts` directory contains the smart contract implementations, the Qubic Programming Interface (QPI) lives in `src/qpi`. These contracts are the core of the Qubic system, enabling decentralized operations and interactions.

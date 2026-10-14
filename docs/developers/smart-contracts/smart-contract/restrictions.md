@@ -18,7 +18,7 @@ Qubic enforces strict coding rules to ensure determinism, security, and network-
 | Variadic arguments (`...`)               | Compiler-dependent and unsafe for auditing.                                                                                                              |
 | Double underscores (`__`)                | Reserved for internal use; may conflict with system symbols.                                                                                             |
 | `QpiContext`, `const_cast`               | Can be misused to alter internal contract behavior.                                                                                                      |
-| Scope resolution (`::`)                  | Only allowed for structs, enums, and namespaces inside contracts or `qpi.h`.                                                                             |
+| Scope resolution (`::`)                  | Only allowed for structs, enums, and namespaces inside contracts or QPI headers (`src/qpi/`).                                                            |
 | `typedef`, `union`                       | Reduces code clarity and may be used to obscure logic or manipulate memory.                                                                              |
 | Global variables                         | Disallowed to avoid shared mutable state. Global constants must be prefixed with the contract state struct name.                                         |
 | Recursion / deep call nesting            | Limited to 10 levels to ensure execution is bounded and safe.                                                                                            |

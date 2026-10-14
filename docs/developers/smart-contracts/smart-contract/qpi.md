@@ -176,8 +176,8 @@ PUBLIC_PROCEDURE_WITH_LOCALS(burnTokens) {
 
 ```cpp
 PUBLIC_PROCEDURE_WITH_LOCALS(burnExcess) {
-    if (state.balance > state.targetBalance) {
-        locals.excess = state.balance - state.targetBalance;
+    if (state.get().balance > state.get().targetBalance) {
+        locals.excess = state.get().balance - state.get().targetBalance;
         qpi.burn(locals.excess); // Burn surplus QU
     }
 }

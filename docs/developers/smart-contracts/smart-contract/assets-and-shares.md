@@ -93,7 +93,7 @@ On success, it returns the payed fee, which is >= 0.
 If `offeredTransferFee` or the contract balance is not sufficient, it returns `-requestedFee`.
 In case of another error, it returns `INVALID_AMOUNT` (which is a negative number of large amount).
 
-For more details, refer to the code of `qpi.releaseShares()` in `src/contract_core/qpi_asset_impl.h`.
+For more details, refer to the code of `qpi.releaseShares()` in `src/qpi/impl/qpi_assets_impl.h`.
 
 ### Transferring rights with `qpi.acquireShares()`
 
@@ -172,7 +172,7 @@ On success, it returns the payed fee, which is >= 0.
 If `offeredTransferFee` or the contract balance is not sufficient, it returns `-requestedFee`.
 In case of another error, it returns `INVALID_AMOUNT` (which is a negative number of large amount).
 
-For more details, refer to the code of `qpi.acquireShares()` in `src/contract_core/qpi_asset_impl.h`.
+For more details, refer to the code of `qpi.acquireShares()` in `src/qpi/impl/qpi_assets_impl.h`.
 
 #### Notes and recommendations
 

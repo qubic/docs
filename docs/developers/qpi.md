@@ -35,7 +35,7 @@ QPI exposes a minimal but powerful set of features, including:
 | **Cryptographic Functions**      | Cryptographic functionality through the K12 function, which is based on the KangarooTwelve (K12) hash algorithm.                           |
 | **Memory Operations**            | Low-level memory operations for efficiently copying and initializing data structures in smart contracts. eg. `copyMemory()`, `setMemory()` |
 
-`qpi.h` is the Qubic Programming Interface for implementing the smart contracts. It is available automatically in the smart contract implementation header files. This page outlines the guidelines for developing secure and efficient Qubic contracts.
+`qpi.h` (`src/qpi/qpi.h` in the core repo, split into sub-headers like `qpi_types.h`, `qpi_containers.h`, `qpi_context.h` and `qpi_macros.h`) is the Qubic Programming Interface for implementing the smart contracts. It is available automatically in the smart contract implementation header files. This page outlines the guidelines for developing secure and efficient Qubic contracts.
 Adherence to these guidelines is crucial for ensuring the proper functionality and security of your contracts within the Qubic environment.
 
 ## Editor Support
@@ -55,9 +55,9 @@ Source: [github.com/AndyQus/qubic-qpi-vscode](https://github.com/AndyQus/qubic-q
 
 ## Concepts
 
-The state is the persistent memory of the contract that is kept aligned in all nodes. A contract can have member functions and procedures.
+The state is the persistent memory of the contract that is kept aligned in all nodes. All persistent fields must be declared inside a nested `struct StateData`. The state is accessed via `state.get()` (read-only) and `state.mut()` (read-write). Calling `state.mut()` marks the state as dirty so that its digest is recomputed at the end of the tick. A contract can have member functions and procedures.
 
-Functions cannot change the state of the contract. They can be called via a `RequestContractFunction` network message.
+Functions cannot change the state of the contract (only `state.get()` is available). They can be called via a `RequestContractFunction` network message.
 
 Procedures can change the state of the contract. They are invoked by a transaction and run when the tick containing the transaction is processed.
 
@@ -82,7 +82,7 @@ Due to security reasons, certain things are prohibited:
 - Native data types like `bool`, `int`, `long`, `char`, ... Use their corresponding predefined data types in `qpi.h` (`bit`, `uint8`, `sint8`, `uint16`, `sint32`, `uint64`, ...)
 - Inclusion of other files via `#include`. All functions must reside within a single file.
 - Math operators `%` and `/`. Use `mod` and `div` from `qpi.h` instead. `+`, `-`, `*`(multiplication), and bit-wise operators are accepted.
-- Local variable declaration, even for for-loop. You need to define all necessary variables in either in the contract state or in a "locals" struct similar to the input and output struct of a function or procedure.
+- Local variable declaration, even for for-loop. You need to define all necessary variables in either `StateData` (accessed via `state.mut()`) or in a "locals" struct similar to the input and output struct of a function or procedure.
 - The `typedef`, `union` keyword.
 - Floating point data types (half, float, double)
 
@@ -390,9 +390,9 @@ PUBLIC_PROCEDURE_WITH_LOCALS(burnTokens)
 ```cpp
 PUBLIC_PROCEDURE_WITH_LOCALS(burnExcess)
 {
-    if (state.balance > state.targetBalance)
+    if (state.get().balance > state.get().targetBalance)
     {
-        locals.excess = state.balance - state.targetBalance;
+        locals.excess = state.get().balance - state.get().targetBalance;
         qpi.burn(locals.excess); // Burn surplus QU
     }
 }

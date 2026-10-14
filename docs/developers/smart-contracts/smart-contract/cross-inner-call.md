@@ -103,7 +103,10 @@ struct CROSS2
 struct CROSS : public ContractBase
 {
     public:
-        sint64 crossStateNumber;
+        struct StateData
+        {
+            sint64 crossStateNumber;
+        };
 
         struct setCrossStateNumber_input
         {
@@ -116,7 +119,7 @@ struct CROSS : public ContractBase
 
         PUBLIC_PROCEDURE(setCrossStateNumber)
         {
-            state.crossStateNumber = input.crossStateNumber;
+            state.mut().crossStateNumber = input.crossStateNumber;
         }
 
         struct getCrossStateNumber_input
@@ -130,7 +133,7 @@ struct CROSS : public ContractBase
 
         PUBLIC_FUNCTION(getCrossStateNumber)
         {
-            output.crossStateNumber = state.crossStateNumber;
+            output.crossStateNumber = state.get().crossStateNumber;
         }
 
         REGISTER_USER_FUNCTIONS_AND_PROCEDURES()
